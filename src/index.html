@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!--
+
+valid word - must be correct length AND use the right letters
+18 pts for 9 letter
+an eight rather than a eight
+
+don't say x is ok and x is ok
+
+-->
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+	<link type="image/vnd.microsoft.icon" sizes="16x16 32x32 64x64" href="assets/img/favicon.ico" rel="icon">
+	<title>Countdown</title>
+
+	<!-- build:css assets/css/tidy.min.css -->
+	<link href="assets/css/bootstrap.min.css" rel="stylesheet">
+	<link href="assets/css/style.css" rel="stylesheet">
+	<!-- /build -->
+
+	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+	<!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+	<div class="container narrow-container">
+		<div class="row">
+			<div class="col-sm-12">
+				<h1>Countdown</h1>
+				<p>
+					Play countdown against contestants from the actual show.
+				</p>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-4">
+				<button class="btn btn-default">Play random game</button>
+			</div>
+			<div class="col-sm-4">
+				<div class="input-group">
+					<input id="episode" type="text" class="form-control" placeholder="Episode number..." />
+					<span class="input-group-btn">
+						<button id="go" class="btn btn-default" type="button">Play!</button>
+					</span>
+				</div>
+			</div>
+			<div class="col-sm-4">
+				<button class="btn btn-default">Settings</button>
+			</div>
+		</div>
+	</div>
+
+	<div class="container narrow-container">
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="row">
+					<div class="col-sm-12">
+						<span class="slot"></span>
+						<span class="slot"></span>
+						<span class="slot"></span>
+						<span class="slot"></span>
+						<span class="slot"></span>
+						<span class="slot"></span>
+						<span class="slot"></span>
+						<span class="slot"></span>
+						<span class="slot"></span>
+						<span class="clock"></span>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-12 letter-declare">
+						<span class="btn btn-success">3</span>
+						<span class="btn btn-success">4</span>
+						<span class="btn btn-success">5</span>
+						<span class="btn btn-success">6</span>
+						<span class="btn btn-success">7</span>
+						<span class="btn btn-success">8</span>
+						<span class="btn btn-success">9</span>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-3 col-sm-offset-3">
+						<span class="target"></span>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-12">
+						<span class="nslot"></span>
+						<span class="nslot"></span>
+						<span class="nslot"></span>
+						<span class="nslot"></span>
+						<span class="nslot"></span>
+						<span class="nslot"></span>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-12 word-declare">
+						<div class="input-group">
+							<input id="word" type="text" class="form-control" placeholder="Enter word..." />
+							<span class="input-group-btn">
+						<button id="goWord" class="btn btn-default" type="button">Submit!</button>
+					</span>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-12 number-declare">
+						<div class="input-group">
+							<input id="number" type="text" class="form-control" placeholder="Enter number..." />
+							<span class="input-group-btn">
+						<button id="goNumber" class="btn btn-default" type="button">Submit!</button>
+					</span>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-12 conundrum-buzz">
+						<button id="buzz" class="btn btn-danger" type="button">BUZZ!</button>
+					</div>
+					<div class="col-sm-12 conundrum-declare">
+						<div class="input-group">
+							<input id="conundrum" type="text" class="form-control" placeholder="Enter conundrum..." />
+							<span class="input-group-btn">
+								<button id="goConundrum" class="btn btn-default" type="button">Submit!</button>
+							</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="feed" rows="6"></div>
+			</div>
+		</div>
+	</div>
+
+	<div id="Nick"></div>
+
+	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+	<!-- build:js assets/js/tidy.min.js -->
+	<script src="assets/js/script.js"></script>
+	<!-- /build -->
+
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+</body>
+
+</html>
