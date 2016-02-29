@@ -1,16 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<!--
-
-valid word - must be correct length AND use the right letters
-18 pts for 9 letter
-an eight rather than a eight
-
-don't say x is ok and x is ok
-
--->
-
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -34,118 +24,168 @@ don't say x is ok and x is ok
 
 <body>
 	<div class="container narrow-container">
-		<div class="row">
-			<div class="col-sm-12">
-				<h1>Countdown</h1>
-				<p>
-					Play countdown against contestants from the actual show.
-				</p>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-sm-4">
-				<button class="btn btn-default">Play random game</button>
-			</div>
-			<div class="col-sm-4">
-				<div class="input-group">
-					<input id="episode" type="text" class="form-control" placeholder="Episode number..." />
-					<span class="input-group-btn">
-						<button id="go" class="btn btn-default" type="button">Play!</button>
-					</span>
+		<div id="intro-page" class="page">
+			<div class="row">
+				<div class="col-sm-12">
+					<h1>Countdown</h1>
+					<p>
+						Play countdown against contestants from the actual show.
+					</p>
 				</div>
 			</div>
-			<div class="col-sm-4">
-				<button class="btn btn-default">Settings</button>
+			<div class="row">
+				<div class="col-xs-12 form-inline">
+					<span>Play </span>
+					<select class="form-control" name="player">
+						<option value="winn">the winner</option>
+						<option value="lose">the loser</option>
+						<option value="both">both players</option>
+						<option value="cham">the champion</option>
+						<option value="chal">the challenger</option>
+						<option value="rand">a random player</option>
+					</select>
+					<span> from </span>
+					<div class="input-group">
+						<input id="episode" type="text" class="form-control" placeholder="Episode number... leave blank for random" />
+						<span class="input-group-btn">
+							<button id="go" class="btn btn-default" type="button">Play!</button>
+						</span>
+					</div>
+				</div>
 			</div>
 		</div>
-	</div>
 
-	<div class="container narrow-container">
-		<div class="row">
-			<div class="col-sm-12">
-				<div class="row">
-					<div class="col-sm-12">
-						<span class="slot"></span>
-						<span class="slot"></span>
-						<span class="slot"></span>
-						<span class="slot"></span>
-						<span class="slot"></span>
-						<span class="slot"></span>
-						<span class="slot"></span>
-						<span class="slot"></span>
-						<span class="slot"></span>
-						<span class="clock"></span>
+		<div id="letters-page" class="letters-container page">
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="row">
+						<div class="col-sm-12">
+							<span class="slot"></span>
+							<span class="slot"></span>
+							<span class="slot"></span>
+							<span class="slot"></span>
+							<span class="slot"></span>
+							<span class="slot"></span>
+							<span class="slot"></span>
+							<span class="slot"></span>
+							<span class="slot"></span>
+							<span class="clock"></span>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-12 letter-declare">
+							<span class="btn btn-success">3</span>
+							<span class="btn btn-success">4</span>
+							<span class="btn btn-success">5</span>
+							<span class="btn btn-success">6</span>
+							<span class="btn btn-success">7</span>
+							<span class="btn btn-success">8</span>
+							<span class="btn btn-success">9</span>
+						</div>
 					</div>
 				</div>
-				<div class="row">
-					<div class="col-sm-12 letter-declare">
-						<span class="btn btn-success">3</span>
-						<span class="btn btn-success">4</span>
-						<span class="btn btn-success">5</span>
-						<span class="btn btn-success">6</span>
-						<span class="btn btn-success">7</span>
-						<span class="btn btn-success">8</span>
-						<span class="btn btn-success">9</span>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-sm-3 col-sm-offset-3">
-						<span class="target"></span>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-sm-12">
-						<span class="nslot"></span>
-						<span class="nslot"></span>
-						<span class="nslot"></span>
-						<span class="nslot"></span>
-						<span class="nslot"></span>
-						<span class="nslot"></span>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-sm-12 word-declare">
-						<div class="input-group">
-							<input id="word" type="text" class="form-control" placeholder="Enter word..." />
-							<span class="input-group-btn">
+			</div>
+			<div class="row">
+				<div class="col-sm-12 word-declare">
+					<div class="input-group">
+						<input id="word" type="text" class="form-control" placeholder="Enter word..." />
+						<span class="input-group-btn">
 						<button id="goWord" class="btn btn-default" type="button">Submit!</button>
 					</span>
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-sm-12 number-declare">
-						<div class="input-group">
-							<input id="number" type="text" class="form-control" placeholder="Enter number..." />
-							<span class="input-group-btn">
-						<button id="goNumber" class="btn btn-default" type="button">Submit!</button>
-					</span>
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-sm-12 conundrum-buzz">
-						<button id="buzz" class="btn btn-danger" type="button">BUZZ!</button>
-					</div>
-					<div class="col-sm-12 conundrum-declare">
-						<div class="input-group">
-							<input id="conundrum" type="text" class="form-control" placeholder="Enter conundrum..." />
-							<span class="input-group-btn">
-								<button id="goConundrum" class="btn btn-default" type="button">Submit!</button>
-							</span>
-						</div>
 					</div>
 				</div>
 			</div>
 		</div>
+
+		<div id="numbers-page" class="numbers-container page">
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="row">
+								<div class="col-sm-12">
+									<span class="nslot"></span>
+									<span class="nslot"></span>
+									<span class="nslot"></span>
+									<span class="nslot"></span>
+									<span class="nslot"></span>
+									<span class="nslot"></span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-12 letter-declare">
+							<span class="btn btn-success">3</span>
+							<span class="btn btn-success">4</span>
+							<span class="btn btn-success">5</span>
+							<span class="btn btn-success">6</span>
+							<span class="btn btn-success">7</span>
+							<span class="btn btn-success">8</span>
+							<span class="btn btn-success">9</span>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-3 col-sm-offset-3">
+							<span class="target"></span>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-12 number-declare">
+					<div class="input-group">
+						<input id="number" type="text" class="form-control" placeholder="Enter number..." />
+						<span class="input-group-btn">
+						<button id="goNumber" class="btn btn-default" type="button">Submit!</button>
+					</span>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="conundrum-page" class="conundrum-container page">
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="row">
+						<div class="col-sm-12">
+							<span class="slot"></span>
+							<span class="slot"></span>
+							<span class="slot"></span>
+							<span class="slot"></span>
+							<span class="slot"></span>
+							<span class="slot"></span>
+							<span class="slot"></span>
+							<span class="slot"></span>
+							<span class="slot"></span>
+							<span class="clock"></span>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-12 conundrum-buzz">
+					<button id="buzz" class="btn btn-danger" type="button">BUZZ!</button>
+				</div>
+				<div class="col-sm-12 conundrum-declare">
+					<div class="input-group">
+						<input id="conundrum" type="text" class="form-control" placeholder="Enter conundrum..." />
+						<span class="input-group-btn">
+						<button id="goConundrum" class="btn btn-default" type="button">Submit!</button>
+					</span>
+					</div>
+				</div>
+			</div>
+		</div>
+
 		<div class="row">
 			<div class="col-sm-12">
 				<div class="feed" rows="6"></div>
 			</div>
 		</div>
+
 	</div>
 
-	<div id="Nick"></div>
 
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>

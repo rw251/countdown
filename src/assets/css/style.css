@@ -8,6 +8,7 @@
     height: 120px;
     overflow-y: scroll;
     border: 2px solid darkgrey;
+    margin-top:10px;
 }
 
 .slot, .nslot {
@@ -29,6 +30,7 @@
     margin-right: 5px;
 }
 
-.letter-declare, .word-declare, .number-declare, .conundrum-declare, .conundrum-buzz {
+.letter-declare, .word-declare, .number-declare, .conundrum-declare,
+.conundrum-buzz, .letters-container, .numbers-container, .conundrum-container {
     display:none;
 }

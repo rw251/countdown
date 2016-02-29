@@ -8,8 +8,12 @@ $(document).ready(function() {
     });
 
     $('#go').on('click', function() {
-        $.get('down.php?episode=' + $('#episode').val(), function(doc) {
-            game.start($(doc).find('.round_table').children());
+        var vs = $('select[name=player]').val();
+        var episode = $('#episode').val();
+        episode = episode === "" ? Math.floor(Math.random()*5000) + 1000 : episode;
+        $.get('down.php?episode=' + episode, function(doc) {
+            $('#intro-page').hide();
+            game.start($(doc).find('.round_table').children(), vs, "richard");
         });
     });
 

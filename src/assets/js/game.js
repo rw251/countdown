@@ -2,7 +2,7 @@ var speech = require("./speech.js"),
     dictionary = require("./dictionary.js");
 
 
-var c1, c2, c1first, c2first, rows, round = 1,
+var c1, c2, c1first, c2first, rows, name, round = 1,
     letters, numbers, timerDefault = 1,
     timer = timerDefault,
     score = {};
@@ -12,7 +12,7 @@ var elClock, elWordLength, elWord, elNumber, elSlots, elNSlots;
 var getLetters = function(val) {
     var rtn = {};
 
-    rtn.letters = val.find('.lselection').text();//.substr(7);
+    rtn.letters = val.find('.lselection').text(); //.substr(7);
     rtn.c1 = val.find('.c1word').text().trim();
     rtn.c2 = val.find('.c2word').text().trim();
     rtn.c1valid = true;
@@ -255,17 +255,43 @@ var declareNumber = function(number) {
     });
 };
 
-var startGame = function(r) {
+var startGame = function(r, vs, player) {
+    //detect format
+
+
     rows = r;
+    name = player;
     c1 = $(rows[0]).find('.c1word').text();
     c2 = $(rows[0]).find('.c2word').text();
+    var finalScores = $(rows[rows.length-1]).find('.score').text().split(/[^0-9]/).map(function(v){return +v;});
+    var isChampWinner = finalScores[0]>finalScores[1];
+
+    if (vs === "cham") {
+        //all fine
+    }
+    else if (vs === "chal") {
+        c1 = c2;
+    }
+    else if (vs === "winn") {
+        c1 = isChampWinner ? c1 : c2;
+    }
+    else if (vs === "lose") {
+        c1 = isChampWinner ? c2 : c1;
+    }
+    else if (vs === "rand") {
+        c1 = Math.random()>0.5 ? c1 : c2;
+    }
+    else if (vs === "both") {
+        c2first = c2.split(' ')[0];
+    }
+
     c1first = c1.split(' ')[0];
-    c2first = c2.split(' ')[0];
+   
     speech.say([{
         what: speech.WELCOME,
         who: "nick"
     }, {
-        what: speech.WHO + c1 + " and " + c2 + ".",
+        what: speech.WHO + player + " and " + c1 + (c2first ? " and " + c2 + "." : "."),
         who: "nick"
     }], function() {
         playRound();
@@ -369,6 +395,7 @@ var doNumber = function(contestant) {
 };
 
 var playRound = function() {
+    $('.page').hide();
     elSlots.text("");
     elWord.val("");
 
@@ -380,9 +407,11 @@ var playRound = function() {
     }
     else if ([1, 2, 5, 6, 8, 9, 12, 13, 14, 15].indexOf(i) > -1) {
         //letters
+        
+        $('#letters-page').show();
 
         letters = getLetters($(rows[i]));
-        var cont = ([1, 2, 5, 6, 8, 9, 12, 13, 14, 15].indexOf(i) % 2 === 0 ? c1first : c2first);
+        var cont = ([1, 2, 5, 6, 8, 9, 12, 13, 14, 15].indexOf(i) % 2 === 0 ? c1first : name);
 
         speech.say("Ok, " + cont + speech.LETTERS, "NICK", function() {
             doLetter(cont);
@@ -390,6 +419,7 @@ var playRound = function() {
     }
     else if (i === 17) {
         //con
+        $('#conundrum-page').show();
         letters = getConundrum($(rows[i]));
 
         $('.conundrum-buzz').show();
@@ -400,7 +430,8 @@ var playRound = function() {
     }
     else if ([3, 7, 10, 16].indexOf(i) > -1) {
         //numbers
-        var cont = ([3, 7, 10, 16].indexOf(i) % 2 === 0 ? c1first : c2first);
+        $('#numbers-page').show();
+        var cont = ([3, 7, 10, 16].indexOf(i) % 2 === 0 ? c1first : name);
         numbers = getNumbers($(rows[i]));
 
         speech.say("Ok, " + cont + speech.NUMBERS, "NICK", function() {
