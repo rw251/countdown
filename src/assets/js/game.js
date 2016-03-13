@@ -1,7 +1,7 @@
 var speech = require("./speech.js"),
     dictionary = require("./dictionary.js");
 
-
+speech.silent = true;
 var c1, c2, c1first, c2first, rows, name, round = 1,
     letters, numbers, timerDefault = 1,
     timer = timerDefault,
@@ -100,29 +100,46 @@ var getConundrum = function(val) {
     return rtn;
 };
 
+var iveGot = function(n){
+    return n===8 ? "I've got an 8." : "I've got a " + n + ".";
+};
+
 
 var declareWordLength = function(length) {
     elWordLength.hide();
-    speech.say("I've got a " + length, "Richard", function() {
-        speech.say("I've got " + letters.c1.length, c1first, function() {
+    speech.say(iveGot(length), "Richard", function() {
+        speech.say(iveGot(letters.c1.length), c1first, function() {
             if (c2first) {
                 //3p game
-                speech.say("And I've got " + letters.c2.length, c2first, function() {
+                speech.say(iveGot(letters.c2.length), c2first, function() {
                     speech.say("So, Richard, what have you got?", "nick");
-                    elWord.val("").show().focus();
+                    elWord.show().find('input[type=text]').val("").focus();
                 });
             }
             else {
                 //2p game
                 speech.say("So, Richard, what have you got?", "nick");
-                elWord.val("").show().focus();
+                elWord.show().find('input[type=text]').val("").focus();
             }
+            $('.slot').on('click', function(){
+               var t = $(this).text();
+               elWord.find('input[type=text]').val(elWord.find('input[type=text]').val()+t);
+               $(this).addClass('slot-done');
+               $(this).off('click');
+            }).addClass('slot-hover');
         });
     });
 };
 
+var updateScore = function() {
+    $('#pscore').text(score.me);
+    $('#c1score').text(score.c1);
+    if (c2first) $('#c2score').text(score.c2);
+};
+
 var declareWord = function(word) {
     elWord.hide();
+    $('.slot').removeClass('slot-done').removeClass('slot-hover').off('click');
     speech.say([{
         what: word,
         who: "Richard"
@@ -135,13 +152,29 @@ var declareWord = function(word) {
             speech.say(letters.c2, c2first, function() {
                 speech.say("Dictionary corner?", "nick", function() {
                     dictionary.isValidWord(word, function(isValid) {
-                        var phrase = (isValid ? word + " is ok, " : word + " isn't there I'm afraid.") +
-                            (letters.c1valid ? letters.c1 + " is ok, " : letters.c1 + " isn't there I'm afraid.") +
-                            (letters.c2valid ? " and " + letters.c2 + " is ok, " : " and " + letters.c2 + " isn't there I'm afraid.");
+                        var words = [word];
+                        var valids = [isValid];
+                        if (word !== letters.c1) {
+                            words.push(letters.c1);
+                            valids.push(letters.c1valid);
+                        }
+                        if (c2first && words.indexOf(letters.c2) === -1) {
+                            words.push(letters.c2);
+                            valids.push(letters.c2valid);
+                        }
+
+                        var best = words.reduce(function(prev, cur, idx) {
+                            return valids[idx] ? Math.max(prev, cur.length) : prev;
+                        }, 0);
+
+                        var phrase = valids.map(function(val, idx) {
+                            if (val) return words[idx] + " is ok ";
+                            else return words[idx] + " isn't there I'm afraid ";
+                        }).join(" and ");
                         speech.say(phrase, "susie", function() {
-                            if (isValid) score.me += word.length;
-                            if (letters.c1valid) score.c1 += letters.c1.length;
-                            if (letters.c2valid) score.c2 += letters.c2.length;
+                            if (isValid && word.length === best) score.me += word.length + (best === 9 ? 9 : 0);
+                            if (letters.c1valid && letters.c1.length === best) score.c1 += letters.c1.length + (best === 9 ? 9 : 0);
+                            if (c2first && letters.c2valid && letters.c2.length === best) score.c2 += letters.c2.length + (best === 9 ? 9 : 0);
                             round++;
                             playRound();
                         });
@@ -153,12 +186,24 @@ var declareWord = function(word) {
             //2p game
             speech.say("Dictionary corner?", "nick", function() {
                 dictionary.isValidWord(word, function(isValid) {
-                    var phrase = (isValid ? word + " is ok, " : word + " isn't there I'm afraid.") +
-                        (letters.c1valid ? letters.c1 + " is ok, " : letters.c1 + " isn't there I'm afraid.") +
-                        (letters.c2valid ? " and " + letters.c2 + " is ok, " : " and " + letters.c2 + " isn't there I'm afraid.");
+                    var words = [word];
+                    var valids = [isValid];
+                    if (word !== letters.c1) {
+                        words.push(letters.c1);
+                        valids.push(letters.c1valid);
+                    }
+
+                    var best = words.reduce(function(prev, cur, idx) {
+                        return valids[idx] ? Math.max(prev, cur.length) : prev;
+                    }, 0);
+
+                    var phrase = valids.map(function(val, idx) {
+                        if (val) return words[idx] + " is ok ";
+                        else return words[idx] + " isn't there I'm afraid ";
+                    }).join(" and ");
                     speech.say(phrase, "susie", function() {
-                        if (isValid) score.me += word.length;
-                        if (letters.c1valid) score.c1 += letters.c1.length;
+                        if (isValid && word.length === best) score.me += word.length + (best === 9 ? 9 : 0);
+                        if (letters.c1valid && letters.c1.length === best) score.c1 += letters.c1.length + (best === 9 ? 9 : 0);
                         round++;
                         playRound();
                     });
@@ -210,8 +255,10 @@ var declareNumber = function(number) {
             var winners = [];
             if (mindiff === diff.c1 && numbers.c1method) {
                 winners.push(c1first);
+                score.c1+=c1points;
             }
-            if (mindiff === diff.c2 && numbers.c2method) {
+            if (c2first && mindiff === diff.c2 && numbers.c2method) {
+                score.c2+=c2points;
                 winners.push(c2first);
             }
 
@@ -223,6 +270,7 @@ var declareNumber = function(number) {
             }
             else {
                 if (mindiff === diff.p) {
+                    score.me+=points;
                     winners.push("richard");
                 }
             }
@@ -257,14 +305,26 @@ var declareNumber = function(number) {
 
 var startGame = function(r, vs, player) {
     //detect format
-
+    var x = r.toArray().map(function(val){
+       if($(val).find('.lselection').length>0){
+           return "L";
+       } else if($(val).find('.nselection').length>0){ 
+           return "N";
+       } else if($(val).find('.cselection').length>0){ 
+           return "C";
+       } else {
+           return "";
+       }
+    });
 
     rows = r;
     name = player;
     c1 = $(rows[0]).find('.c1word').text();
     c2 = $(rows[0]).find('.c2word').text();
-    var finalScores = $(rows[rows.length-1]).find('.score').text().split(/[^0-9]/).map(function(v){return +v;});
-    var isChampWinner = finalScores[0]>finalScores[1];
+    var finalScores = $(rows[rows.length - 1]).find('.score').text().split(/[^0-9]/).map(function(v) {
+        return +v;
+    });
+    var isChampWinner = finalScores[0] > finalScores[1];
 
     if (vs === "cham") {
         //all fine
@@ -279,14 +339,18 @@ var startGame = function(r, vs, player) {
         c1 = isChampWinner ? c2 : c1;
     }
     else if (vs === "rand") {
-        c1 = Math.random()>0.5 ? c1 : c2;
+        c1 = Math.random() > 0.5 ? c1 : c2;
     }
     else if (vs === "both") {
         c2first = c2.split(' ')[0];
+        $('#c2').text(c2first + ": ");
     }
 
     c1first = c1.split(' ')[0];
-   
+
+    $('#p1').text(name + ": ");
+    $('#c1').text(c1first + ": ");
+
     speech.say([{
         what: speech.WELCOME,
         who: "nick"
@@ -386,7 +450,7 @@ var doNumber = function(contestant) {
                 speech.say(speech.THIRTY, "nick", function() {
                     countdown(function() {
                         speech.say("Time's up. So what do you have?", "nick");
-                        elNumber.val("").show().focus();
+                        elNumber.show().find('input[type=text]').val("").focus();
                     });
                 });
             });
@@ -396,48 +460,45 @@ var doNumber = function(contestant) {
 
 var playRound = function() {
     $('.page').hide();
-    elSlots.text("");
-    elWord.val("");
+    elSlots.html("&nbsp;");
 
-    var i = round;
-    if (i === 4 || i === 11) {
-        //Tea time teaser
-        round++;
-        playRound();
-    }
-    else if ([1, 2, 5, 6, 8, 9, 12, 13, 14, 15].indexOf(i) > -1) {
-        //letters
-        
+    updateScore();
+    
+    if($(rows[round]).find('.lselection').length>0){
+       //letters
+
         $('#letters-page').show();
 
-        letters = getLetters($(rows[i]));
-        var cont = ([1, 2, 5, 6, 8, 9, 12, 13, 14, 15].indexOf(i) % 2 === 0 ? c1first : name);
+        letters = getLetters($(rows[round]));
+        var cont = ([1, 2, 5, 6, 8, 9, 12, 13, 14, 15].indexOf(round) % 2 === 0 ? c1first : name);
 
         speech.say("Ok, " + cont + speech.LETTERS, "NICK", function() {
             doLetter(cont);
         });
-    }
-    else if (i === 17) {
-        //con
+    } else if($(rows[round]).find('.nselection').length>0){ 
+       //numbers
+        $('#numbers-page').show();
+        var cont = ([3, 7, 10, 16].indexOf(round) % 2 === 0 ? c1first : name);
+        numbers = getNumbers($(rows[round]));
+
+        speech.say("Ok, " + cont + speech.NUMBERS, "NICK", function() {
+            doNumber(cont);
+        });
+    } else if($(rows[round]).find('.cselection').length>0){ 
+       //con
         $('#conundrum-page').show();
-        letters = getConundrum($(rows[i]));
+        letters = getConundrum($(rows[round]));
 
         $('.conundrum-buzz').show();
 
         speech.say("So finally it's time for the conundrum.  Fingers on buzzers as we reveal, today's, countdown conundrum.", "nick", function() {
             doConundrum();
         });
+    } else {
+       //Tea time teaser
+        round++;
+        playRound();
     }
-    else if ([3, 7, 10, 16].indexOf(i) > -1) {
-        //numbers
-        $('#numbers-page').show();
-        var cont = ([3, 7, 10, 16].indexOf(i) % 2 === 0 ? c1first : name);
-        numbers = getNumbers($(rows[i]));
-
-        speech.say("Ok, " + cont + speech.NUMBERS, "NICK", function() {
-            doNumber(cont);
-        });
-    };
 }
 
 var initialise = function(clock, slots, nslots, wordLengthDeclare, wordDeclare, numberDeclare) {

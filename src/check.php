@@ -18,10 +18,8 @@ libxml_use_internal_errors(true);
 $doc = new DOMDocument();
 $doc->loadHTMLFile($url);
 
-
 $xpath = new DOMXpath($doc);
 $elements = $xpath->query("//title");
-
 
 if (!is_null($elements)) {
     $title = $elements->item(0)->childNodes->item(0)->nodeValue;
