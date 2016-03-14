@@ -2,7 +2,7 @@
 var game = require('./game.js');
 
 $(document).ready(function() {
-    game.init($('.clock'), $('.slot'), $('.nslot'), $('.letter-declare'), $('.word-declare'), $('.number-declare'));
+    game.init($('.clock'), $('.slot'), $('.nslot'), $('.cslot'), $('.letter-declare'), $('.word-declare'), $('.number-declare'));
     $('#episode').keydown(function(e) {
         if (e.keyCode == 13) $('#go').click();
     });
@@ -10,7 +10,7 @@ $(document).ready(function() {
     $('#go').on('click', function() {
         var vs = $('select[name=player]').val();
         var episode = $('#episode').val();
-        episode = episode === "" ? Math.floor(Math.random()*1000) + 5000 : episode;
+        episode = episode === "" ? Math.floor(Math.random()*5000) + 1000 : episode;
         
         /*
          LLNLLNLLNLLLLNC - 5666 -
@@ -36,6 +36,10 @@ $(document).ready(function() {
 
     $('#goNumber').on('click', function() {
         game.declare.number($('#number').val());
+    });
+
+    $('#goNumberNothing').on('click', function() {
+        game.declare.number('');
     });
 
 

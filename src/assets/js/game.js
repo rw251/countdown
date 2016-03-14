@@ -7,12 +7,13 @@ var c1, c2, c1first, c2first, rows, name, round = 1,
     timer = timerDefault,
     score = {};
 
-var elClock, elWordLength, elWord, elNumber, elSlots, elNSlots;
+var elClock, elWordLength, elWord, elNumber, elSlots, elNSlots, elCSlots;
 
 var getLetters = function(val) {
     var rtn = {};
 
-    rtn.letters = val.find('.lselection').text(); //.substr(7);
+    rtn.letters = val.find('.lselection').text();
+    rtn.oLetters = val.find('.lselection').text(); 
     rtn.c1 = val.find('.c1word').text().trim();
     rtn.c2 = val.find('.c2word').text().trim();
     rtn.c1valid = true;
@@ -85,13 +86,17 @@ var getConundrum = function(val) {
     var time = 60;
 
     if (c1buzz.length > 8) {
+        console.log(c1buzz);
         ans = c1buzz;
+        console.log(c1buzz.match(/\(([0-9\.]+) /));
         rtn.time = +c1buzz.match(/\(([0-9\.]+) /)[1];
         rtn.who = "c1";
     }
     else if (c2buzz.length > 8) {
+        console.log(c2buzz);
         ans = c2buzz;
-        rtn.time = +c1buzz.match(/\(([0-9\.]+) /)[1];
+        console.log(c2buzz.match(/\(([0-9\.]+) /));
+        rtn.time = +c2buzz.match(/\(([0-9\.]+) /)[1];
         rtn.who = "c2";
     }
     //cultivater ☓ 
@@ -122,10 +127,10 @@ var declareWordLength = function(length) {
                 elWord.show().find('input[type=text]').val("").focus();
             }
             $('.slot').on('click', function(){
-               var t = $(this).text();
-               elWord.find('input[type=text]').val(elWord.find('input[type=text]').val()+t);
+               var t = $(this).text().toLowerCase();
                $(this).addClass('slot-done');
                $(this).off('click');
+               elWord.find('input[type=text]').val(elWord.find('input[type=text]').val()+t).focus();
             }).addClass('slot-hover');
         });
     });
@@ -151,7 +156,7 @@ var declareWord = function(word) {
             //3p game
             speech.say(letters.c2, c2first, function() {
                 speech.say("Dictionary corner?", "nick", function() {
-                    dictionary.isValidWord(word, function(isValid) {
+                    dictionary.isValidWord(word, letters.oLetters, function(isValid) {
                         var words = [word];
                         var valids = [isValid];
                         if (word !== letters.c1) {
@@ -172,11 +177,29 @@ var declareWord = function(word) {
                             else return words[idx] + " isn't there I'm afraid ";
                         }).join(" and ");
                         speech.say(phrase, "susie", function() {
+                            var tts = [];
+                            var longest = letters.others.reduce(function(prev,cur){return Math.max(prev, cur.replace(/\*/,"").length);},0);
+                            if(longest <= best) tts.push({what:"We can't beat that.", who:"susie"});
+                            else if(letters.others.length>2) tts.push({what:"We found a few " + longest+"s.", who:"susie"});
+                            else if(letters.others.length===2) tts.push({what:"We found a couple of " + longest+"s.", who:"susie"});
+                            else if(letters.others.length===1) tts.push({what:"We found one " + longest, who:"susie"});
+                            
+                            var dc = letters.others.filter(function(v){return v.indexOf("*")<0;});
+                            var ai = letters.others.filter(function(v){return v.indexOf("*")>-1;}).map(function(v){return v.replace(/\*/,"");});
+                            
+                            if(dc.length>0) {
+                                tts.push({what: "We got " + dc.join(", "), who: "susie"});
+                            }
+                            if(ai.length>0) {
+                                tts.push({what: "The computer got " + ai.join(", ") , who: "susie"});
+                            }
                             if (isValid && word.length === best) score.me += word.length + (best === 9 ? 9 : 0);
                             if (letters.c1valid && letters.c1.length === best) score.c1 += letters.c1.length + (best === 9 ? 9 : 0);
                             if (c2first && letters.c2valid && letters.c2.length === best) score.c2 += letters.c2.length + (best === 9 ? 9 : 0);
-                            round++;
-                            playRound();
+                            speech.say(tts, function(){
+                                round++;
+                                playRound(); 
+                            });
                         });
                     });
                 });
@@ -185,7 +208,7 @@ var declareWord = function(word) {
         else {
             //2p game
             speech.say("Dictionary corner?", "nick", function() {
-                dictionary.isValidWord(word, function(isValid) {
+                dictionary.isValidWord(word, letters.oLetters, function(isValid) {
                     var words = [word];
                     var valids = [isValid];
                     if (word !== letters.c1) {
@@ -202,10 +225,30 @@ var declareWord = function(word) {
                         else return words[idx] + " isn't there I'm afraid ";
                     }).join(" and ");
                     speech.say(phrase, "susie", function() {
+                        
+                        var tts = [];
+                        var longest = letters.others.reduce(function(prev,cur){return Math.max(prev, cur.replace(/\*/,"").length);},0);
+                        if(longest <= best) tts.push({what:"We can't beat that.", who:"susie"});
+                        else if(letters.others.length>2) tts.push({what:"We found a few " + longest+"s.", who:"susie"});
+                        else if(letters.others.length===2) tts.push({what:"We found a couple of " + longest+"s.", who:"susie"});
+                        else if(letters.others.length===1) tts.push({what:"We found one " + longest, who:"susie"});
+                        
+                        var dc = letters.others.filter(function(v){return v.indexOf("*")<0;});
+                        var ai = letters.others.filter(function(v){return v.indexOf("*")>-1;}).map(function(v){return v.replace(/\*/,"");});
+                        
+                        if(dc.length>0) {
+                            tts.push({what: "We got " + dc.join(", "), who: "susie"});
+                        }
+                        if(ai.length>0) {
+                            tts.push({what: "The computer got " + ai.join(", ") , who: "susie"});
+                        }
+                        
                         if (isValid && word.length === best) score.me += word.length + (best === 9 ? 9 : 0);
                         if (letters.c1valid && letters.c1.length === best) score.c1 += letters.c1.length + (best === 9 ? 9 : 0);
-                        round++;
-                        playRound();
+                        speech.say(tts, function(){
+                            round++;
+                            playRound(); 
+                        });
                     });
                 });
             });
@@ -236,7 +279,7 @@ var declareNumber = function(number) {
 
     var texts = [];
     texts.push({
-        what: number,
+        what: number === 0 ? "Sorry, I messed up." : number,
         who: "richard"
     });
     texts.push({
@@ -274,6 +317,8 @@ var declareNumber = function(number) {
                     winners.push("richard");
                 }
             }
+            
+            console.log(numbers.rachel);
 
             if (winners.length === 0) {
                 speech.say("So no-one got it. Never mind.", "nick", function() {
@@ -412,7 +457,7 @@ var doLetter = function(contestant) {
 
 var doConundrum = function() {
     letters.conundrum.split("").forEach(function(l, i) {
-        $(elSlots[i]).text(l);
+        $(elCSlots[i]).text(l);
     });
     timer = timerDefault;
     countdown(function() {
@@ -461,6 +506,7 @@ var doNumber = function(contestant) {
 var playRound = function() {
     $('.page').hide();
     elSlots.html("&nbsp;");
+    elNSlots.html("&nbsp;");
 
     updateScore();
     
@@ -477,6 +523,7 @@ var playRound = function() {
         });
     } else if($(rows[round]).find('.nselection').length>0){ 
        //numbers
+        $('.target').text("000");
         $('#numbers-page').show();
         var cont = ([3, 7, 10, 16].indexOf(round) % 2 === 0 ? c1first : name);
         numbers = getNumbers($(rows[round]));
@@ -501,10 +548,11 @@ var playRound = function() {
     }
 }
 
-var initialise = function(clock, slots, nslots, wordLengthDeclare, wordDeclare, numberDeclare) {
+var initialise = function(clock, slots, nslots, cslots, wordLengthDeclare, wordDeclare, numberDeclare) {
     elClock = clock;
     elSlots = slots;
     elNSlots = nslots;
+    elCSlots = cslots;
     elWordLength = wordLengthDeclare;
     elWord = wordDeclare;
     elNumber = numberDeclare;

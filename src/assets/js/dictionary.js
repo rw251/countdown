@@ -1,4 +1,16 @@
-var isValidWord = function(word, callback) {
+var isValidWord = function(word, letters, callback) {
+    
+    var enoughLetters = true;
+    word.split("").forEach(function(c){
+       if(letters.indexOf(c)>-1){
+           letters = letters.replace(new RegExp(c,"i"),"");
+       }  else {
+           enoughLetters = false;
+       }
+    });
+    
+    if(!enoughLetters) return callback(false);
+    
     $.getJSON('check.php?word=' + word, function(data) {
         if (data.match) {
             callback(true);
@@ -7,13 +19,13 @@ var isValidWord = function(word, callback) {
             callback(false);
         }
     }).done(function() {
-        console.log("second success");
+        
     })
     .fail(function() {
-        console.log("error");
+       
     })
     .always(function() {
-        console.log("complete");
+        
     });
 };
 
