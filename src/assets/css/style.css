@@ -30,7 +30,8 @@
 
 .slot,
 .nslot,
-.cslot {
+.cslot,
+.calcslot{
     border: 1px solid darkgrey;
     display: inline-block;
     width: 40px;
@@ -46,6 +47,21 @@
 }
 
 .target {
+    border: 1px solid darkgrey;
+    display: inline-block;
+    width: 75px;
+    line-height: 40px;
+    margin-right: 1px;
+    margin-top: 4px;
+    font-family: CenturyGothic, "Apple Gothic", AppleGothic, "URW Gothic L", "Avant Garde", sans-serif;
+    font-size: 30px;
+    font-weight: bold;
+    text-align: center;
+    background-color: rgb(0, 84, 176);
+    color: white;
+}
+
+.clock {
     border: 1px solid darkgrey;
     display: inline-block;
     width: 75px;
@@ -82,10 +98,11 @@
 .letter-declare,
 .word-declare,
 .number-declare,
+.number-calc,
 .conundrum-declare,
 .conundrum-buzz,
 .letters-container,
 .numbers-container,
 .conundrum-container {
-    /*display:none;*/
+    display:none;
 }

@@ -1,4 +1,6 @@
-var isValidWord = function(word, letters, callback) {
+var isValidWord = function(word, length, letters, callback) {
+    
+    if(word.length!==+length) return callback(false);
     
     var enoughLetters = true;
     word.split("").forEach(function(c){
