@@ -31,7 +31,7 @@
 .slot,
 .nslot,
 .cslot,
-.calcslot{
+.calcslot {
     border: 1px solid darkgrey;
     display: inline-block;
     width: 40px;
@@ -79,8 +79,23 @@
 
 /* uncss:ignore */
 
+.slot-selected {
+    border: 2px solid yellow;
+    margin: 3px 0px -1px -1px;
+}
+
+
+/* uncss:ignore */
+
 .slot-done {
     background-color: darkgrey;
+}
+
+
+/* uncss:ignore */
+
+.slot-changed {
+    background-color: lightgreen;
 }
 
 
@@ -104,5 +119,5 @@
 .letters-container,
 .numbers-container,
 .conundrum-container {
-    display:none;
+    display: none;
 }

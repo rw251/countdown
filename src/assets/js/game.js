@@ -343,6 +343,15 @@ var declareWord = function(word) {
 };
 
 var checkNumber = function(number, callback) {
+    if(number===0) return callback(false);
+    $('#messedUp').on('click', function() {
+        $('.nslot').off('click').removeClass('slot-selected slot-done slot-hover slot-changed');
+        $('.calcslot').off('click').removeClass('slot-selected slot-done slot-hover slot-changed');
+        $('.number-calc').hide();
+        $('#messedUp').off('click');
+        callback(false);
+    });
+
     $('.number-calc').show();
 
     var n1, n2, nn1, nn2, symbol;
@@ -350,10 +359,12 @@ var checkNumber = function(number, callback) {
     var numclick = function() {
         if (symbol) {
             n2 = $(this);
-            $(this).addClass('slot-done');
+            $(this).addClass('slot-selected');
             $(this).off('click');
             nn1 = +n1.text();
             nn2 = +n2.text();
+
+            console.log(nn1, symbol.text(), nn2);
 
             if (symbol.data("operator") === "add") {
                 n1.text(nn1 + nn2);
@@ -368,12 +379,16 @@ var checkNumber = function(number, callback) {
                 n1.text(nn1 - nn2);
             }
 
-            n1.on('click', numclick).removeClass('slot-done').addClass('slot-hover');
-            $('.calcslot').on('click', symclick).removeClass('slot-done').addClass('slot-hover');
+            n1.on('click', numclick).removeClass('slot-selected').addClass('slot-hover slot-changed');
+            n2.removeClass('slot-selected').addClass('slot-done');
+            $('.calcslot').on('click', symclick).removeClass('slot-selected').addClass('slot-hover');
 
 
             if (+n1.text() === number) {
-                $('.nslot').removeClass('slot-done').removeClass('slot-hover');
+                $('.nslot').off('click').removeClass('slot-selected slot-done slot-hover slot-changed');
+                $('.calcslot').off('click').removeClass('slot-selected slot-done slot-hover slot-changed');
+                $('.number-calc').hide();
+                $('#messedUp').off('click');
                 callback(true);
             }
 
@@ -384,7 +399,7 @@ var checkNumber = function(number, callback) {
         }
         else if (!n1) {
             n1 = $(this);
-            $(this).addClass('slot-done');
+            $(this).addClass('slot-selected');
             $(this).off('click');
         }
     };
@@ -392,12 +407,12 @@ var checkNumber = function(number, callback) {
     var symclick = function() {
         if (!n1) return;
         symbol = $(this);
-        $(this).addClass('slot-done');
+        $(this).addClass('slot-selected');
         $('.calcslot').off('click');
     };
 
-    $('.nslot').on('click', numclick).removeClass('slot-done').addClass('slot-hover');
-    $('.calcslot').on('click', symclick).removeClass('slot-done').addClass('slot-hover');
+    $('.nslot').on('click', numclick).addClass('slot-hover');
+    $('.calcslot').on('click', symclick).addClass('slot-hover');
 
     speech.say("Go on Richard, show us how it's done.", "nick", function() {
 
@@ -405,6 +420,8 @@ var checkNumber = function(number, callback) {
 
 
 };
+
+
 
 var declareNumber = function(number) {
     elNumber.hide();
@@ -451,7 +468,7 @@ var declareNumber = function(number) {
                 winners.push(c2first);
             }
 
-            if (!isValid) {
+            if (!isValid && number > 0) {
                 texts.push({
                     what: "Sorry, Richard, but you've gone wrong.",
                     who: "rachel"
