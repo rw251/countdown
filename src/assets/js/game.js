@@ -457,7 +457,8 @@ var declareNumber = function(number) {
     speech.say(texts, function() {
         checkNumber(number, function(isValid) {
             texts = [];
-            var mindiff = Math.min(diff.p, Math.min(diff.c1, diff.c2));
+            var mindiff = c2first ? Math.min(diff.c1, diff.c2) : diff.c1;
+            if(isValid) mindiff = Math.min(mindiff, diff.p);
             var winners = [];
             if (mindiff === diff.c1 && numbers.c1method) {
                 winners.push(c1first);
@@ -532,7 +533,9 @@ var startGame = function(r, vs, player) {
     name = player;
     c1 = $(rows[0]).find('.c1word').text();
     c2 = $(rows[0]).find('.c2word').text();
-    var finalScores = $(rows[rows.length - 1]).find('.score').text().split(/[^0-9]/).map(function(v) {
+    var finalScores = $(rows[rows.length - 1]).find('.score').text().split(/[^0-9]/).filter(function(v){
+        return v!=="";
+    }).map(function(v) {
         return +v;
     });
     var isChampWinner = finalScores[0] > finalScores[1];
