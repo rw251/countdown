@@ -11,6 +11,8 @@ var speech = {
     "NUMBERS": " Numbers " //", it's your numbers game."
 };
 
+speech.speed=300;
+
 function sayLots(texts, callback) {
     if (texts.length > 0) {
         var text = texts.shift();
@@ -54,18 +56,18 @@ function say(text, who, callback) {
     }, 500);
 
     if (speech.silent) {
-        setTimeout(callback, 300);
+        setTimeout(callback, speech.speed);
     } else {
         var voices = speechSynthesis.getVoices();
         
         getGender(who, function(gender) {
             msg.voice = gender === "female" ? femaleVoice : maleVoice;
             msg.text = text;
-            msg.rate = 1;
+            msg.rate = (1000-speech.speed)/500;
         
             if (who.toLowerCase() !== "nick") {
                 msg.pitch = 0;
-                msg.rate = 1.25;
+                msg.rate = (1000-speech.speed)/400;
             }
         
             msg.onend = null;

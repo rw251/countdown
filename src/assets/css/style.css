@@ -46,6 +46,11 @@
     color: white;
 }
 
+.nslot {
+    width: 60px;
+    line-height: 60px;
+}
+
 .target {
     border: 1px solid darkgrey;
     display: inline-block;
