@@ -10,7 +10,13 @@
 	<title>Countdown</title>
 
 	<!-- build:css assets/css/tidy.min.css -->
-	<link href="assets/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="assets/css/pure-min-0.6.0.css">
+	<!--[if lte IE 8]>
+    <link rel="stylesheet" href="assets/css/pure-grids-responsive-old-ie-min-0.6.0.css">
+	<![endif]-->
+	<!--[if gt IE 8]><!-->
+	<link rel="stylesheet" href="assets/css/pure-grids-responsive-min-0.6.0.css">
+	<!--<![endif]-->
 	<link href="assets/css/style.css" rel="stylesheet">
 	<!-- /build -->
 
@@ -25,116 +31,147 @@
 <body>
 	<div class="container narrow-container">
 		<div id="intro-page" class="page">
-			<div class="row">
-				<div class="col-sm-12">
+			<div class="pure-g">
+				<div class="pure-u-1">
 					<h1>Countdown</h1>
 					<p>
 						Play countdown against contestants from the actual show.
 					</p>
 				</div>
 			</div>
-			<div class="row">
-				<div class="col-xs-12 form-inline">
-					<span>Play </span>
-					<select class="form-control" name="player">
-						<option value="winn">the winner</option>
-						<option value="lose">the loser</option>
-						<option value="both">both players</option>
-						<option value="cham">the champion</option>
-						<option value="chal">the challenger</option>
-						<option value="rand">a random player</option>
-					</select>
-					<span> from </span>
-					<div class="input-group">
-						<input id="episode" type="text" class="form-control" placeholder="Episode number... leave blank for random" />
-						<span class="input-group-btn">
-							<button id="go" class="btn btn-default" type="button">Play!</button>
-						</span>
-					</div>
-				</div>
-			</div>
+			<form class="pure-form">
+				<label for="player">Play</label>
+				<select id="player" name="player">
+					<option value="winn">the winner</option>
+					<option value="lose">the loser</option>
+					<option value="both">both players</option>
+					<option value="cham">the champion</option>
+					<option value="chal">the challenger</option>
+					<option value="rand">a random player</option>
+				</select>
+				<label for="episode">from</label>
+				<input id="episode" type="text" class="pure-input-1-3" placeholder="Episode number... leave blank for random" />
 
-			<div class="row">
-				<div class="col-xs-12 form-horizontal">
-					<div class="form-group">
-						<label for="setting-speed" class="col-sm-2 control-label">Game speed</label>
-						<div class="col-sm-10">
-							<label class="radio-inline">
-								<input type="radio" name="setting-speed" id="inlineRadio1" value="700"> Slow
+				<button id="go" class="pure-button pure-button-primary">Play!</button>
+			</form>
+
+			<form class="pure-form pure-form-stacked">
+				<fieldset>
+					<legend>Settings</legend>
+					<div class="pure-g">
+
+						<div class="pure-u-1 pure-u-md-1-4">
+							<label for="setting-speed" class="control-label">Game speed</label>
+
+							<label for="setting-speed-one" class="pure-radio">
+								<input id="setting-speed-one" type="radio" name="setting-speed" value="700"> Slow
 							</label>
-							<label class="radio-inline">
-								<input type="radio" name="setting-speed" id="inlineRadio2" value="500" checked> Medium
+
+							<label for="setting-speed-two" class="pure-radio">
+								<input id="setting-speed-two" type="radio" name="setting-speed" value="500" checked> Medium
 							</label>
-							<label class="radio-inline">
-								<input type="radio" name="setting-speed" id="inlineRadio3" value="300"> Fast
+
+							<label for="setting-speed-three" class="pure-radio">
+								<input id="setting-speed-three" type="radio" name="setting-speed" value="300"> Fast
 							</label>
 						</div>
-					</div>
-					<div class="form-group">
-						<label for="setting-clock" class="col-sm-2 control-label">Round length (seconds)</label>
-						<div class="col-sm-10">
-							<input type="number" class="form-control" id="setting-clock" value="30">
+
+						<div class="pure-u-1 pure-u-md-1-4">
+							<label for="setting-clock" class="control-label">Round length (seconds)</label>
+							<input class="pure-input-1-3" type="number" id="setting-clock" value="30">
 						</div>
-					</div>
-					<div class="form-group">
-						<div class="col-sm-offset-2 col-sm-10">
-							<div class="checkbox">
-								<label>
-									<input type="checkbox" id="setting-speech" checked> Enable speech
-								</label>
-							</div>
+
+						<div class="pure-u-1 pure-u-md-1-4">
+							<label>
+								<input type="checkbox" id="setting-speech" checked> Enable speech!
+							</label>
 						</div>
-					</div>
-					<div class="form-group">
-						<label for="setting-rounds" class="col-sm-2 control-label">Include rounds</label>
-						<div class="col-sm-10">
-							<label class="checkbox-inline">
+
+						<div class="pure-u-1 pure-u-md-1-4">
+							<label for="setting-rounds" class="control-label">Include rounds</label>
+
+							<label class="pure-radio">
 								<input type="checkbox" id="setting-inc-letters" value="option1" checked> Letters
 							</label>
-							<label class="checkbox-inline">
+							<label class="pure-radio">
 								<input type="checkbox" id="setting-inc-numbers" value="option2" checked> Numbers
 							</label>
-							<label class="checkbox-inline">
+							<label class="pure-radio">
 								<input type="checkbox" id="setting-inc-conundrum" value="option3" checked> Conundrum
 							</label>
 						</div>
 					</div>
-				</div>
-			</div>
+				</fieldset>
+			</form>
 		</div>
 
 		<div id="letters-page" class="letters-container page">
-			<div class="row">
-				<div class="slots">
-					<span class="slot">&nbsp;</span>
-					<span class="slot">&nbsp;</span>
-					<span class="slot">&nbsp;</span>
+			<div class="pure-g">
+				<div class="pure-u-1 letter-board">
+					<div class="wrap">
+						<div class="tile">
+							<div class="tileInner"></div>
+						</div>
+						<div class="tile">
+							<div class="tileInner"></div>
+						</div>
+						<div class="tile tile-end">
+							<div class="tileInner"></div>
+						</div>
+						<div class="tile">
+							<div class="tileInner"></div>
+						</div>
+						<div class="tile">
+							<div class="tileInner"></div>
+						</div>
+						<div class="tile tile-end">
+							<div class="tileInner"></div>
+						</div>
+						<div class="tile">
+							<div class="tileInner"></div>
+						</div>
+						<div class="tile">
+							<div class="tileInner"></div>
+						</div>
+						<div class="tile tile-end">
+							<div class="tileInner"></div>
+						</div>
+					</div>
 				</div>
-				<div class="slots">
-					<span class="slot">&nbsp;</span>
-					<span class="slot">&nbsp;</span>
-					<span class="slot">&nbsp;</span>
-				</div>
-				<div class="slots">
-					<span class="slot">&nbsp;</span>
-					<span class="slot">&nbsp;</span>
-					<span class="slot">&nbsp;</span>
-				</div>
-				<span class="clock">30</span>
 			</div>
-			<div class="row">
-				<div class="col-sm-12 letter-declare">
-					<span class="btn btn-success">3</span>
-					<span class="btn btn-success">4</span>
-					<span class="btn btn-success">5</span>
-					<span class="btn btn-success">6</span>
-					<span class="btn btn-success">7</span>
-					<span class="btn btn-success">8</span>
-					<span class="btn btn-success">9</span>
+			<div class="pure-g">
+				<div class="pure-u-1 letter-declare">
+					<div class="tile button-success">
+						<div class="tileInner">1</div>
+					</div>
+					<div class="tile button-success">
+						<div class="tileInner">2</div>
+					</div>
+					<div class="tile tile-end button-success">
+						<div class="tileInner">3</div>
+					</div>
+					<div class="tile button-success">
+						<div class="tileInner">4</div>
+					</div>
+					<div class="tile button-success">
+						<div class="tileInner">5</div>
+					</div>
+					<div class="tile tile-end button-success">
+						<div class="tileInner">6</div>
+					</div>
+					<div class="tile button-success">
+						<div class="tileInner">7</div>
+					</div>
+					<div class="tile button-success">
+						<div class="tileInner">8</div>
+					</div>
+					<div class="tile tile-end button-success">
+						<div class="tileInner">9</div>
+					</div>
 				</div>
 			</div>
-			<div class="row">
-				<div class="col-sm-12 word-declare">
+			<div class="pure-g">
+				<div class="pure-u-1 word-declare">
 					<div class="input-group">
 						<input id="word" type="text" class="form-control" placeholder="Enter word..." />
 						<span class="input-group-btn">
@@ -146,26 +183,28 @@
 		</div>
 
 		<div id="numbers-page" class="numbers-container page">
-			<div class="row">
-				<div class="col-sm-3 col-sm-offset-3">
+			<div class="pure-g">
+				<div class="pure-u-1-4">
 					<span class="target">000</span>
 				</div>
 			</div>
-			<div class="row">
-				<div class="slots">
-					<span class="nslot">&nbsp;</span>
-					<span class="nslot">&nbsp;</span>
-					<span class="nslot">&nbsp;</span>
+			<div class="pure-g">
+				<div class="pure-u-1">
+					<div class="slots">
+						<span class="nslot">&nbsp;</span>
+						<span class="nslot">&nbsp;</span>
+						<span class="nslot">&nbsp;</span>
+					</div>
+					<div class="slots">
+						<span class="nslot">&nbsp;</span>
+						<span class="nslot">&nbsp;</span>
+						<span class="nslot">&nbsp;</span>
+					</div>
+					<span class="clock">30</span>
 				</div>
-				<div class="slots">
-					<span class="nslot">&nbsp;</span>
-					<span class="nslot">&nbsp;</span>
-					<span class="nslot">&nbsp;</span>
-				</div>
-				<span class="clock">30</span>
 			</div>
-			<div class="row">
-				<div class="col-sm-12 number-calc">
+			<div class="pure-g">
+				<div class="pure-u-1 number-calc">
 					<div class="slots">
 						<span class="calcslot" data-operator="add">+</span>
 						<span class="calcslot" data-operator="subtract">−</span>
@@ -177,8 +216,8 @@
 					</div>
 				</div>
 			</div>
-			<div class="row">
-				<div class="col-sm-12 number-declare form-inline">
+			<div class="pure-g">
+				<div class="pure-u-1 number-declare form-inline">
 					<div class="input-group">
 						<input id="number" type="text" class="form-control" placeholder="Enter number..." />
 						<span class="input-group-btn">
@@ -191,29 +230,32 @@
 		</div>
 
 		<div id="conundrum-page" class="conundrum-container page">
-			<div class="row">
-				<div class="slots">
-					<span class="cslot">&nbsp;</span>
-					<span class="cslot">&nbsp;</span>
-					<span class="cslot">&nbsp;</span>
+			<div class="pure-g">
+
+				<div class="pure-u-1">
+					<div class="slots">
+						<span class="cslot">&nbsp;</span>
+						<span class="cslot">&nbsp;</span>
+						<span class="cslot">&nbsp;</span>
+					</div>
+					<div class="slots">
+						<span class="cslot">&nbsp;</span>
+						<span class="cslot">&nbsp;</span>
+						<span class="cslot">&nbsp;</span>
+					</div>
+					<div class="slots">
+						<span class="cslot">&nbsp;</span>
+						<span class="cslot">&nbsp;</span>
+						<span class="cslot">&nbsp;</span>
+					</div>
+					<span class="clock">30</span>
 				</div>
-				<div class="slots">
-					<span class="cslot">&nbsp;</span>
-					<span class="cslot">&nbsp;</span>
-					<span class="cslot">&nbsp;</span>
-				</div>
-				<div class="slots">
-					<span class="cslot">&nbsp;</span>
-					<span class="cslot">&nbsp;</span>
-					<span class="cslot">&nbsp;</span>
-				</div>
-				<span class="clock">30</span>
 			</div>
-			<div class="row">
-				<div class="col-sm-12 conundrum-buzz">
+			<div class="pure-g">
+				<div class="pure-u-1 conundrum-buzz">
 					<button id="buzz" class="btn btn-danger" type="button">BUZZ!</button>
 				</div>
-				<div class="col-sm-12 conundrum-declare">
+				<div class="pure-u-1 conundrum-declare">
 					<div class="input-group">
 						<input id="conundrum" type="text" class="form-control" placeholder="Enter conundrum..." />
 						<span class="input-group-btn">
@@ -224,19 +266,26 @@
 			</div>
 		</div>
 
-		<div class="row">
-			<div class="col-sm-7">
-				<div class="feed" rows="6"></div>
-			</div>
-			<div class="col-sm-5">
-				<div><span id="p1"></span><span id="pscore" class="score"></span></div>
-				<div><span id="c1"></span><span id="c1score" class="score"></span></div>
-				<div><span id="c2"></span><span id="c2score" class="score"></span></div>
+		<div id="clock-score" class="clock-container page">
+			<div class="l-box">
+				<div>
+					<span id="p1"></span><span id="pscore" class="score"></span>
+					<span class="clock">30</span>
+					<span id="c1"></span><span id="c1score" class="score"></span>
+					<span id="c2"></span><span id="c2score" class="score"></span>
+				</div>
 			</div>
 		</div>
 
-		<div id="test">
+		<div id="feed-wrapper" class="pure-g feed-wrapper">
+			<div class="pure-u-sm-7-12">
+				<div class="l-box">
+					<div class="feed" rows="6"></div>
+				</div>
+			</div>
+			<div class="pure-u-sm-5-12">
 
+			</div>
 		</div>
 
 	</div>
@@ -250,7 +299,7 @@
 	<!-- /build -->
 
 	<!-- Latest compiled and minified JavaScript -->
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+	<!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>-->
 </body>
 
 </html>

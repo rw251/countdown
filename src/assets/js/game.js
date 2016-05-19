@@ -2,7 +2,8 @@ var speech = require("./speech.js"),
     numberRound = require('./numbers.js'),
     letterRound = require('./letters.js'),
     timer = require('./timer.js'),
-    score = require('./score.js');
+    score = require('./score.js'),
+    local = require('./local.js');
 
 var c1, c2, rows, name, round = 0,
     letters,
@@ -78,8 +79,8 @@ var startGame = function(r, vs, player) {
     name = player;
     c1 = $(rows[0]).find('.c1word').text();
     c2 = $(rows[0]).find('.c2word').text();
-    var finalScores = $(rows[rows.length - 1]).find('.score').text().split(/[^0-9]/).filter(function(v){
-        return v!=="";
+    var finalScores = $(rows[rows.length - 1]).find('.score').text().split(/[^0-9]/).filter(function(v) {
+        return v !== "";
     }).map(function(v) {
         return +v;
     });
@@ -129,7 +130,7 @@ var doConundrum = function() {
     timer.start(function() {
         speech.say("Time's up.", "nick", function() {
             letters.answer.split("").forEach(function(l, i) {
-                $($('.slot')[i]).text(l);
+                $($('.tileInner')[i]).text(l);
             });
         });
     });
@@ -137,8 +138,10 @@ var doConundrum = function() {
 
 var playRound = function() {
     round++;
+    timer.reset();
     $('.page').hide();
-    $('.slot').html("&nbsp;");
+    $('#clock-score').show();
+    $('.letter-board .tileInner').html("");
     $('.nslot').html("&nbsp;");
 
     updateScore();
@@ -185,19 +188,21 @@ var playRound = function() {
 }
 
 var initialise = function() {
+    
+    
     score.me = 0;
     score.c1 = 0;
     score.c2 = 0;
-    
+
     $('#episode').keydown(function(e) {
         if (e.keyCode == 13) $('#go').click();
     });
 
-    $('#go').on('click', function() {
+    $('#go').on('click', function(e) {
         var vs = $('select[name=player]').val();
         var episode = $('#episode').val();
-        episode = episode === "" ? Math.floor(Math.random()*5000) + 1000 : episode;
-        
+        episode = episode === "" ? Math.floor(Math.random() * 5000) + 1000 : episode;
+
         speech.silent = !$('#setting-speech').is(':checked');
         speech.speed = +$('[name=setting-speed]:checked').val();
         timer.LENGTH = +$('#setting-clock').val();
@@ -205,18 +210,21 @@ var initialise = function() {
         skipLetters = !$('#setting-inc-letters').is(':checked');
         skipNumbers = !$('#setting-inc-numbers').is(':checked');
         skipConundrums = !$('#setting-inc-conundrum').is(':checked');
-        
+
         /*
          LLNLLNLLNLLLLNC - 5666 -
          LLLLNLLLLNLLLNC - 3086 - 5665
          LLLNLLLNC       - 1    - 3086
          LLNLLNCLLNLLNC  - 14 round (grand finals / CoCs / 2 specials) [80,132,184,234,288,338,397,404,444,445,494,544,594,601,644,707,757,812,819,867,937,1002,1003,1067,1074,1132,1197,1262,1327,1334,1392,1457,1522,1523,1587,1594,1652,1717,1782,1847,1854,1907,1972,2037,2102,2162,2177,2292,2422,2552,2673,2678,2797,2911,3042,3085]
         */
-        
+
         $.get('down.php?episode=' + episode, function(doc) {
             $('#intro-page').hide();
+            $('#feed-wrapper').show();
             startGame($(doc).find('.round_table').children(), vs, "richard");
         });
+
+        e.preventDefault();
     });
 
     $('#goWord').on('click', function() {
@@ -241,17 +249,17 @@ var initialise = function() {
         if (e.keyCode == 13) $('#goNumber').click();
     });
 
-    $('.letter-declare').on('click', 'span', function(e) {
+    $('.letter-declare').on('click', '.tileInner', function(e) {
         letterRound.declareWordLength($(this).text());
     });
-    
-    $('#buzz').on('click', function(){
+
+    $('#buzz').on('click', function() {
         $('.conundrum-buzz').hide();
         $('.conundrum-declare').show();
     });
-    
-    $('#goConundrum').on('click', function(){
-        
+
+    $('#goConundrum').on('click', function() {
+
     });
 };
 

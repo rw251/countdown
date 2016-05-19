@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "watch": "nodemon -e js,html,css -i dist -q --exec grunt dev",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Richard Williams",
@@ -21,6 +22,7 @@
     "grunt-processhtml": "^0.3.13",
     "grunt-strip-code": "^0.1.2",
     "grunt-uncss": "^0.4.4",
-    "load-grunt-config": "^0.19.1"
+    "load-grunt-config": "^0.19.1",
+    "nodemon": "^1.9.2"
   }
 }

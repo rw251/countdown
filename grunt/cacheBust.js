@@ -5,7 +5,7 @@ module.exports = {
         algorithm: 'md5',
         length: 16,
         deleteOriginals: true,
-        assets: ['assets/**/*'],
+        assets: ['assets/css/*','assets/js/*'],
         baseDir: 'dist/public_html/'
     },
 
