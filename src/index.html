@@ -141,42 +141,46 @@
 			</div>
 			<div class="pure-g">
 				<div class="pure-u-1 letter-declare">
-					<div class="tile button-success">
-						<div class="tileInner">1</div>
-					</div>
-					<div class="tile button-success">
-						<div class="tileInner">2</div>
-					</div>
-					<div class="tile tile-end button-success">
-						<div class="tileInner">3</div>
-					</div>
-					<div class="tile button-success">
-						<div class="tileInner">4</div>
-					</div>
-					<div class="tile button-success">
-						<div class="tileInner">5</div>
-					</div>
-					<div class="tile tile-end button-success">
-						<div class="tileInner">6</div>
-					</div>
-					<div class="tile button-success">
-						<div class="tileInner">7</div>
-					</div>
-					<div class="tile button-success">
-						<div class="tileInner">8</div>
-					</div>
-					<div class="tile tile-end button-success">
-						<div class="tileInner">9</div>
+					<div class="wrap">
+						<div class="tile button-success">
+							<div class="tileInner">1</div>
+						</div>
+						<div class="tile button-success">
+							<div class="tileInner">2</div>
+						</div>
+						<div class="tile tile-end button-success">
+							<div class="tileInner">3</div>
+						</div>
+						<div class="tile button-success">
+							<div class="tileInner">4</div>
+						</div>
+						<div class="tile button-success">
+							<div class="tileInner">5</div>
+						</div>
+						<div class="tile tile-end button-success">
+							<div class="tileInner">6</div>
+						</div>
+						<div class="tile button-success">
+							<div class="tileInner">7</div>
+						</div>
+						<div class="tile button-success">
+							<div class="tileInner">8</div>
+						</div>
+						<div class="tile tile-end button-success">
+							<div class="tileInner">9</div>
+						</div>
 					</div>
 				</div>
 			</div>
 			<div class="pure-g">
-				<div class="pure-u-1 word-declare">
-					<div class="input-group">
-						<input id="word" type="text" class="form-control" placeholder="Enter word..." />
-						<span class="input-group-btn">
-						<button id="goWord" class="btn btn-default" type="button">Submit!</button>
-					</span>
+				<div class="pure-u-1">
+					<div class="wrap">
+						<form class="pure-form word-declare">
+							<input id="word" type="text" class="hidden-sm" placeholder="Enter word..." />
+							<input id="word" type="text" class="visible-sm" placeholder="Tap letters to spell word..." disabled />
+							<button id="undoLetter" class="pure-button visible-sm" type="button">Undo</button>
+							<button id="goWord" class="pure-button" type="button">Submit!</button>
+						</form>
 					</div>
 				</div>
 			</div>
@@ -277,14 +281,11 @@
 			</div>
 		</div>
 
-		<div id="feed-wrapper" class="pure-g feed-wrapper">
-			<div class="pure-u-sm-7-12">
+		<div id="feed-wrapper" class="feed-wrapper">
+			<div>
 				<div class="l-box">
 					<div class="feed" rows="6"></div>
 				</div>
-			</div>
-			<div class="pure-u-sm-5-12">
-
 			</div>
 		</div>
 
@@ -294,6 +295,8 @@
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 
+	<script src="assets/js/nosleep.min.js"></script>
+	
 	<!-- build:js assets/js/tidy.min.js -->
 	<script src="assets/js/script.js"></script>
 	<!-- /build -->

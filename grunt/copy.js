@@ -19,6 +19,15 @@ module.exports = {
                 dest: 'dist/public_html/assets/img',
                 filter: 'isFile',
                 flatten: true
+            },
+
+            // includes files within path and its sub-directories
+            {
+                expand: true,
+                src: ['src/assets/jslibs/*'],
+                dest: 'dist/public_html/assets/js',
+                filter: 'isFile',
+                flatten: true
             }
         ]
     },
@@ -52,6 +61,15 @@ module.exports = {
                 expand: true,
                 src: ['src/assets/img/*'],
                 dest: 'dist/public_html/assets/img',
+                filter: 'isFile',
+                flatten: true
+            },
+
+            // includes files within path and its sub-directories
+            {
+                expand: true,
+                src: ['src/assets/jslibs/*'],
+                dest: 'dist/public_html/assets/js',
                 filter: 'isFile',
                 flatten: true
             }

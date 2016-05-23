@@ -1,8 +1,10 @@
-var time = 30;
+var time = 30,
+    noSleep = new NoSleep();
 
 var countdown = function(finalCallback) {
     $('.clock').text(time);
     if (time === 0) {
+        noSleep.disable();
         finalCallback();
     }
     else {
@@ -14,15 +16,16 @@ var countdown = function(finalCallback) {
 };
 
 var timer = {
-    
+
     LENGTH: 30,
 
     start: function(callback) {
+        noSleep.enable();
         countdown(callback);
     },
 
     reset: function() {
-        time=timer.LENGTH;
+        time = timer.LENGTH;
         $('.clock').text(timer.LENGTH);
     }
 

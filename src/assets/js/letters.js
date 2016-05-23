@@ -77,7 +77,7 @@ var lettersRound = {
 
     declare: function(word, playRound) {
         $('.word-declare').hide();
-        $('.tileInner').removeClass('slot-done').removeClass('slot-hover').off('click');
+        $('.tileInner').removeClass('slot-hover').off('click').parent().removeClass('slot-done');
         speech.say([{
             what: word,
             who: "Richard"
@@ -262,10 +262,11 @@ var lettersRound = {
                     $('.word-declare').show().find('input[type=text]').val("").focus();
                 }
                 $('.tileInner').on('click', function() {
-                    var t = $(this).text().toLowerCase();
-                    $(this).addClass('slot-done');
+                    var t = $(this).text();
+                    $(this).parent().addClass('slot-done');
                     $(this).off('click');
                     $('.word-declare').find('input[type=text]').val($('.word-declare').find('input[type=text]').val() + t).focus();
+                    $('#wordalt').val($('#word').val());
                 }).addClass('slot-hover');
             });
         });
