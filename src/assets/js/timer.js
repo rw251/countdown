@@ -19,8 +19,11 @@ var timer = {
 
     LENGTH: 30,
 
-    start: function(callback) {
+    enableNoSleep: function() {
         noSleep.enable();
+    },
+
+    start: function(callback) {
         countdown(callback);
     },
 

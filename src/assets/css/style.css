@@ -195,7 +195,7 @@ textarea,
 }
 
 .l-box {
-    padding: 1em;
+    padding: 0 1em 1em 1em;
 }
 
 .button-success {
@@ -208,16 +208,39 @@ textarea,
 
 
 /* sm and below*/
+
 @media screen and (max-width:47.938em) {
-    .hidden-sm{display:none !important}
-    .visible-sm{display:inline}
-    div.visible-sm{display: block}
+    .hidden-sm {
+        display: none !important
+    }
+    .visible-sm {
+        display: inline
+    }
+    div.visible-sm {
+        display: block
+    }
+    .feed {
+        width: 100%;
+        height: 60px;
+        overflow-y: scroll;
+        border: 2px solid darkgrey;
+        margin-top: 2px;
+    }
 }
+
+
 /* md and greater */
+
 @media screen and (min-width:48em) {
-    .hidden-sm{display:inline}
-    div.hidden-sm{display: block}
-    .visible-sm{display:none !important}
+    .hidden-sm {
+        display: inline
+    }
+    div.hidden-sm {
+        display: block
+    }
+    .visible-sm {
+        display: none !important
+    }
 }
 
 .pure-form input[type=text][disabled] {

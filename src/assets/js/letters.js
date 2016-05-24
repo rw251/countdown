@@ -267,9 +267,30 @@ var lettersRound = {
                     $(this).off('click');
                     $('.word-declare').find('input[type=text]').val($('.word-declare').find('input[type=text]').val() + t).focus();
                     $('#wordalt').val($('#word').val());
+                    if (!lettersRound.tiles) lettersRound.tiles = [$(this)];
+                    else lettersRound.tiles.push($(this));
                 }).addClass('slot-hover');
             });
         });
+    },
+
+    undo: function() {
+        if (lettersRound.tiles && lettersRound.tiles.length>0) {
+            var tile = lettersRound.tiles.pop();
+            tile.parent().removeClass('slot-done');
+            var newText = $('#word').val().substr(0,$('#word').val().length-1);
+            $('#word').val(newText).focus();
+            $('#wordalt').val(newText);
+            tile.on('click', function() {
+                var t = $(this).text();
+                $(this).parent().addClass('slot-done');
+                $(this).off('click');
+                $('.word-declare').find('input[type=text]').val($('.word-declare').find('input[type=text]').val() + t).focus();
+                $('#wordalt').val($('#word').val());
+                if (!lettersRound.tiles) lettersRound.tiles = [$(this)];
+                else lettersRound.tiles.push($(this));
+            })
+        }
     }
 
 };

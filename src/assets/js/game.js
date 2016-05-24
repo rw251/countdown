@@ -199,6 +199,7 @@ var initialise = function() {
     });
 
     $('#go').on('click', function(e) {
+        timer.enableNoSleep();
         var vs = $('select[name=player]').val();
         var episode = $('#episode').val();
         episode = episode === "" ? Math.floor(Math.random() * 5000) + 1000 : episode;
@@ -228,7 +229,12 @@ var initialise = function() {
     });
 
     $('#goWord').on('click', function() {
+        timer.enableNoSleep();  
         letterRound.declare($('#word').val().toUpperCase(), playRound);
+    });
+    
+    $('#undoLetter').on('click', function(){
+        letterRound.undo();
     });
 
 
@@ -237,10 +243,12 @@ var initialise = function() {
     });
 
     $('#goNumber').on('click', function() {
+        timer.enableNoSleep();
         numberRound.declare($('#number').val(), playRound);
     });
 
     $('#goNumberNothing').on('click', function() {
+        timer.enableNoSleep();
         numberRound.declare('', playRound);
     });
 
