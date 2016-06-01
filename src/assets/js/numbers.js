@@ -62,7 +62,7 @@ var numberRound = {
         if (numbers.selection.length === 6) {
             var number = numbers.selection.pop();
             speech.say("Hi Rachel, can I have " + numbers.say + " please.", contestant, function() {
-                $('.nslot')[5].innerText = number;
+                $('.number-board .tileInner')[5].innerText = number;
                 speech.say(number, "Rachel", function() {
                     numberRound.do(contestant);
                 });
@@ -71,7 +71,7 @@ var numberRound = {
 
         else if (numbers.selection.length > 0) {
             var number = numbers.selection.pop();
-            $('.nslot')[numbers.selection.length].innerText = number;
+            $('.number-board .tileInner')[numbers.selection.length].innerText = number;
             speech.say(number, "Rachel", function() {
                 numberRound.do(contestant);
             });
@@ -179,7 +179,7 @@ var numberRound = {
     checkNumber: function(number, callback) {
         if (number === 0) return callback(false);
         $('#messedUp').on('click', function() {
-            $('.nslot').off('click').removeClass('slot-selected slot-done slot-hover slot-changed');
+            $('.number-board .tileInner').off('click').removeClass('slot-hover').parent().removeClass('slot-done slot-selected slot-changed');
             $('.calcslot').off('click').removeClass('slot-selected slot-done slot-hover slot-changed');
             $('.number-calc').hide();
             $('#messedUp').off('click');
@@ -219,7 +219,7 @@ var numberRound = {
 
 
                 if (+n1.text() === number) {
-                    $('.nslot').off('click').removeClass('slot-selected slot-done slot-hover slot-changed');
+                    $('.number-board .tileInner').off('click').removeClass('slot-hover').parent().removeClass('slot-done slot-selected slot-changed');
                     $('.calcslot').off('click').removeClass('slot-selected slot-done slot-hover slot-changed');
                     $('.number-calc').hide();
                     $('#messedUp').off('click');
@@ -245,7 +245,7 @@ var numberRound = {
             $('.calcslot').off('click');
         };
 
-        $('.nslot').on('click', numclick).addClass('slot-hover');
+        $('.number-board .tileInner').on('click', numclick).parent().addClass('slot-hover');
         $('.calcslot').on('click', symclick).addClass('slot-hover');
 
         speech.say("Go on Richard, show us how it's done.", "nick", function() {

@@ -236,6 +236,8 @@ var initialise = function() {
     $('#undoLetter').on('click', function(){
         letterRound.undo();
     });
+    
+    
 
 
     $('#word').keydown(function(e) {

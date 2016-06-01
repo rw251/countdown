@@ -40,19 +40,24 @@
 				</div>
 			</div>
 			<form class="pure-form">
-				<label for="player">Play</label>
-				<select id="player" name="player">
-					<option value="winn">the winner</option>
-					<option value="lose">the loser</option>
-					<option value="both">both players</option>
-					<option value="cham">the champion</option>
-					<option value="chal">the challenger</option>
-					<option value="rand">a random player</option>
-				</select>
-				<label for="episode">from</label>
-				<input id="episode" type="text" class="pure-input-1-3" placeholder="Episode number... leave blank for random" />
-
-				<button id="go" class="pure-button pure-button-primary">Play!</button>
+				<fieldset>
+					<div class="pure-g">
+						<div class="pure-u-1">
+							<label for="player">Play</label>
+							<select id="player" name="player">
+								<option value="winn">the winner</option>
+								<option value="lose">the loser</option>
+								<option value="both">both players</option>
+								<option value="cham">the champion</option>
+								<option value="chal">the challenger</option>
+								<option value="rand">a random player</option>
+							</select>
+							<label for="episode">from</label>
+							<input id="episode" type="text" class="pure-input-1-3" placeholder="Episode number... leave blank for random" />
+						</div>
+					</div>
+					<button id="go" class="pure-button pure-button-primary">Play!</button>
+				</fieldset>
 			</form>
 
 			<form class="pure-form pure-form-stacked">
@@ -60,7 +65,7 @@
 					<legend>Settings</legend>
 					<div class="pure-g">
 
-						<div class="pure-u-1 pure-u-md-1-4">
+						<div class="pure-u-1-2 pure-u-md-1-4">
 							<label for="setting-speed" class="control-label">Game speed</label>
 
 							<label for="setting-speed-one" class="pure-radio">
@@ -76,18 +81,7 @@
 							</label>
 						</div>
 
-						<div class="pure-u-1 pure-u-md-1-4">
-							<label for="setting-clock" class="control-label">Round length (seconds)</label>
-							<input class="pure-input-1-3" type="number" id="setting-clock" value="30">
-						</div>
-
-						<div class="pure-u-1 pure-u-md-1-4">
-							<label>
-								<input type="checkbox" id="setting-speech" checked> Enable speech!
-							</label>
-						</div>
-
-						<div class="pure-u-1 pure-u-md-1-4">
+						<div class="pure-u-1-2 pure-u-md-1-4">
 							<label for="setting-rounds" class="control-label">Include rounds</label>
 
 							<label class="pure-radio">
@@ -98,6 +92,18 @@
 							</label>
 							<label class="pure-radio">
 								<input type="checkbox" id="setting-inc-conundrum" value="option3" checked> Conundrum
+							</label>
+						</div>
+
+						<div class="pure-u-1-2 pure-u-md-1-4">
+							<label for="setting-clock" class="control-label">Round length (seconds)</label>
+							<input class="pure-input-1-3" type="number" id="setting-clock" value="30">
+						</div>
+
+						<div class="pure-u-1-2 pure-u-md-1-4">
+							<label for="setting-speech" class="control-label">Speech</label>
+							<label>
+								<input type="checkbox" id="setting-speech" checked> Enable speech!
 							</label>
 						</div>
 					</div>
@@ -193,18 +199,27 @@
 				</div>
 			</div>
 			<div class="pure-g">
-				<div class="pure-u-1">
-					<div class="slots">
-						<span class="nslot">&nbsp;</span>
-						<span class="nslot">&nbsp;</span>
-						<span class="nslot">&nbsp;</span>
+				<div class="pure-u-1 number-board">
+					<div class="wrap">
+						<div class="tile">
+							<div class="tileInner"></div>
+						</div>
+						<div class="tile">
+							<div class="tileInner"></div>
+						</div>
+						<div class="tile tile-end">
+							<div class="tileInner"></div>
+						</div>
+						<div class="tile">
+							<div class="tileInner"></div>
+						</div>
+						<div class="tile">
+							<div class="tileInner"></div>
+						</div>
+						<div class="tile tile-end">
+							<div class="tileInner"></div>
+						</div>
 					</div>
-					<div class="slots">
-						<span class="nslot">&nbsp;</span>
-						<span class="nslot">&nbsp;</span>
-						<span class="nslot">&nbsp;</span>
-					</div>
-					<span class="clock">30</span>
 				</div>
 			</div>
 			<div class="pure-g">
@@ -252,7 +267,6 @@
 						<span class="cslot">&nbsp;</span>
 						<span class="cslot">&nbsp;</span>
 					</div>
-					<span class="clock">30</span>
 				</div>
 			</div>
 			<div class="pure-g">
@@ -296,7 +310,7 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 
 	<script src="assets/js/nosleep.min.js"></script>
-	
+
 	<!-- build:js assets/js/tidy.min.js -->
 	<script src="assets/js/script.js"></script>
 	<!-- /build -->

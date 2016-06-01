@@ -21,6 +21,11 @@ textarea,
     min-height: 1px;
 }
 
+.narrow-container {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
 @media (min-width: 760px) {
     .narrow-container {
         padding-left: 50px;
@@ -221,7 +226,7 @@ textarea,
     }
     .feed {
         width: 100%;
-        height: 60px;
+        height: 45px;
         overflow-y: scroll;
         border: 2px solid darkgrey;
         margin-top: 2px;
@@ -245,4 +250,8 @@ textarea,
 
 .pure-form input[type=text][disabled] {
     color: #555;
+}
+
+.control-label {
+    font-weight: bold;
 }
