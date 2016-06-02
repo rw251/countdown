@@ -1,6 +1,7 @@
 var speech = require('./speech.js'),
     timer = require('./timer.js'),
-    score = require('./score.js');
+    score = require('./score.js'),
+    $ = require('jquery');
 
 var numbers;
 
@@ -59,9 +60,13 @@ var numberRound = {
     },
 
     do: function(contestant) {
+        var number;
         if (numbers.selection.length === 6) {
-            var number = numbers.selection.pop();
+            number = numbers.selection.pop();
             speech.say("Hi Rachel, can I have " + numbers.say + " please.", contestant, function() {
+                $($('.number-board .tileInner')[5]).removeClass("digits2 digits3 digits4");
+                if(number>9) $($('.number-board .tileInner')[5]).addClass("digits2");
+                if(number>99) $($('.number-board .tileInner')[5]).addClass("digits3");
                 $('.number-board .tileInner')[5].innerText = number;
                 speech.say(number, "Rachel", function() {
                     numberRound.do(contestant);
@@ -70,7 +75,10 @@ var numberRound = {
         }
 
         else if (numbers.selection.length > 0) {
-            var number = numbers.selection.pop();
+            number = numbers.selection.pop();
+            $($('.number-board .tileInner')[numbers.selection.length]).removeClass("digits2 digits3 digits4");
+            if(number>9) $($('.number-board .tileInner')[numbers.selection.length]).addClass("digits2");
+            if(number>99) $($('.number-board .tileInner')[numbers.selection.length]).addClass("digits3");
             $('.number-board .tileInner')[numbers.selection.length].innerText = number;
             speech.say(number, "Rachel", function() {
                 numberRound.do(contestant);
@@ -180,7 +188,7 @@ var numberRound = {
         if (number === 0) return callback(false);
         $('#messedUp').on('click', function() {
             $('.number-board .tileInner').off('click').removeClass('slot-hover').parent().removeClass('slot-done slot-selected slot-changed');
-            $('.calcslot').off('click').removeClass('slot-selected slot-done slot-hover slot-changed');
+            $('.calcslot').off('click').removeClass('slot-hover').parent().removeClass('slot-done slot-selected slot-changed');
             $('.number-calc').hide();
             $('#messedUp').off('click');
             callback(false);
@@ -188,12 +196,12 @@ var numberRound = {
 
         $('.number-calc').show();
 
-        var n1, n2, nn1, nn2, symbol;
+        var n1, n2, nn1, nn2, symbol, sum;
 
         var numclick = function() {
             if (symbol) {
                 n2 = $(this);
-                $(this).addClass('slot-selected');
+                $(this).parent().addClass('slot-selected');
                 $(this).off('click');
                 nn1 = +n1.text();
                 nn2 = +n2.text();
@@ -201,26 +209,31 @@ var numberRound = {
                 console.log(nn1, symbol.text(), nn2);
 
                 if (symbol.data("operator") === "add") {
-                    n1.text(nn1 + nn2);
+                    sum = nn1+nn2;
                 }
                 else if (symbol.data("operator") === "times") {
-                    n1.text(nn1 * nn2);
+                    sum = nn1*nn2;
                 }
                 else if (symbol.data("operator") === "divide") {
-                    n1.text(nn1 / nn2);
+                    sum = nn1/nn2;
                 }
                 else {
-                    n1.text(nn1 - nn2);
+                    sum = nn1-nn2;
                 }
+                n1.removeClass("digits2 digits3 digits4");
+                if(sum>9) n1.addClass("digits2");
+                if(sum>99) n1.addClass("digits3");
+                if(sum>999) n1.addClass("digits4");
+                n1.text(sum);
 
-                n1.on('click', numclick).removeClass('slot-selected').addClass('slot-hover slot-changed');
-                n2.removeClass('slot-selected').addClass('slot-done');
-                $('.calcslot').on('click', symclick).removeClass('slot-selected').addClass('slot-hover');
+                n1.on('click', numclick).parent().removeClass('slot-selected').addClass('slot-hover slot-changed');
+                n2.parent().removeClass('slot-selected').addClass('slot-done');
+                $('.calcslot').on('click', symclick).parent().removeClass('slot-selected').addClass('slot-hover');
 
 
                 if (+n1.text() === number) {
                     $('.number-board .tileInner').off('click').removeClass('slot-hover').parent().removeClass('slot-done slot-selected slot-changed');
-                    $('.calcslot').off('click').removeClass('slot-selected slot-done slot-hover slot-changed');
+                    $('.calcslot').off('click').removeClass('slot-hover').parent().removeClass('slot-done slot-selected slot-changed');
                     $('.number-calc').hide();
                     $('#messedUp').off('click');
                     callback(true);
@@ -233,7 +246,7 @@ var numberRound = {
             }
             else if (!n1) {
                 n1 = $(this);
-                $(this).addClass('slot-selected');
+                $(this).parent().addClass('slot-selected');
                 $(this).off('click');
             }
         };

@@ -4,25 +4,22 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "watch": "nodemon -e js,html,css -i dist -q --exec grunt dev",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "brunch watch --server",
+    "build": "brunch build --production",
+    "build:dev": "brunch build"
   },
   "author": "Richard Williams",
   "license": "ISC",
   "devDependencies": {
-    "browserify": "^13.0.0",
-    "grunt": "^0.4.5",
-    "grunt-browserify": "^4.0.1",
-    "grunt-cache-bust": "^1.1.0",
-    "grunt-contrib-clean": "^1.0.0",
-    "grunt-contrib-concat": "^1.0.0",
-    "grunt-contrib-copy": "^0.8.2",
-    "grunt-contrib-cssmin": "^0.14.0",
-    "grunt-contrib-uglify": "^0.11.1",
-    "grunt-processhtml": "^0.3.13",
-    "grunt-strip-code": "^0.1.2",
-    "grunt-uncss": "^0.4.4",
-    "load-grunt-config": "^0.19.1",
-    "nodemon": "^1.9.2"
+    "auto-reload-brunch": "^2.7.1",
+    "brunch": "^2.8.0",
+    "jade-brunch": "^2.8.0",
+    "javascript-brunch": "^2.0.0",
+    "jshint-brunch": "^2.0.0",
+    "sass-brunch": "^2.6.3"
+  },
+  "dependencies": {
+    "jquery": "^1.12.4",
+    "nosleep.js": "^0.5.1"
   }
 }

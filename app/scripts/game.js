@@ -1,9 +1,10 @@
-var speech = require("./speech.js"),
-    numberRound = require('./numbers.js'),
-    letterRound = require('./letters.js'),
-    timer = require('./timer.js'),
-    score = require('./score.js'),
-    local = require('./local.js');
+var speech = require("./speech"),
+    numberRound = require('./numbers'),
+    letterRound = require('./letters'),
+    timer = require('./timer'),
+    score = require('./score'),
+    local = require('./local'),
+    $ = require('jquery');
 
 var c1, c2, rows, name, round = 0,
     letters,
@@ -137,11 +138,14 @@ var doConundrum = function() {
 };
 
 var playRound = function() {
+    var cont;
+    
     round++;
     timer.reset();
     $('.page').hide();
     $('#clock-score').show();
     $('.letter-board .tileInner').html("");
+    $('.number-board .tileInner').html("");
     $('.nslot').html("&nbsp;");
 
     updateScore();
@@ -153,7 +157,7 @@ var playRound = function() {
         $('#letters-page').show();
 
         letters = letterRound.load($(rows[round]), switcheroo);
-        var cont = ([1, 2, 5, 6, 8, 9, 12, 13, 14, 15].indexOf(round) % 2 === 0 ? score.c1first : name);
+        cont = ([1, 2, 5, 6, 8, 9, 12, 13, 14, 15].indexOf(round) % 2 === 0 ? score.c1first : name);
 
         speech.say("Ok, " + cont + speech.LETTERS, "NICK", function() {
             letterRound.do(cont);
@@ -163,7 +167,7 @@ var playRound = function() {
         //numbers
         $('.target').text("000");
         $('#numbers-page').show();
-        var cont = ([3, 7, 10, 16].indexOf(round) % 2 === 0 ? score.c1first : name);
+        cont = ([3, 7, 10, 16].indexOf(round) % 2 === 0 ? score.c1first : name);
         numberRound.load($(rows[round]), switcheroo);
 
         speech.say("Ok, " + cont + speech.NUMBERS, "NICK", function() {
@@ -185,7 +189,7 @@ var playRound = function() {
         //Tea time teaser
         playRound();
     }
-}
+};
 
 var initialise = function() {
     

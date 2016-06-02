@@ -1,3 +1,5 @@
+@import 'pure-min-0.6.0';
+
 html,
 button,
 input,
@@ -50,12 +52,18 @@ textarea,
     margin-bottom: 2px;
 }
 
+.tile.number-tile {
+    width: 16%;
+    padding-bottom: 16%;
+}
+
 .wrap {
     overflow: hidden;
     margin: 10px 10px 0 10px;
 }
 
-.tileInner {
+.tileInner,
+.calcslot {
     font-size: 7vw;
     display: flex;
     justify-content: center;
@@ -69,38 +77,74 @@ textarea,
     overflow: hidden;
 }
 
+
+/* uncss:ignore */
+
+.tileInner.digits2 {}
+
+
+/* uncss:ignore */
+
+.tileInner.digits3 {
+    font-size: 5vw;
+}
+
+
+/* uncss:ignore */
+
+.tileInner.digits4 {
+    font-size: 3vw;
+}
+
 @media only screen and (max-width: 480px) and (orientation:portrait) {
     /* Smartphone view: 1 tile */
-    .tile {
+    .tile,
+    .tile.number-tile {
         width: 32%;
         padding-bottom: 32%;
     }
     .tile-end {
         margin-right: 0;
     }
-    .tileInner {
+    .tileInner,
+    .calcslot {
         font-size: 20vw;
+    }
+    .tileInner.digits2 {}
+    .tileInner.digits3 {
+        font-size: 12vw;
+    }
+    .tileInner.digits4 {
+        font-size: 9vw;
     }
 }
 
 @media only screen and (max-width: 360px) {
     /* Smartphone view: 1 tile */
-    .tile {
+    .tile,
+    .tile.number-tile {
         width: 32%;
         padding-bottom: 32%;
     }
     .tile-end {
         margin-right: 0;
     }
-    .tileInner {
+    .tileInner,
+    .calcslot {
         font-size: 20vw;
+    }
+    .tileInner.digits2 {}
+    .tileInner.digits3 {
+        font-size: 12vw;
+    }
+    .tileInner.digits4 {
+        font-size: 9vw;
     }
 }
 
 .slot,
 .nslot,
-.cslot,
-.calcslot {
+.cslot {
     border: 1px solid darkgrey;
     display: inline-block;
     width: 40px;
@@ -150,9 +194,10 @@ textarea,
 
 /* uncss:ignore */
 
-.slot-selected {
-    border: 2px solid yellow;
-    margin: 3px 0px -1px -1px;
+.slot-selected .tileInner,
+.slot-selected .calcslot {
+    border: 10px solid yellow;
+    margin: -10px;
 }
 
 

@@ -1,7 +1,8 @@
 var speech = require('./speech.js'),
     timer = require('./timer.js'),
     score = require('./score.js'),
-    dictionary = require("./dictionary.js");
+    dictionary = require("./dictionary.js"),
+    $ = require('jquery');
 
 var letters, wordLength;
 
@@ -289,7 +290,7 @@ var lettersRound = {
                 $('#wordalt').val($('#word').val());
                 if (!lettersRound.tiles) lettersRound.tiles = [$(this)];
                 else lettersRound.tiles.push($(this));
-            })
+            });
         }
     }
 

@@ -1,4 +1,5 @@
-/* global localStorage,$ */
+/* global localStorage */
+var $ = require('jquery');
 
 var save = function() {
   localStorage.setItem("settings", JSON.stringify(l.settings));
@@ -30,8 +31,8 @@ if (l.settings.skipConundrums) $('#setting-inc-conundrum').attr("checked", false
 
 $('#setting-speech,#setting-inc-letters,#setting-inc-numbers,#setting-inc-conundrum').on('change', function(){
   update();
-})
+});
 $('input[name=setting-speed], #setting-clock').on('keyup mouseup', function() {
   update();
-})
+});
 module.exports = l;

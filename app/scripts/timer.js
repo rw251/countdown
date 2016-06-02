@@ -1,5 +1,7 @@
 var time = 30,
-    noSleep = new NoSleep();
+    $ = require('jquery'),
+    n = require('nosleep.js'),
+    noSleep = new n();
 
 var countdown = function(finalCallback) {
     $('.clock').text(time);

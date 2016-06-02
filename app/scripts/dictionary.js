@@ -1,3 +1,5 @@
+var $ = require('jquery');
+
 var isValidWord = function(word, length, letters, callback) {
     
     if(word.length!==+length) return callback(false);

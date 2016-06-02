@@ -1,3 +1,5 @@
+var $ = require('jquery');
+
 var isFunction = function(functionToCheck) {
     var getType = {};
     return functionToCheck && getType.toString.call(functionToCheck) === '[object Function]';
@@ -80,7 +82,7 @@ function say(text, who, callback) {
             speechSynthesis.speak(msg);
         });
     }
-};
+}
 
 var msg = new SpeechSynthesisUtterance();
 msg.lang = 'en-GB';
