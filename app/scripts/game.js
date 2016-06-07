@@ -6,14 +6,21 @@ var speech = require("./speech"),
     local = require('./local'),
     $ = require('jquery');
 
+var tmpl = {
+    letters: require("templates/letters"),
+    numbers: require("templates/numbers"),
+    conundrum: require("templates/conundrum"),
+    score: require("templates/score"),
+    feed: require("templates/feed"),
+    welcome: require("templates/welcome")
+};
+
 var c1, c2, rows, name, round = 0,
     letters,
     switcheroo = false,
     skipLetters = true,
     skipNumbers = false,
     skipConundrums = false;
-
-
 
 var getConundrum = function(val) {
     var rtn = {};
@@ -139,22 +146,22 @@ var doConundrum = function() {
 
 var playRound = function() {
     var cont;
-    
+
     round++;
     timer.reset();
-    $('.page').hide();
-    $('#clock-score').show();
-    $('.letter-board .tileInner').html("");
-    $('.number-board .tileInner').html("");
-    $('.nslot').html("&nbsp;");
+    //$('.page').hide();
+    //$('#clock-score').show();
+    //$('.letter-board .tileInner').html("");
+    //$('.number-board .tileInner').html("");
+    //$('.nslot').html("&nbsp;");
 
     updateScore();
 
-    $('#test').html(rows[round]);
+    //$('#test').html(rows[round]);
 
     if ($(rows[round]).find('.lselection').length > 0 && !skipLetters) {
         //letters
-        $('#letters-page').show();
+        $('#container').html(tmpl.letters());
 
         letters = letterRound.load($(rows[round]), switcheroo);
         cont = ([1, 2, 5, 6, 8, 9, 12, 13, 14, 15].indexOf(round) % 2 === 0 ? score.c1first : name);
@@ -165,10 +172,10 @@ var playRound = function() {
     }
     else if ($(rows[round]).find('.nselection').length > 0 && !skipNumbers) {
         //numbers
-        $('.target').text("000");
-        $('#numbers-page').show();
         cont = ([3, 7, 10, 16].indexOf(round) % 2 === 0 ? score.c1first : name);
         numberRound.load($(rows[round]), switcheroo);
+        
+        $('#container').html(tmpl.numbers({target: +numberRound.getTarget()}));
 
         speech.say("Ok, " + cont + speech.NUMBERS, "NICK", function() {
             numberRound.do(cont);
@@ -176,7 +183,7 @@ var playRound = function() {
     }
     else if ($(rows[round]).find('.cselection').length > 0 && !skipConundrums) {
         //con
-        $('#conundrum-page').show();
+        $('#container').html(tmpl.conundrum());
         letters = getConundrum($(rows[round]));
 
         $('.conundrum-buzz').show();
@@ -192,8 +199,8 @@ var playRound = function() {
 };
 
 var initialise = function() {
-    
-    
+
+    $('#container').html(tmpl.welcome(local.settings));
     score.me = 0;
     score.c1 = 0;
     score.c2 = 0;
@@ -224,55 +231,35 @@ var initialise = function() {
         */
 
         $.get('down.php?episode=' + episode, function(doc) {
-            $('#intro-page').hide();
-            $('#feed-wrapper').show();
+            $('#feed').html(tmpl.feed());
+            $('#score').html(tmpl.score());
             startGame($(doc).find('.round_table').children(), vs, "richard");
         });
 
         e.preventDefault();
     });
 
-    $('#goWord').on('click', function() {
-        timer.enableNoSleep();  
+    $('#container').on('click', '#goWord', function() {
+        timer.enableNoSleep();
         letterRound.declare($('#word').val().toUpperCase(), playRound);
-    });
-    
-    $('#undoLetter').on('click', function(){
+    }).on('click', '#undoLetter', function() {
         letterRound.undo();
-    });
-    
-    
-
-
-    $('#word').keydown(function(e) {
-        if (e.keyCode == 13) $('#goWord').click();
-    });
-
-    $('#goNumber').on('click', function() {
+    }).on('click', '#goNumber', function() {
         timer.enableNoSleep();
         numberRound.declare($('#number').val(), playRound);
-    });
-
-    $('#goNumberNothing').on('click', function() {
+    }).on('click', '#goNumberNothing', function() {
         timer.enableNoSleep();
         numberRound.declare('', playRound);
-    });
-
-
-    $('#number').keydown(function(e) {
-        if (e.keyCode == 13) $('#goNumber').click();
-    });
-
-    $('.letter-declare').on('click', '.tileInner', function(e) {
+    }).on('click', '.letter-declare .tileInner', function(e) {
         letterRound.declareWordLength($(this).text());
-    });
-
-    $('#buzz').on('click', function() {
+    }).on('keydown', '#word', function(e) {
+        if (e.keyCode == 13) $('#goWord').click();
+    }).on('keydown', '#number', function(e) {
+        if (e.keyCode == 13) $('#goNumber').click();
+    }).on('click', '#buzz', function() {
         $('.conundrum-buzz').hide();
         $('.conundrum-declare').show();
-    });
-
-    $('#goConundrum').on('click', function() {
+    }).on('click', '#goConundrum', function() {
 
     });
 };

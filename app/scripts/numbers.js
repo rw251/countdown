@@ -58,6 +58,10 @@ var numberRound = {
 
         numbers = rtn;
     },
+    
+    getTarget: function(){
+      return numbers.target;  
+    },
 
     do: function(contestant) {
         var number;
@@ -187,8 +191,8 @@ var numberRound = {
     checkNumber: function(number, callback) {
         if (number === 0) return callback(false);
         $('#messedUp').on('click', function() {
-            $('.number-board .tileInner').off('click').removeClass('slot-hover').parent().removeClass('slot-done slot-selected slot-changed');
-            $('.calcslot').off('click').removeClass('slot-hover').parent().removeClass('slot-done slot-selected slot-changed');
+            $('.number-board .tileInner').removeClass('slot-hover').parent().off('click').removeClass('slot-done slot-selected slot-changed');
+            $('.calcslot').removeClass('slot-hover').parent().off('click').removeClass('slot-done slot-selected slot-changed');
             $('.number-calc').hide();
             $('#messedUp').off('click');
             callback(false);
@@ -196,13 +200,14 @@ var numberRound = {
 
         $('.number-calc').show();
 
-        var n1, n2, nn1, nn2, symbol, sum;
+        var n1, n2, nn1, nn2, symbol, sum, n1inner,n2inner;
 
         var numclick = function() {
             if (symbol) {
+                n1inner = n1.find('.tileInner');
                 n2 = $(this);
-                $(this).parent().addClass('slot-selected');
-                $(this).off('click');
+                $(this).addClass('slot-selected');
+                $(this).parent().off('click');
                 nn1 = +n1.text();
                 nn2 = +n2.text();
 
@@ -220,20 +225,20 @@ var numberRound = {
                 else {
                     sum = nn1-nn2;
                 }
-                n1.removeClass("digits2 digits3 digits4");
-                if(sum>9) n1.addClass("digits2");
-                if(sum>99) n1.addClass("digits3");
-                if(sum>999) n1.addClass("digits4");
-                n1.text(sum);
+                n1inner.removeClass("digits2 digits3 digits4");
+                if(sum>9) n1inner.addClass("digits2");
+                if(sum>99) n1inner.addClass("digits3");
+                if(sum>999) n1inner.addClass("digits4");
+                n1inner.text(sum);
 
-                n1.on('click', numclick).parent().removeClass('slot-selected').addClass('slot-hover slot-changed');
-                n2.parent().removeClass('slot-selected').addClass('slot-done');
-                $('.calcslot').on('click', symclick).parent().removeClass('slot-selected').addClass('slot-hover');
+                n1.on('click', numclick).removeClass('slot-selected').addClass('slot-hover slot-changed');
+                n2.removeClass('slot-selected').addClass('slot-done');
+                $('.calcslot').parent().on('click', symclick).removeClass('slot-selected').addClass('slot-hover');
 
 
                 if (+n1.text() === number) {
-                    $('.number-board .tileInner').off('click').removeClass('slot-hover').parent().removeClass('slot-done slot-selected slot-changed');
-                    $('.calcslot').off('click').removeClass('slot-hover').parent().removeClass('slot-done slot-selected slot-changed');
+                    $('.number-board .tileInner').removeClass('slot-hover').parent().off('click').removeClass('slot-done slot-selected slot-changed');
+                    $('.calcslot').removeClass('slot-hover').parent().off('click').removeClass('slot-done slot-selected slot-changed');
                     $('.number-calc').hide();
                     $('#messedUp').off('click');
                     callback(true);
@@ -246,20 +251,20 @@ var numberRound = {
             }
             else if (!n1) {
                 n1 = $(this);
-                $(this).parent().addClass('slot-selected');
-                $(this).off('click');
+                $(this).addClass('slot-selected');
+                $(this).parent().off('click');
             }
         };
 
         var symclick = function() {
             if (!n1) return;
-            symbol = $(this);
+            symbol = $(this).find('.calcslot');
             $(this).addClass('slot-selected');
-            $('.calcslot').off('click');
+            $('.calcslot').parent().off('click');
         };
 
-        $('.number-board .tileInner').on('click', numclick).parent().addClass('slot-hover');
-        $('.calcslot').on('click', symclick).addClass('slot-hover');
+        $('.number-board .tileInner').parent().on('click', numclick).addClass('slot-hover');
+        $('.calcslot').parent().on('click', symclick).addClass('slot-hover');
 
         speech.say("Go on Richard, show us how it's done.", "nick", function() {
 

@@ -13,7 +13,7 @@ var speech = {
     "NUMBERS": " Numbers " //", it's your numbers game."
 };
 
-speech.speed=300;
+speech.speed = 300;
 
 function sayLots(texts, callback) {
     if (texts.length > 0) {
@@ -59,49 +59,57 @@ function say(text, who, callback) {
 
     if (speech.silent) {
         setTimeout(callback, speech.speed);
-    } else {
+    }
+    else {
         var voices = speechSynthesis.getVoices();
-        
+
         getGender(who, function(gender) {
             msg.voice = gender === "female" ? femaleVoice : maleVoice;
             msg.text = text;
-            msg.rate = (1000-speech.speed)/500;
-        
+            msg.rate = (1000 - speech.speed) / 500;
+
             if (who.toLowerCase() !== "nick") {
                 msg.pitch = 0;
-                msg.rate = (1000-speech.speed)/400;
+                msg.rate = (1000 - speech.speed) / 400;
             }
-        
+
             msg.onend = null;
             if (callback) {
                 msg.onend = function(e) {
                     callback();
                 };
             }
-        
+
             speechSynthesis.speak(msg);
         });
     }
 }
 
-var msg = new SpeechSynthesisUtterance();
-msg.lang = 'en-GB';
-var maleVoice;
-var femaleVoice;
+if ('speechSynthesis' in window) {
+    var msg = new SpeechSynthesisUtterance();
+    msg.lang = 'en-GB';
+    var maleVoice;
+    var femaleVoice;
 
-window.speechSynthesis.onvoiceschanged = function() {
-    var voices = window.speechSynthesis.getVoices();
-    maleVoice = speechSynthesis.getVoices().filter(function(v) {
-        return v.lang === "en-GB" && v.name.indexOf("Male") > -1;
-    })[0];
-    femaleVoice = speechSynthesis.getVoices().filter(function(v) {
-        return v.lang === "en-GB" && v.name.indexOf("Female") > -1;
-    })[0];
-};
+    window.speechSynthesis.onvoiceschanged = function() {
+        var voices = window.speechSynthesis.getVoices();
+        maleVoice = speechSynthesis.getVoices().filter(function(v) {
+            return v.lang === "en-GB" && v.name.indexOf("Male") > -1;
+        })[0];
+        femaleVoice = speechSynthesis.getVoices().filter(function(v) {
+            return v.lang === "en-GB" && v.name.indexOf("Female") > -1;
+        })[0];
+    };
 
-window.speechSynthesis.getVoices();
+    window.speechSynthesis.getVoices();
+    speech.available = true;
+    speech.silent = false;
+}
+else {
+    speech.available = false;
+    speech.silent = true;
+}
 
 speech.say = say;
-speech.silent = false;
 
 module.exports = speech;

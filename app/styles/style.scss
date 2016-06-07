@@ -41,7 +41,13 @@ textarea,
     }
 }
 
-.tile {
+.number-select {
+    background-color: rgb(0, 84, 176);
+    color: white;
+    font-size: 7vw;
+}
+
+.tile3 {
     float: left;
     position: relative;
     width: 10%;
@@ -52,9 +58,16 @@ textarea,
     margin-bottom: 2px;
 }
 
-.tile.number-tile {
+.tile6 {
+    @extend .tile3;
     width: 16%;
     padding-bottom: 16%;
+}
+
+.tile4 {
+    @extend .tile3;
+    width: 24%;
+    padding-bottom: 24%;
 }
 
 .wrap {
@@ -98,10 +111,14 @@ textarea,
 
 @media only screen and (max-width: 480px) and (orientation:portrait) {
     /* Smartphone view: 1 tile */
-    .tile,
-    .tile.number-tile {
+    .tile3,
+    .tile6 {
         width: 32%;
         padding-bottom: 32%;
+    }
+    .tile4 {
+        width: 48%;
+        padding-bottom: 48%;
     }
     .tile-end {
         margin-right: 0;
@@ -121,10 +138,14 @@ textarea,
 
 @media only screen and (max-width: 360px) {
     /* Smartphone view: 1 tile */
-    .tile,
-    .tile.number-tile {
+    .tile3,
+    .tile6 {
         width: 32%;
         padding-bottom: 32%;
+    }
+    .tile4 {
+        width: 48%;
+        padding-bottom: 48%;
     }
     .tile-end {
         margin-right: 0;
@@ -205,6 +226,7 @@ textarea,
 
 .slot-done {
     background-color: darkgrey;
+    display:none;
 }
 
 
@@ -229,14 +251,13 @@ textarea,
 .letter-declare,
 .word-declare,
 .number-declare,
-.number-calc,
+.number-calc/*,
 .conundrum-declare,
 .conundrum-buzz,
 .letters-container,
 .numbers-container,
 .conundrum-container,
-.clock-container,
-.feed-wrapper {
+.clock-container*/ {
     display: none;
 }
 
@@ -299,4 +320,8 @@ textarea,
 
 .control-label {
     font-weight: bold;
+}
+
+.cent {
+    text-align: center;
 }

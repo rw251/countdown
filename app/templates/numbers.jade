@@ -1,0 +1,36 @@
+#numbers-page.numbers-container.page
+  .pure-g
+    .pure-u-1.cent
+      span.target 000
+  .pure-g
+    .pure-u-1.number-board
+      .wrap
+        - var n = 1
+        while n < 7
+          .tile6(class=n%3===0 ? 'tile-end' : '')
+            .tileInner
+            - n++
+  .pure-g
+    .pure-u-1-6
+    .pure-u-2-3.number-calc
+      .slots
+        .tile4
+          span.calcslot(data-operator='add') +
+        .tile4.tile-end
+          span.calcslot(data-operator='subtract') −
+        .tile4
+          span.calcslot(data-operator='divide') ÷
+        .tile4.tile-end
+          span.calcslot(data-operator='times') ×
+      div
+        button#messedUp.btn.btn-default(type='button') Messed it up!!
+  .pure-g
+    .pure-u-1.number-declare.form-inline
+      | I've got
+      select#number.number-select
+        - var n = target-10
+        while n <= target+10
+          option(value=n, selected=n===target ? '' : undefined)
+            = n++
+      button#goNumber.btn.btn-default(type='button') Declare!
+      button#goNumberNothing.btn.btn-default(type='button') Nowhere near!
