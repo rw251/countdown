@@ -1,3 +1,6 @@
+/* jshint node: true */
+/* global location */
+
 var speech = require("./speech"),
     numberRound = require('./numbers'),
     letterRound = require('./letters'),
@@ -262,6 +265,26 @@ var initialise = function() {
     }).on('click', '#goConundrum', function() {
 
     });
+    
+    //Temp for trying out different interfaces
+    var display = location.href.split("?").splice(1);
+    if(display.length>0){
+        var els = display[0].split("&");
+        var tmp;
+        switch(els[0][0]) {
+            case "n":
+                tmp=require("templates/numbers")({target:200});
+                break;
+            case "l":
+                tmp=require("templates/letters")();
+                break;
+            default:
+                tmp = require("templates/conundrum")();
+        }
+        $('#container').html(tmp);
+        if(els.length>1 && els[1][0]==="s") $('#container').find('*').show();
+        
+    }
 };
 
 module.exports = {

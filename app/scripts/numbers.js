@@ -191,8 +191,8 @@ var numberRound = {
     checkNumber: function(number, callback) {
         if (number === 0) return callback(false);
         $('#messedUp').on('click', function() {
-            $('.number-board .tileInner').removeClass('slot-hover').parent().off('click').removeClass('slot-done slot-selected slot-changed');
-            $('.calcslot').removeClass('slot-hover').parent().off('click').removeClass('slot-done slot-selected slot-changed');
+            $('.number-board .tileInner').removeClass('slot-hover').parent().off('click').removeClass('slot-hide slot-selected slot-changed');
+            $('.calcslot').removeClass('slot-hover').parent().off('click').removeClass('slot-hide slot-selected slot-changed');
             $('.number-calc').hide();
             $('#messedUp').off('click');
             callback(false);
@@ -232,13 +232,13 @@ var numberRound = {
                 n1inner.text(sum);
 
                 n1.on('click', numclick).removeClass('slot-selected').addClass('slot-hover slot-changed');
-                n2.removeClass('slot-selected').addClass('slot-done');
+                n2.removeClass('slot-selected').addClass('slot-hide');
                 $('.calcslot').parent().on('click', symclick).removeClass('slot-selected').addClass('slot-hover');
 
 
                 if (+n1.text() === number) {
-                    $('.number-board .tileInner').removeClass('slot-hover').parent().off('click').removeClass('slot-done slot-selected slot-changed');
-                    $('.calcslot').removeClass('slot-hover').parent().off('click').removeClass('slot-done slot-selected slot-changed');
+                    $('.number-board .tileInner').removeClass('slot-hover').parent().off('click').removeClass('slot-hide slot-selected slot-changed');
+                    $('.calcslot').removeClass('slot-hover').parent().off('click').removeClass('slot-hide slot-selected slot-changed');
                     $('.number-calc').hide();
                     $('#messedUp').off('click');
                     callback(true);

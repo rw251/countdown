@@ -23,14 +23,16 @@
         .tile4.tile-end
           span.calcslot(data-operator='times') ×
       div
-        button#messedUp.btn.btn-default(type='button') Messed it up!!
+        button#messedUp.pure-button(type='button') Messed it up!!
   .pure-g
-    .pure-u-1.number-declare.form-inline
-      | I've got
-      select#number.number-select
-        - var n = target-10
-        while n <= target+10
-          option(value=n, selected=n===target ? '' : undefined)
-            = n++
-      button#goNumber.btn.btn-default(type='button') Declare!
-      button#goNumberNothing.btn.btn-default(type='button') Nowhere near!
+    .pure-u-1.number-declare
+      form.pure-form
+        fieldset
+          legend I've got..
+          select#number.number-select
+            - var n = target-10
+            while n <= target+10
+              option(value=n, selected=n===target ? '' : undefined)
+                = n++
+          button#goNumber.pure-button(type='button') Declare!
+          button#goNumberNothing.pure-button Nowhere near!
