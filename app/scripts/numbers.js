@@ -206,20 +206,20 @@ var numberRound = {
             if (symbol) {
                 n1inner = n1.find('.tileInner');
                 n2 = $(this);
-                $(this).addClass('slot-selected');
+                //$(this).addClass('slot-selected');
                 $(this).parent().off('click');
                 nn1 = +n1.text();
                 nn2 = +n2.text();
 
                 console.log(nn1, symbol.text(), nn2);
 
-                if (symbol.data("operator") === "add") {
+                if (symbol.find('.calcslot').data("operator") === "add") {
                     sum = nn1+nn2;
                 }
-                else if (symbol.data("operator") === "times") {
+                else if (symbol.find('.calcslot').data("operator") === "times") {
                     sum = nn1*nn2;
                 }
-                else if (symbol.data("operator") === "divide") {
+                else if (symbol.find('.calcslot').data("operator") === "divide") {
                     sum = nn1/nn2;
                 }
                 else {
@@ -231,9 +231,9 @@ var numberRound = {
                 if(sum>999) n1inner.addClass("digits4");
                 n1inner.text(sum);
 
-                n1.on('click', numclick).removeClass('slot-selected').addClass('slot-hover slot-changed');
+                n1.removeClass('slot-selected').addClass('slot-hover slot-changed').on('click', numclick);
                 n2.removeClass('slot-selected').addClass('slot-hide');
-                $('.calcslot').parent().on('click', symclick).removeClass('slot-selected').addClass('slot-hover');
+                $('.calcslot').parent().removeClass('slot-selected').on('click', symclick).addClass('slot-hover');
 
 
                 if (+n1.text() === number) {
@@ -252,13 +252,13 @@ var numberRound = {
             else if (!n1) {
                 n1 = $(this);
                 $(this).addClass('slot-selected');
-                $(this).parent().off('click');
+                $(this).off('click');
             }
         };
 
         var symclick = function() {
             if (!n1) return;
-            symbol = $(this).find('.calcslot');
+            symbol = $(this);
             $(this).addClass('slot-selected');
             $('.calcslot').parent().off('click');
         };
