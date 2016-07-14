@@ -1,18 +1,12 @@
 #conundrum-page.conundrum-container.page
   .pure-g
-    .pure-u-1
-      .slots
-        span.cslot  
-        span.cslot  
-        span.cslot  
-      .slots
-        span.cslot  
-        span.cslot  
-        span.cslot  
-      .slots
-        span.cslot  
-        span.cslot  
-        span.cslot  
+    .pure-u-1.letter-board
+      .wrap
+        - var word = "COUNTDOWN"
+        while word.length>0
+          .tile3(class=n%3===0 ? 'tile-end' : '')
+            .tileInner= word[0]
+            - word=word.substr(1)
   .pure-g
     .pure-u-1.conundrum-buzz
       button#buzz.btn.btn-danger(type='button') BUZZ!

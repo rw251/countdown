@@ -4,6 +4,7 @@
 var speech = require("./speech"),
     numberRound = require('./numbers'),
     letterRound = require('./letters'),
+    conundrumRound = require('./conundrum'),
     timer = require('./timer'),
     score = require('./score'),
     local = require('./local'),
@@ -24,50 +25,6 @@ var c1, c2, rows, name, round = 0,
     skipLetters = true,
     skipNumbers = false,
     skipConundrums = false;
-
-var getConundrum = function(val) {
-    var rtn = {};
-
-    rtn.conundrum = val.find('.cselection').text();
-    var c1buzz = val.find('.c1buzz').text().trim();
-    var c2buzz = val.find('.c2buzz').text().trim();
-    var ans = val.find('.cothers').text().trim();
-    var time = 60;
-
-    if (c1buzz.length > 8) {
-        console.log(c1buzz);
-        ans = c1buzz;
-        console.log(c1buzz.match(/\(([0-9\.]+) /));
-        rtn.time = +c1buzz.match(/\(([0-9\.]+) /)[1];
-        rtn.who = "c1";
-    }
-    else if (c2buzz.length > 8) {
-        console.log(c2buzz);
-        ans = c2buzz;
-        console.log(c2buzz.match(/\(([0-9\.]+) /));
-        rtn.time = +c2buzz.match(/\(([0-9\.]+) /)[1];
-        rtn.who = "c2";
-    }
-    //cultivater ☓ 
-    rtn.answer = ans.match(/[A-Z]{9}/)[0];
-
-    if (switcheroo) {
-        rtn.c3buzz = rtn.c1buzz;
-        rtn.c1buzz = rtn.c2buzz;
-        rtn.c2buzz = rtn.c3buzz;
-        if (rtn.who === "c1") rtn.who = "c2";
-        if (rtn.who === "c2") rtn.who = "c1";
-    }
-
-    return rtn;
-};
-
-
-var updateScore = function() {
-    $('#pscore').text(score.me);
-    $('#c1score').text(score.c1);
-    if (score.c2first) $('#c2score').text(score.c2);
-};
 
 var startGame = function(r, vs, player) {
     //detect format
@@ -134,19 +91,6 @@ var startGame = function(r, vs, player) {
     });
 };
 
-var doConundrum = function() {
-    letters.conundrum.split("").forEach(function(l, i) {
-        $($('.cslot')[i]).text(l);
-    });
-    timer.start(function() {
-        speech.say("Time's up.", "nick", function() {
-            letters.answer.split("").forEach(function(l, i) {
-                $($('.tileInner')[i]).text(l);
-            });
-        });
-    });
-};
-
 var playRound = function() {
     var cont;
 
@@ -158,7 +102,7 @@ var playRound = function() {
     //$('.number-board .tileInner').html("");
     //$('.nslot').html("&nbsp;");
 
-    updateScore();
+    score.update();
 
     //$('#test').html(rows[round]);
 
@@ -177,8 +121,10 @@ var playRound = function() {
         //numbers
         cont = ([3, 7, 10, 16].indexOf(round) % 2 === 0 ? score.c1first : name);
         numberRound.load($(rows[round]), switcheroo);
-        
-        $('#container').html(tmpl.numbers({target: +numberRound.getTarget()}));
+
+        $('#container').html(tmpl.numbers({
+            target: +numberRound.getTarget()
+        }));
 
         speech.say("Ok, " + cont + speech.NUMBERS, "NICK", function() {
             numberRound.do(cont);
@@ -186,13 +132,12 @@ var playRound = function() {
     }
     else if ($(rows[round]).find('.cselection').length > 0 && !skipConundrums) {
         //con
-        $('#container').html(tmpl.conundrum());
-        letters = getConundrum($(rows[round]));
+        conundrumRound.load($(rows[round]), switcheroo);
 
-        $('.conundrum-buzz').show();
+        $('#container').html(tmpl.conundrum());
 
         speech.say("So finally it's time for the conundrum.  Fingers on buzzers as we reveal, today's, countdown conundrum.", "nick", function() {
-            doConundrum();
+            conundrumRound.do(score.c1first);
         });
     }
     else {
@@ -262,28 +207,33 @@ var initialise = function() {
     }).on('click', '#buzz', function() {
         $('.conundrum-buzz').hide();
         $('.conundrum-declare').show();
+        conundrumRound.buzz();
     }).on('click', '#goConundrum', function() {
-
+        conundrumRound.declare($('#conundrum').val());
+    }).on('keydown', '#conundrum', function(e) {
+        if (e.keyCode == 13) $('#goConundrum').click();
     });
-    
+
     //Temp for trying out different interfaces
     var display = location.href.split("?").splice(1);
-    if(display.length>0){
+    if (display.length > 0) {
         var els = display[0].split("&");
         var tmp;
-        switch(els[0][0]) {
+        switch (els[0][0]) {
             case "n":
-                tmp=require("templates/numbers")({target:200});
+                tmp = require("templates/numbers")({
+                    target: 200
+                });
                 break;
             case "l":
-                tmp=require("templates/letters")();
+                tmp = require("templates/letters")();
                 break;
             default:
                 tmp = require("templates/conundrum")();
         }
         $('#container').html(tmp);
-        if(els.length>1 && els[1][0]==="s") $('#container').find('*').show();
-        
+        if (els.length > 1 && els[1][0] === "s") $('#container').find('*').show();
+
     }
 };
 
