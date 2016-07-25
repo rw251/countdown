@@ -19,6 +19,7 @@
     "sass-brunch": "^2.6.3"
   },
   "dependencies": {
+    "digest-brunch": "^1.5.1",
     "jquery": "^1.12.4",
     "nosleep.js": "^0.5.1"
   }

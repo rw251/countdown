@@ -163,7 +163,7 @@ var initialise = function() {
         var episode = $('#episode').val();
         episode = episode === "" ? Math.floor(Math.random() * 5000) + 1000 : episode;
         
-        $('#episode').text(episode);
+        $('#episodenumber').text(episode);
 
         speech.silent = !$('#setting-speech').is(':checked');
         speech.speed = +$('[name=setting-speed]:checked').val();
