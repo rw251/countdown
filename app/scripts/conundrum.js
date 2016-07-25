@@ -15,6 +15,10 @@ var conundrumRound = {
         };
 
         rtn.conundrum = val.find('.cselection').text();
+        if(rtn.conundrum.length === 10) {
+            //occasioinally conundrum is abcdefghi* if they don't know what it actually was
+            rtn.conundrum = rtn.conundrum.substr(0,9).toUpperCase();
+        }
         var c1buzz = val.find('.c1buzz').text().trim();
         var c2buzz = val.find('.c2buzz').text().trim();
         var ans = val.find('.cothers').text().trim();
