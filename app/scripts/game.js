@@ -158,6 +158,8 @@ var initialise = function() {
     });
 
     $('#go').on('click', function(e) {
+        $(this).text("Loading...").prop('disabled', true);
+        
         timer.enableNoSleep();
         var vs = $('select[name=player]').val();
         var episode = $('#episode').val();
@@ -172,6 +174,7 @@ var initialise = function() {
         skipLetters = !$('#setting-inc-letters').is(':checked');
         skipNumbers = !$('#setting-inc-numbers').is(':checked');
         skipConundrums = !$('#setting-inc-conundrum').is(':checked');
+        $('#container').parent().fadeOut("slow");
 
         /*
          LLNLLNLLNLLLLNC - 5666 -
@@ -183,6 +186,7 @@ var initialise = function() {
         $.get('down.php?episode=' + episode, function(doc) {
             $('#feed').html(tmpl.feed());
             $('#score').html(tmpl.score());
+            $('#container').html(tmpl.letters()).parent().fadeIn("fast");
             startGame($(doc).find('.round_table').children(), vs, "richard");
         });
 
@@ -194,12 +198,18 @@ var initialise = function() {
         letterRound.declare($('#word').val().toUpperCase(), playRound);
     }).on('click', '#undoLetter', function() {
         letterRound.undo();
-    }).on('click', '#goNumber', function() {
+    }).on('click', '#goNumber', function(e) {
+        timer.isPaused=true;
         timer.enableNoSleep();
         numberRound.declare($('#number').val(), playRound);
-    }).on('click', '#goNumberNothing', function() {
+        e.preventDefault();
+        e.stopPropagation();
+    }).on('click', '#goNumberNothing', function(e) {
+        timer.isPaused=true;
         timer.enableNoSleep();
         numberRound.declare('', playRound);
+        e.preventDefault();
+        e.stopPropagation();
     }).on('click', '.letter-declare .tileInner', function(e) {
         letterRound.declareWordLength($(this).text());
     }).on('keydown', '#word', function(e) {
@@ -213,7 +223,7 @@ var initialise = function() {
     }).on('click', '#goConundrum', function() {
         conundrumRound.declare($('#conundrum').val());
     }).on('keydown', '#conundrum', function(e) {
-        if (e.keyCode == 13) $('#goConundrum').click();
+        if (e.keyCode == 13) $('#goConundrum').click(); 
     });
 
     //Temp for trying out different interfaces

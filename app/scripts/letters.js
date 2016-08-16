@@ -78,6 +78,8 @@ var lettersRound = {
 
     declare: function(word, playRound) {
         $('.word-declare').hide();
+
+        $('body').off('keydown');
         $('.tileInner').removeClass('slot-hover').off('click').parent().removeClass('slot-done');
         speech.say([{
             what: word,
@@ -244,8 +246,33 @@ var lettersRound = {
         return n === 8 ? "I've got an 8." : "I've got a " + n + ".";
     },
 
+    doTile: function() {
+        var t = $(this).text();
+        $(this).parent().addClass('slot-done');
+        $(this).off('click');
+        $('.word-declare').find('input[type=text]').val($('.word-declare').find('input[type=text]').val() + t).focus();
+        $('#wordalt').val($('#word').val());
+        if (!lettersRound.tiles) lettersRound.tiles = [$(this)];
+        else lettersRound.tiles.push($(this));
+    },
+
     declareWordLength: function(length) {
         wordLength = length;
+        $('body').on('keydown', function(e) {
+            var k = e.keyCode;
+            if (k > 90) k -= 32;
+            if (k >= 65 && k <= 90) {
+                lettersRound.doTile.call($('.tile3:not(.slot-done) .tileInner:contains(' + String.fromCharCode(k) + '):first'));
+            }
+            else if (e.keyCode === 8) {
+                lettersRound.undo();
+            }
+            else if (e.keyCode === 13) {
+                $('#goWord').click();
+            }
+            e.preventDefault();
+
+        });
         $('.letter-declare').hide();
         $('.letter-board').show();
         speech.say(lettersRound.iveGot(length), "Richard", function() {
@@ -262,24 +289,16 @@ var lettersRound = {
                     speech.say("So, Richard, what have you got?", "nick");
                     $('.word-declare').show().find('input[type=text]').val("").focus();
                 }
-                $('.tileInner').on('click', function() {
-                    var t = $(this).text();
-                    $(this).parent().addClass('slot-done');
-                    $(this).off('click');
-                    $('.word-declare').find('input[type=text]').val($('.word-declare').find('input[type=text]').val() + t).focus();
-                    $('#wordalt').val($('#word').val());
-                    if (!lettersRound.tiles) lettersRound.tiles = [$(this)];
-                    else lettersRound.tiles.push($(this));
-                }).addClass('slot-hover');
+                $('.tileInner').on('click', lettersRound.doTile).addClass('slot-hover');
             });
         });
     },
 
     undo: function() {
-        if (lettersRound.tiles && lettersRound.tiles.length>0) {
+        if (lettersRound.tiles && lettersRound.tiles.length > 0) {
             var tile = lettersRound.tiles.pop();
             tile.parent().removeClass('slot-done');
-            var newText = $('#word').val().substr(0,$('#word').val().length-1);
+            var newText = $('#word').val().substr(0, $('#word').val().length - 1);
             $('#word').val(newText).focus();
             $('#wordalt').val(newText);
             tile.on('click', function() {

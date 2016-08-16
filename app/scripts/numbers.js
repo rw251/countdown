@@ -58,9 +58,9 @@ var numberRound = {
 
         numbers = rtn;
     },
-    
-    getTarget: function(){
-      return numbers.target;  
+
+    getTarget: function() {
+        return numbers.target;
     },
 
     do: function(contestant) {
@@ -69,8 +69,8 @@ var numberRound = {
             number = numbers.selection.pop();
             speech.say("Hi Rachel, can I have " + numbers.say + " please.", contestant, function() {
                 $($('.number-board .tileInner')[5]).removeClass("digits2 digits3 digits4");
-                if(number>9) $($('.number-board .tileInner')[5]).addClass("digits2");
-                if(number>99) $($('.number-board .tileInner')[5]).addClass("digits3");
+                if (number > 9) $($('.number-board .tileInner')[5]).addClass("digits2");
+                if (number > 99) $($('.number-board .tileInner')[5]).addClass("digits3");
                 $('.number-board .tileInner')[5].innerText = number;
                 speech.say(number, "Rachel", function() {
                     numberRound.do(contestant);
@@ -81,8 +81,8 @@ var numberRound = {
         else if (numbers.selection.length > 0) {
             number = numbers.selection.pop();
             $($('.number-board .tileInner')[numbers.selection.length]).removeClass("digits2 digits3 digits4");
-            if(number>9) $($('.number-board .tileInner')[numbers.selection.length]).addClass("digits2");
-            if(number>99) $($('.number-board .tileInner')[numbers.selection.length]).addClass("digits3");
+            if (number > 9) $($('.number-board .tileInner')[numbers.selection.length]).addClass("digits2");
+            if (number > 99) $($('.number-board .tileInner')[numbers.selection.length]).addClass("digits3");
             $('.number-board .tileInner')[numbers.selection.length].innerText = number;
             speech.say(number, "Rachel", function() {
                 numberRound.do(contestant);
@@ -95,7 +95,7 @@ var numberRound = {
                     speech.say(speech.THIRTY, "nick", function() {
                         timer.start(function() {
                             speech.say("Time's up. So what do you have?", "nick");
-                             $('.number-declare').show().find('input[type=text]').val("").focus();
+                            $('.number-declare').show().find('input[type=text]').val("").focus();
                         });
                     });
                 });
@@ -104,7 +104,7 @@ var numberRound = {
     },
 
     declare: function(number, playRound) {
-         $('.number-declare').hide();
+        $('.number-declare').hide();
 
         number = +number;
         numbers.c1 = +numbers.c1;
@@ -135,11 +135,48 @@ var numberRound = {
         });
 
         speech.say(texts, function() {
+
+            var mindiff = score.c2first ? Math.min(diff.c1, diff.c2) : diff.c1;
+            var method, winners = [];
+
+            if (mindiff < diff.p || number === 0) {
+                //you lost - so don't bother
+                if (mindiff === diff.c1 && numbers.c1method) {
+                    winners.push(score.c1first);
+                    method = numbers.c1method;
+                    score.c1 += c1points;
+                }
+                if (score.c2first && mindiff === diff.c2 && numbers.c2method) {
+                    score.c2 += c2points;
+                    method = numbers.c2method;
+                    winners.push(score.c2first);
+                }
+                if (winners.length === 0) {
+                    speech.say("So no-one got it. Never mind.", "nick", function() {
+                        playRound();
+                    });
+                }
+                else if (winners.length === 1) {
+                    speech.say("Go on " + winners[0], "nick", function() {
+                        speech.say(method, winners[0], function() {
+                            speech.say("Well done " + winners[0], "rachel", function() {
+                                playRound();
+                            });
+                        });
+                    });
+                }
+                else if (winners.length === 2 && score.c2first) {
+                    speech.say("Well done " + winners.join(" and "), "nick", function() {
+                        playRound();
+                    });
+                }
+                return;
+            }
+
             numberRound.checkNumber(number, function(isValid) {
-                texts = [];
-                var mindiff = score.c2first ? Math.min(diff.c1, diff.c2) : diff.c1;
+
+
                 if (isValid) mindiff = Math.min(mindiff, diff.p);
-                var winners = [];
                 if (mindiff === diff.c1 && numbers.c1method) {
                     winners.push(score.c1first);
                     score.c1 += c1points;
@@ -148,7 +185,7 @@ var numberRound = {
                     score.c2 += c2points;
                     winners.push(score.c2first);
                 }
-
+                texts = [];
                 if (!isValid && number > 0) {
                     texts.push({
                         what: "Sorry, Richard, but you've gone wrong.",
@@ -200,7 +237,7 @@ var numberRound = {
 
         $('.number-calc').show();
 
-        var n1, n2, nn1, nn2, symbol, sum, n1inner,n2inner;
+        var n1, n2, nn1, nn2, symbol, sum, n1inner, n2inner;
 
         var numclick = function() {
             if (symbol) {
@@ -214,21 +251,21 @@ var numberRound = {
                 console.log(nn1, symbol.text(), nn2);
 
                 if (symbol.find('.calcslot').data("operator") === "add") {
-                    sum = nn1+nn2;
+                    sum = nn1 + nn2;
                 }
                 else if (symbol.find('.calcslot').data("operator") === "times") {
-                    sum = nn1*nn2;
+                    sum = nn1 * nn2;
                 }
                 else if (symbol.find('.calcslot').data("operator") === "divide") {
-                    sum = nn1/nn2;
+                    sum = nn1 / nn2;
                 }
                 else {
-                    sum = nn1-nn2;
+                    sum = nn1 - nn2;
                 }
                 n1inner.removeClass("digits2 digits3 digits4");
-                if(sum>9) n1inner.addClass("digits2");
-                if(sum>99) n1inner.addClass("digits3");
-                if(sum>999) n1inner.addClass("digits4");
+                if (sum > 9) n1inner.addClass("digits2");
+                if (sum > 99) n1inner.addClass("digits3");
+                if (sum > 999) n1inner.addClass("digits4");
                 n1inner.text(sum);
 
                 n1.removeClass('slot-selected').addClass('slot-hover slot-changed').on('click', numclick);

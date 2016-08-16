@@ -34,6 +34,7 @@ var timer = {
     },
 
     start: function(callback) {
+        timer.isPaused=false;
         countdown(callback);
     },
 
