@@ -42,6 +42,10 @@ var timer = {
         time = timer.LENGTH;
         $('.clock').text(timer.LENGTH);
     },
+    
+    getTime: function(){
+      return time;  
+    },
 
     conundrum: function(buzztime, callback) {
         countdown(callback, buzztime);

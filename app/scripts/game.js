@@ -8,7 +8,8 @@ var speech = require("./speech"),
     timer = require('./timer'),
     score = require('./score'),
     local = require('./local'),
-    $ = require('jquery');
+    $ = require('jquery'),
+    localforage = require('localforage');
 
 var tmpl = {
     letters: require("templates/letters"),
@@ -24,7 +25,9 @@ var c1, c2, rows, name, round = 0,
     switcheroo = false,
     skipLetters = true,
     skipNumbers = false,
-    skipConundrums = false;
+    skipConundrums = false,
+    gameRecord = [],
+    episode;
 
 var startGame = function(r, vs, player) {
     //detect format
@@ -91,7 +94,24 @@ var startGame = function(r, vs, player) {
     });
 };
 
-var playRound = function() {
+var playRound = function(lastRound, save) {
+
+    if (lastRound) gameRecord.push(lastRound);
+
+    if (save) {
+        localforage.getItem('gamelist', function(err, val) {
+            if (err) console.log(err);
+            val = val || [];
+            val.push(episode);
+            localforage.setItem('gamelist', val);
+            localforage.setItem('' + episode, gameRecord, function(err) {
+                if (err) console.log(err);
+            });
+        });
+
+        return;
+    }
+
     var cont;
 
     round++;
@@ -132,7 +152,7 @@ var playRound = function() {
     }
     else if ($(rows[round]).find('.cselection').length > 0 && !skipConundrums) {
         //con
-        conundrumRound.load($(rows[round]), switcheroo);
+        conundrumRound.load($(rows[round]), switcheroo, playRound);
 
         $('#container').html(tmpl.conundrum());
 
@@ -146,7 +166,87 @@ var playRound = function() {
     }
 };
 
+var cacheEpisode = function(episode, callback) {
+    localforage.getItem('cachedEpisodes', function(err, val) {
+        if (err) return callback(err);
+        val = val || [];
+        val.push(episode);
+        localforage.setItem('cachedEpisodes', val, function(err) {
+            if (err) return callback(err);
+            callback();
+        });
+    });
+};
+
+var getEpisode = function(episodeNumber, callback) {
+    $.get('down.php?episode=' + episodeNumber, function(doc) {
+        callback(null, {
+            n: episodeNumber,
+            rows: $(doc).find('.round_table').html().replace(/>[\r\n]/g, ">")
+        });
+    });
+};
+
+
+var getRandomEpisode = function(callback) {
+    localforage.getItem('gamelist', function(err, val) {
+        val = val || [];
+        var r = Math.floor(Math.random() * 5000) + 1000;
+        
+        while(val.indexOf(r)>-1){
+            r = Math.floor(Math.random() * 5000) + 1000;
+        }
+
+        getEpisode(r, function(err, val) {
+            if (err) return callback(err);
+            return callback(null, val);
+        });
+    });
+};
+
+var numberOfCachedGames = function(callback) {
+    localforage.getItem('cachedEpisodes', function(err, val) {
+        if (err) return callback(err);
+        val = val || [];
+        console.log(val.length + ' cached episodes.');
+        return callback ? callback(null, val.length) : val;
+    });
+};
+
+var refillCachedGames = function(limit, callback) {
+    numberOfCachedGames(function(err, val) {
+        if (err) return callback(err);
+        if (val < limit) {
+            getRandomEpisode(function(err, val) {
+                if (err) return callback(err);
+                cacheEpisode(val, function() {
+                    refillCachedGames(limit, callback);
+                });
+            });
+        }
+        else {
+            return callback();
+        }
+    });
+};
+
+var resetCache = function() {
+    localforage.getItem('cachedEpisodes', function(err, val) {
+        if (err) console.log(err);
+        val = [];
+        console.log('Resetting cache...');
+        localforage.setItem('cachedEpisodes', val, function(err, val) {
+            if (err) console.log(err);
+            console.log('Cache reset.');
+            refillCachedGames(10, function() {});
+        });
+    });
+};
+
 var initialise = function() {
+
+    numberOfCachedGames();
+    refillCachedGames(10, function() {});
 
     $('#container').html(tmpl.welcome(local.settings));
     score.me = 0;
@@ -159,12 +259,12 @@ var initialise = function() {
 
     $('#go').on('click', function(e) {
         $(this).text("Loading...").prop('disabled', true);
-        
+
         timer.enableNoSleep();
         var vs = $('select[name=player]').val();
-        var episode = $('#episode').val();
+        episode = $('#episode').val();
         episode = episode === "" ? Math.floor(Math.random() * 5000) + 1000 : episode;
-        
+
         $('#episodenumber').text(episode);
 
         speech.silent = !$('#setting-speech').is(':checked');
@@ -183,11 +283,11 @@ var initialise = function() {
          LLNLLNCLLNLLNC  - 14 round (grand finals / CoCs / 2 specials) [80,132,184,234,288,338,397,404,444,445,494,544,594,601,644,707,757,812,819,867,937,1002,1003,1067,1074,1132,1197,1262,1327,1334,1392,1457,1522,1523,1587,1594,1652,1717,1782,1847,1854,1907,1972,2037,2102,2162,2177,2292,2422,2552,2673,2678,2797,2911,3042,3085]
         */
 
-        $.get('down.php?episode=' + episode, function(doc) {
+        getEpisode(episode, function(err, val) {
             $('#feed').html(tmpl.feed());
             $('#score').html(tmpl.score());
             $('#container').html(tmpl.letters()).parent().fadeIn("fast");
-            startGame($(doc).find('.round_table').children(), vs, "richard");
+            startGame($(val.rows), vs, "richard");
         });
 
         e.preventDefault();
@@ -199,13 +299,13 @@ var initialise = function() {
     }).on('click', '#undoLetter', function() {
         letterRound.undo();
     }).on('click', '#goNumber', function(e) {
-        timer.isPaused=true;
+        timer.isPaused = true;
         timer.enableNoSleep();
         numberRound.declare($('#number').val(), playRound);
         e.preventDefault();
         e.stopPropagation();
     }).on('click', '#goNumberNothing', function(e) {
-        timer.isPaused=true;
+        timer.isPaused = true;
         timer.enableNoSleep();
         numberRound.declare('', playRound);
         e.preventDefault();
@@ -223,7 +323,12 @@ var initialise = function() {
     }).on('click', '#goConundrum', function() {
         conundrumRound.declare($('#conundrum').val());
     }).on('keydown', '#conundrum', function(e) {
-        if (e.keyCode == 13) $('#goConundrum').click(); 
+        if (e.keyCode == 13) $('#goConundrum').click();
+    });
+
+    $('#reset').on('click', function(e) {
+        resetCache();
+        e.preventDefault();
     });
 
     //Temp for trying out different interfaces

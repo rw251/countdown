@@ -21,6 +21,7 @@
   "dependencies": {
     "digest-brunch": "^1.5.1",
     "jquery": "^1.12.4",
+    "localforage": "^1.4.2",
     "nosleep.js": "^0.5.1"
   }
 }

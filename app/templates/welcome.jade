@@ -24,7 +24,7 @@
     fieldset
       legend Settings
       .pure-g
-        .pure-u-1-2.pure-u-md-1-4
+        .pure-u-1-2.pure-u-md-1-5
           label.control-label(for='setting-speed') Game speed
           label.pure-radio(for='setting-speed-one')
             input#setting-speed-one(type='radio', name='setting-speed', value='700', checked= speed===700 ? '' : undefined)
@@ -35,7 +35,7 @@
           label.pure-radio(for='setting-speed-three')
             input#setting-speed-three(type='radio', name='setting-speed', value='300', checked= speed===300 ? '' : undefined)
             |  Fast
-        .pure-u-1-2.pure-u-md-1-4
+        .pure-u-1-2.pure-u-md-1-5
           label.control-label(for='setting-rounds') Include rounds
           label.pure-radio
             input#setting-inc-letters(type='checkbox', value='option1', checked=skipLetters ? undefined : '')
@@ -46,11 +46,13 @@
           label.pure-radio
             input#setting-inc-conundrum(type='checkbox', value='option3', checked=skipConundrums ? undefined : '')
             |  Conundrum
-        .pure-u-1-2.pure-u-md-1-4
+        .pure-u-1-2.pure-u-md-1-5
           label.control-label(for='setting-clock') Round length (seconds)
           input#setting-clock.pure-input-1-3(type='number', value=timerlength || '30')
-        .pure-u-1-2.pure-u-md-1-4
+        .pure-u-1-2.pure-u-md-1-5
           label.control-label(for='setting-speech') Speech
           label
             input#setting-speech(type='checkbox', checked=silent ? undefined : '')
             |  Enable speech!
+        .pure-u-1-2.pure-u-md-1-5
+          button#reset.pure-button.pure-button-primary Reset cache

@@ -6,18 +6,21 @@ var speech = require('./speech.js'),
 
 var conundrum, wordLength;
 
+var playRound;
+
 var conundrumRound = {
 
-    load: function(val, switcheroo) {
+    load: function(val, switcheroo, play) {
+        playRound = play;
         var rtn = {
             c1: {},
             c2: {}
         };
 
         rtn.conundrum = val.find('.cselection').text();
-        if(rtn.conundrum.length === 10) {
+        if (rtn.conundrum.length === 10) {
             //occasioinally conundrum is abcdefghi* if they don't know what it actually was
-            rtn.conundrum = rtn.conundrum.substr(0,9).toUpperCase();
+            rtn.conundrum = rtn.conundrum.substr(0, 9).toUpperCase();
         }
         var c1buzz = val.find('.c1buzz').text().trim();
         var c2buzz = val.find('.c2buzz').text().trim();
@@ -99,7 +102,9 @@ var conundrumRound = {
                                 score.c1 += 10;
                                 score.update();
                                 speech.say("Well done " + contestant, "nick", function() {
-
+                                    playRound({
+                                        time: [-1, conundrum.c1.time, conundrum.c2.time]
+                                    }, true);
                                 });
                             }
                             else {
@@ -115,7 +120,11 @@ var conundrumRound = {
                                             conundrum.answer.split("").forEach(function(l, i) {
                                                 $($('.tileInner')[i]).text(l);
                                             });
-                                            speech.say(conundrum.answer + ". Good game everyone", "nick", function() {});
+                                            speech.say(conundrum.answer + ". Good game everyone", "nick", function() {
+                                                playRound({
+                                                    time: [-1, -1, conundrum.c2.time]
+                                                }, true);
+                                            });
                                         });
                                     });
                                 });
@@ -131,7 +140,11 @@ var conundrumRound = {
                     conundrum.answer.split("").forEach(function(l, i) {
                         $($('.tileInner')[i]).text(l);
                     });
-                    speech.say(conundrum.answer + ". Good game everyone", "nick", function() {});
+                    speech.say(conundrum.answer + ". Good game everyone", "nick", function() {
+                        playRound({
+                            time: [-1, -1, conundrum.c2.time]
+                        }, true);
+                    });
                 });
             });
         }
@@ -146,7 +159,11 @@ var conundrumRound = {
                     });
                     score.me += 10;
                     score.update();
-                    speech.say(conundrum.answer + ". Well done. Good game everyone", "nick", function() {});
+                    speech.say(conundrum.answer + ". Well done. Good game everyone", "nick", function() {
+                        playRound({
+                            time: [timer.getTime(), conundrum.c1.time, conundrum.c2.time]
+                        }, true);
+                    });
                 }
                 else {
                     "INCORRECT".split("").forEach(function(l, i) {
@@ -168,7 +185,9 @@ var conundrumRound = {
                                                 score.c1 += 10;
                                                 score.update();
                                                 speech.say("Well done " + score.c1first, "nick", function() {
-
+                                                    playRound({
+                                                        time: [-1, conundrum.c1.time, conundrum.c2.time]
+                                                    }, true);
                                                 });
                                             }
                                             else {
@@ -179,7 +198,11 @@ var conundrumRound = {
                                                     conundrum.answer.split("").forEach(function(l, i) {
                                                         $($('.tileInner')[i]).text(l);
                                                     });
-                                                    speech.say(conundrum.answer + ". Good game everyone", "nick", function() {});
+                                                    speech.say(conundrum.answer + ". Good game everyone", "nick", function() {
+                                                        playRound({
+                                                            time: [-1, -1, conundrum.c2.time]
+                                                        }, true);
+                                                    });
                                                 });
                                             }
                                         });

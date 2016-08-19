@@ -12,6 +12,7 @@ var lettersRound = {
         var rtn = {};
 
         rtn.letters = val.find('.lselection').text();
+        rtn.lettersClone = rtn.letters;
         rtn.oLetters = val.find('.lselection').text();
         rtn.c1 = val.find('.c1word').text().trim();
         rtn.c2 = val.find('.c2word').text().trim();
@@ -159,7 +160,11 @@ var lettersRound = {
                                 if (letters.c1valid && letters.c1.length === best) score.c1 += letters.c1.length + (best === 9 ? 9 : 0);
                                 if (score.c2first && letters.c2valid && letters.c2.length === best) score.c2 += letters.c2.length + (best === 9 ? 9 : 0);
                                 speech.say(tts, function() {
-                                    playRound();
+                                    playRound({
+                                        letters: letters.lettersClone,
+                                        what: [word, letters.c1, letters.c2],
+                                        valid: [isValid, letters.c1valid, letters.c2valid]
+                                    });
                                 });
                             });
                         });
@@ -233,7 +238,11 @@ var lettersRound = {
                             if (isValid && word.length === best) score.me += word.length + (best === 9 ? 9 : 0);
                             if (letters.c1valid && letters.c1.length === best) score.c1 += letters.c1.length + (best === 9 ? 9 : 0);
                             speech.say(tts, function() {
-                                playRound();
+                                playRound({
+                                    letters: letters.lettersClone,
+                                    what: [word, letters.c1, letters.c2],
+                                    valid: [isValid, letters.c1valid, letters.c2valid]
+                                });
                             });
                         });
                     });

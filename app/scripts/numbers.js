@@ -13,6 +13,7 @@ var numberRound = {
         var temp = val.find('.nselection').text().split('→');
 
         rtn.selection = temp[0].trim().split(' ');
+        rtn.selectionClone = rtn.selection.slice();
 
         rtn.small = 0;
         rtn.large = 0;
@@ -153,21 +154,36 @@ var numberRound = {
                 }
                 if (winners.length === 0) {
                     speech.say("So no-one got it. Never mind.", "nick", function() {
-                        playRound();
+                        playRound({
+                            numbers: numbers.selectionClone,
+                            target: numbers.target,
+                            what: [number, numbers.c1, numbers.c2],
+                            valid: [null, !!numbers.c1method, !!numbers.c2method]
+                        }); 
                     });
                 }
                 else if (winners.length === 1) {
                     speech.say("Go on " + winners[0], "nick", function() {
                         speech.say(method, winners[0], function() {
                             speech.say("Well done " + winners[0], "rachel", function() {
-                                playRound();
+                                playRound({
+                                    numbers: numbers.selectionClone,
+                                    target: numbers.target,
+                                    what: [number, numbers.c1, numbers.c2],
+                                    valid: [null, !!numbers.c1method, !!numbers.c2method]
+                                });
                             });
                         });
                     });
                 }
                 else if (winners.length === 2 && score.c2first) {
                     speech.say("Well done " + winners.join(" and "), "nick", function() {
-                        playRound();
+                        playRound({
+                            numbers: numbers.selectionClone,
+                            target: numbers.target,
+                            what: [number, numbers.c1, numbers.c2],
+                            valid: [null, !!numbers.c1method, !!numbers.c2method]
+                        });
                     });
                 }
                 return;
@@ -203,22 +219,42 @@ var numberRound = {
 
                 if (winners.length === 0) {
                     speech.say("So no-one got it. Never mind.", "nick", function() {
-                        playRound();
+                        playRound({
+                            numbers: numbers.selectionClone,
+                            target: numbers.target,
+                            what: [number, numbers.c1, numbers.c2],
+                            valid: [isValid, !!numbers.c1method, !!numbers.c2method]
+                        });
                     });
                 }
                 else if (winners.length === 1) {
                     speech.say("Well done " + winners[0], "nick", function() {
-                        playRound();
+                        playRound({
+                            numbers: numbers.selectionClone,
+                            target: numbers.target,
+                            what: [number, numbers.c1, numbers.c2],
+                            valid: [isValid, !!numbers.c1method, !!numbers.c2method]
+                        });
                     });
                 }
                 else if (winners.length === 2 && score.c2first) {
                     speech.say("Well done " + winners.join(" and "), "nick", function() {
-                        playRound();
+                        playRound({
+                            numbers: numbers.selectionClone,
+                            target: numbers.target,
+                            what: [number, numbers.c1, numbers.c2],
+                            valid: [isValid, !!numbers.c1method, !!numbers.c2method]
+                        });
                     });
                 }
                 else {
                     speech.say("Well done everyone.", "nick", function() {
-                        playRound();
+                        playRound({
+                            numbers: numbers.selectionClone,
+                            target: numbers.target,
+                            what: [number, numbers.c1, numbers.c2],
+                            valid: [isValid, !!numbers.c1method, !!numbers.c2method]
+                        });
                     });
                 }
             });
