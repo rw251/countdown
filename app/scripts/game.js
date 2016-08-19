@@ -9,7 +9,8 @@ var speech = require("./speech"),
     score = require('./score'),
     local = require('./local'),
     $ = require('jquery'),
-    localforage = require('localforage');
+    localforage = require('localforage'),
+    dictionary = require('./dictionary');
 
 var tmpl = {
     letters: require("templates/letters"),
@@ -179,21 +180,24 @@ var cacheEpisode = function(episode, callback) {
 };
 
 var getEpisode = function(episodeNumber, callback) {
-    $.get('down.php?episode=' + episodeNumber, function(doc) {
-        callback(null, {
-            n: episodeNumber,
-            rows: $(doc).find('.round_table').html().replace(/>[\r\n]/g, ">")
+    $
+        .get('down.php?episode=' + episodeNumber)
+        .success(function(doc) {
+            callback(null, {
+                n: episodeNumber,
+                rows: $(doc).find('.round_table').html().replace(/>[\r\n]/g, ">")
+            });
+        }).error(function(jqXHR, textStatus, err) {
+            return callback(new Error(err));
         });
-    });
 };
-
 
 var getRandomEpisode = function(callback) {
     localforage.getItem('gamelist', function(err, val) {
         val = val || [];
         var r = Math.floor(Math.random() * 5000) + 1000;
-        
-        while(val.indexOf(r)>-1){
+
+        while (val.indexOf(r) > -1) {
             r = Math.floor(Math.random() * 5000) + 1000;
         }
 
@@ -243,6 +247,17 @@ var resetCache = function() {
     });
 };
 
+var getEpisodeFromCache = function(callback) {
+    localforage.getItem('cachedEpisodes', function(err, val) {
+        if (err) return callback(err);
+        var episode = val.pop();
+        localforage.setItem('cachedEpisodes', val, function(err, val) {
+            if (err) return callback(err);
+            return callback(null, episode);
+        });
+    });
+};
+
 var initialise = function() {
 
     numberOfCachedGames();
@@ -284,10 +299,22 @@ var initialise = function() {
         */
 
         getEpisode(episode, function(err, val) {
-            $('#feed').html(tmpl.feed());
-            $('#score').html(tmpl.score());
-            $('#container').html(tmpl.letters()).parent().fadeIn("fast");
-            startGame($(val.rows), vs, "richard");
+            if (err) {
+                dictionary.cache(function(err, val) {
+                    getEpisodeFromCache(function(err, val) {
+                        $('#feed').html(tmpl.feed());
+                        $('#score').html(tmpl.score());
+                        $('#container').html(tmpl.letters()).parent().fadeIn("fast");
+                        startGame($(val.rows), vs, "richard");
+                    });
+                });
+            }
+            else {
+                $('#feed').html(tmpl.feed());
+                $('#score').html(tmpl.score());
+                $('#container').html(tmpl.letters()).parent().fadeIn("fast");
+                startGame($(val.rows), vs, "richard");
+            }
         });
 
         e.preventDefault();

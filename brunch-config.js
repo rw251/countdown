@@ -23,6 +23,9 @@ module.exports = {
   plugins: {
     autoReload: {
       port: [8081, 8082]
+    },
+    appcache: {
+      
     }
   }
 };

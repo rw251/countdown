@@ -5,12 +5,13 @@
   "main": "index.js",
   "scripts": {
     "start": "brunch watch --server",
-    "build": "brunch build --production",
+    "build": "rm -rf public/ && brunch build --production",
     "build:dev": "brunch build"
   },
   "author": "Richard Williams",
   "license": "ISC",
   "devDependencies": {
+    "appcache-brunch": "^1.7.1",
     "auto-reload-brunch": "^2.7.1",
     "brunch": "^2.8.0",
     "jade-brunch": "^2.8.0",
