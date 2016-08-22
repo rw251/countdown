@@ -280,8 +280,6 @@ var initialise = function() {
         episode = $('#episode').val();
         episode = episode === "" ? Math.floor(Math.random() * 5000) + 1000 : episode;
 
-        $('#episodenumber').text(episode);
-
         speech.silent = !$('#setting-speech').is(':checked');
         speech.speed = +$('[name=setting-speed]:checked').val();
         timer.LENGTH = +$('#setting-clock').val();
@@ -302,6 +300,7 @@ var initialise = function() {
             if (err) {
                 dictionary.cache(function(err, val) {
                     getEpisodeFromCache(function(err, val) {
+                        $('#episodenumber').text(val.n);
                         $('#feed').html(tmpl.feed());
                         $('#score').html(tmpl.score());
                         $('#container').html(tmpl.letters()).parent().fadeIn("fast");
@@ -310,6 +309,7 @@ var initialise = function() {
                 });
             }
             else {
+                $('#episodenumber').text(episode);
                 $('#feed').html(tmpl.feed());
                 $('#score').html(tmpl.score());
                 $('#container').html(tmpl.letters()).parent().fadeIn("fast");
