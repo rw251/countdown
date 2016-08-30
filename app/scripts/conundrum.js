@@ -151,6 +151,8 @@ var conundrumRound = {
     },
 
     declare: function(word) {
+        $('body').off('keydown');
+        $('.tileInner').removeClass('slot-hover').off('click').parent().removeClass('slot-done');
         speech.say("Is it " + word, "richard", function() {
             speech.say("Let's see..", "nick", function() {
                 if (word.toLowerCase() === conundrum.answer.toLowerCase()) {
@@ -219,6 +221,56 @@ var conundrumRound = {
 
     buzz: function() {
         timer.isPaused = true;
+        
+        $('.tileInner').on('click', conundrumRound.doTile).addClass('slot-hover');
+        
+        $('body').on('keydown', function(e) {
+            var k = e.keyCode;
+            if (k > 90) k -= 32;
+            if (k >= 65 && k <= 90) {
+                conundrumRound.doTile.call($('.tile3:not(.slot-done) .tileInner:contains(' + String.fromCharCode(k) + '):first'));
+                e.preventDefault();
+            }
+            else if (e.keyCode === 8) {
+                conundrumRound.undo();
+                e.preventDefault();
+            }
+            else if (e.keyCode === 13) {
+                $('#goConundrum').click();
+                e.preventDefault();
+            }
+           // e.preventDefault();
+
+        });
+    },
+    
+    doTile: function() {
+        var t = $(this).text();
+        $(this).parent().addClass('slot-done');
+        $(this).off('click');
+        $('.conundrum-declare').find('input[type=text]').val($('.conundrum-declare').find('input[type=text]').val() + t).focus();
+        $('#conundrumalt').val($('#conundrum').val());
+        if (!conundrumRound.tiles) conundrumRound.tiles = [$(this)];
+        else conundrumRound.tiles.push($(this));
+    },
+
+    undo: function() {
+        if (conundrumRound.tiles && conundrumRound.tiles.length > 0) {
+            var tile = conundrumRound.tiles.pop();
+            tile.parent().removeClass('slot-done');
+            var newText = $('#conundrum').val().substr(0, $('#conundrum').val().length - 1);
+            $('#conundrum').val(newText).focus();
+            $('#conundrumalt').val(newText);
+            tile.on('click', function() {
+                var t = $(this).text();
+                $(this).parent().addClass('slot-done');
+                $(this).off('click');
+                $('.conundrum-declare').find('input[type=text]').val($('.conundrum-declare').find('input[type=text]').val() + t).focus();
+                $('#conundrumalt').val($('#conundrum').val());
+                if (!conundrumRound.tiles) conundrumRound.tiles = [$(this)];
+                else conundrumRound.tiles.push($(this));
+            });
+        }
     }
 
 };

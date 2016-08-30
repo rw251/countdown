@@ -76,7 +76,6 @@ var lettersRound = {
         }
     },
 
-
     declare: function(word, playRound) {
         $('.word-declare').hide();
 

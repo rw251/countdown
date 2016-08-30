@@ -10,8 +10,12 @@
   .pure-g
     .pure-u-1.conundrum-buzz
       button#buzz.pure-button.button-error.button-xlarge(type='button') BUZZ!
-    .pure-u-1.conundrum-declare
-      .input-group
-        input#conundrum.form-control(type='text', placeholder='Enter conundrum...')
-        span.input-group-btn
+      
+  .pure-g
+    .pure-u-1
+      .wrap
+        form.pure-form.conundrum-declare
+          input#conundrum.hidden-sm(type='text', placeholder='Enter conundrum...')
+          input#conundrumalt.visible-sm(type='text', placeholder='Tap letters to spell conundrum...', disabled='')
+          button#undoConundrumLetter.pure-button.visible-sm(type='button') Undo
           button#goConundrum.pure-button(type='button') Submit!

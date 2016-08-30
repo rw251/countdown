@@ -325,6 +325,8 @@ var initialise = function() {
         letterRound.declare($('#word').val().toUpperCase(), playRound);
     }).on('click', '#undoLetter', function() {
         letterRound.undo();
+    }).on('click', '#undoConundrumLetter', function() {
+        conundrumRound.undo();
     }).on('click', '#goNumber', function(e) {
         timer.isPaused = true;
         timer.enableNoSleep();
