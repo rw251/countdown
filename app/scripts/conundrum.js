@@ -17,61 +17,34 @@ var conundrumRound = {
             c2: {}
         };
 
-        rtn.conundrum = val.find('.cselection').text();
+        rtn.conundrum = val.l;
         if (rtn.conundrum.length === 10) {
             //occasioinally conundrum is abcdefghi* if they don't know what it actually was
             rtn.conundrum = rtn.conundrum.substr(0, 9).toUpperCase();
         }
-        var c1buzz = val.find('.c1buzz').text().trim();
-        var c2buzz = val.find('.c2buzz').text().trim();
-        var ans = val.find('.cothers').text().trim();
+        rtn.c1.answer = val["1"];
+        rtn.c2.answer = val["2"];
 
-        if (c1buzz.length > 8 && c1buzz.indexOf('☓') === -1) ans = c1buzz;
-        else if (c2buzz.length > 8 && c2buzz.indexOf('☓') === -1) ans = c2buzz;
-        rtn.answer = ans.match(/[A-Z]{9}/)[0];
+        rtn.answer = val.s;
 
         rtn.c1.time = 60;
         rtn.c2.time = 60;
 
-        //cultivater ☓ 
-        //(7.5 seconds)
-
-        //LUCRATIVE 
-        //(16.75 seconds)
-
-        //hustleing ☓ 
-        //(25.25 seconds)
-
-        //☓ 
-        //(25.33 seconds)
-
+        if(val["1-time"]) rtn.c1.time = +val["1-time"];
+        if(val["2-time"]) rtn.c2.time = +val["2-time"];
         // empty if nothing
         rtn.c1.success = false;
         rtn.c2.success = false;
 
-        if (c1buzz.length > 8) {
-            console.log(c1buzz);
-            console.log(c1buzz.match(/\(([0-9\.]+) /));
-            rtn.c1.time = +c1buzz.match(/\(([0-9\.]+) /)[1];
-            if (c1buzz.indexOf('☓') === -1) {
-                rtn.who = "c1";
-                rtn.c1.success = true;
-            }
-            else {
-                rtn.c1.answer = c1buzz.match(/[A-Za-z]*/)[0].toUpperCase();
-            }
+        if(val["1-valid"]){
+          //1 got it
+          rtn.who="c1";
+          rtn.c1.success=true;
         }
-        if (c2buzz.length > 8) {
-            console.log(c2buzz);
-            console.log(c2buzz.match(/\(([0-9\.]+) /));
-            rtn.c2.time = +c2buzz.match(/\(([0-9\.]+) /)[1];
-            if (c2buzz.indexOf('☓') === -1) {
-                rtn.who = "c2";
-                rtn.c2.success = true;
-            }
-            else {
-                rtn.c2.answer = c2buzz.match(/[A-Za-z]*/)[0].toUpperCase();
-            }
+        if(val["2-valid"]){
+          //1 got it
+          rtn.who="c2";
+          rtn.c2.success=true;
         }
 
         if (switcheroo) {
@@ -221,9 +194,9 @@ var conundrumRound = {
 
     buzz: function() {
         timer.isPaused = true;
-        
+
         $('.tileInner').on('click', conundrumRound.doTile).addClass('slot-hover');
-        
+
         $('body').on('keydown', function(e) {
             var k = e.keyCode;
             if (k > 90) k -= 32;
@@ -243,7 +216,7 @@ var conundrumRound = {
 
         });
     },
-    
+
     doTile: function() {
         var t = $(this).text();
         $(this).parent().addClass('slot-done');

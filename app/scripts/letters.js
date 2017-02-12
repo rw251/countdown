@@ -11,13 +11,13 @@ var lettersRound = {
     load: function(val, switcheroo) {
         var rtn = {};
 
-        rtn.letters = val.find('.lselection').text();
+        rtn.letters = val.l;
         rtn.lettersClone = rtn.letters;
-        rtn.oLetters = val.find('.lselection').text();
-        rtn.c1 = val.find('.c1word').text().trim();
-        rtn.c2 = val.find('.c2word').text().trim();
-        rtn.c1valid = true;
-        rtn.c2valid = true;
+        rtn.oLetters = val.l+"";
+        rtn.c1 = val["1"];
+        rtn.c2 = val["2"];
+        rtn.c1valid = !val["1-bad"];
+        rtn.c2valid = !val["2-bad"];
 
         if (rtn.c1.toUpperCase() !== rtn.c1) {
             rtn.c1valid = false;
@@ -28,9 +28,9 @@ var lettersRound = {
             rtn.c2 = rtn.c2.substr(0, rtn.c2.length - 2).trim().toUpperCase();
         }
 
-        rtn.others = val.find('.lothers').text().split(',').map(function(a) {
-            return a.trim();
-        });
+        rtn.othersC = val.c || [];
+        rtn.othersD = val.d || [];
+        rtn.others = rtn.othersC.concat(rtn.othersD);
 
         if (switcheroo) {
             rtn.c3 = rtn.c1;
@@ -134,24 +134,15 @@ var lettersRound = {
                                     who: "susie"
                                 });
 
-                                var dc = letters.others.filter(function(v) {
-                                    return v.indexOf("*") < 0;
-                                });
-                                var ai = letters.others.filter(function(v) {
-                                    return v.indexOf("*") > -1;
-                                }).map(function(v) {
-                                    return v.replace(/\*/, "");
-                                });
-
-                                if (dc.length > 0) {
+                                if (letters.othersD.length > 0) {
                                     tts.push({
-                                        what: "We got " + dc.join(", "),
+                                        what: "We got " + letters.othersD.join(", "),
                                         who: "susie"
                                     });
                                 }
-                                if (ai.length > 0) {
+                                if (letters.othersC.length > 0) {
                                     tts.push({
-                                        what: "The computer got " + ai.join(", "),
+                                        what: "The computer got " + letters.othersC.join(", "),
                                         who: "susie"
                                     });
                                 }
@@ -212,24 +203,15 @@ var lettersRound = {
                                 who: "susie"
                             });
 
-                            var dc = letters.others.filter(function(v) {
-                                return v.indexOf("*") < 0;
-                            });
-                            var ai = letters.others.filter(function(v) {
-                                return v.indexOf("*") > -1;
-                            }).map(function(v) {
-                                return v.replace(/\*/, "");
-                            });
-
-                            if (dc.length > 0) {
+                            if (letters.othersD.length > 0) {
                                 tts.push({
-                                    what: "We got " + dc.join(", "),
+                                    what: "We got " + letters.othersD.join(", "),
                                     who: "susie"
                                 });
                             }
-                            if (ai.length > 0) {
+                            if (letters.othersC.length > 0) {
                                 tts.push({
-                                    what: "The computer got " + ai.join(", "),
+                                    what: "The computer got " + letters.othersC.join(", "),
                                     who: "susie"
                                 });
                             }

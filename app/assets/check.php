@@ -23,6 +23,8 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, array('app_id: ' . getenv('OED_ID'), 'app_k
 
 // return transfer as string
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+// enable thie following for debugging
+//curl_setopt($ch, CURLOPT_VERBOSE, true);
 
 $rtn = json_decode(curl_exec($ch));
 

@@ -17,6 +17,7 @@
     "jade-brunch": "^2.8.0",
     "javascript-brunch": "^2.0.0",
     "jshint-brunch": "^2.0.0",
+    "npm-run-all": "^4.0.1",
     "sass-brunch": "^2.6.3"
   },
   "dependencies": {

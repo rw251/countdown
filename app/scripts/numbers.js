@@ -10,10 +10,8 @@ var numberRound = {
     load: function(val, switcheroo) {
         var rtn = {};
 
-        var temp = val.find('.nselection').text().split('→');
-
-        rtn.selection = temp[0].trim().split(' ');
-        rtn.selectionClone = rtn.selection.slice();
+        rtn.selection = val.n;
+        rtn.selectionClone = val.n.slice();
 
         rtn.small = 0;
         rtn.large = 0;
@@ -25,25 +23,23 @@ var numberRound = {
 
         rtn.say = rtn.large === 0 ? "6 small numbers" : rtn.large + " large number" + (rtn.large === 1 ? "" : "s") + " and " + rtn.small + " small ones";
 
-        rtn.target = temp[1].replace(/[^0-9]/g, "");
-        rtn.c1 = val.find('.c1nums').text().split('\n');
-        rtn.c2 = val.find('.c2nums').text().split('\n');
-        if (rtn.c1[0].indexOf('☓') > -1) {
+        rtn.target = val.t;
+        rtn.c1 = val["1"];
+        rtn.c2 = val["2"];
+        if (val["1-bad"]) {
             rtn.c1valid = false;
         }
-        else if (rtn.c1[0].search(/[0-9]/) > -1 && rtn.c1.length > 1) {
-            rtn.c1method = rtn.c1[1];
+        else {
+            rtn.c1method = val["1-sol"];
         }
-        rtn.c1 = rtn.c1[0].replace(/[^0-9]/g, "");
-        if (rtn.c2[0].indexOf('☓') > -1) {
+        if (val["2-bad"]) {
             rtn.c2valid = false;
         }
-        else if (rtn.c2[0].search(/[0-9]/) > -1 && rtn.c2.length > 1) {
-            rtn.c2method = rtn.c2[1];
+        else {
+            rtn.c2method = val["2-sol"];
         }
-        rtn.c2 = rtn.c2[0].replace(/[^0-9]/g, "");
 
-        rtn.rachel = val.find('.nothers').text();
+        rtn.rachel = val.sol;
 
         if (switcheroo) {
             rtn.c3 = rtn.c1;
@@ -159,7 +155,7 @@ var numberRound = {
                             target: numbers.target,
                             what: [number, numbers.c1, numbers.c2],
                             valid: [null, !!numbers.c1method, !!numbers.c2method]
-                        }); 
+                        });
                     });
                 }
                 else if (winners.length === 1) {

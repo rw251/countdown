@@ -18,14 +18,14 @@ module.exports = {
     }
   },
 
-  server: {command: "php -S 0.0.0.0:8080 -t public"},
-  
+  server: {command: "php -S 0.0.0.0:8080 -t public -c php.ini"},
+
   plugins: {
     autoReload: {
       port: [8081, 8082]
     },
     appcache: {
-      
+
     }
   }
 };
