@@ -6,7 +6,8 @@
   "scripts": {
     "start": "brunch watch --server",
     "build": "rm -rf public/ && brunch build --production",
-    "build:dev": "brunch build"
+    "build:dev": "brunch build",
+    "test": "standard"
   },
   "author": "Richard Williams",
   "license": "ISC",
@@ -16,9 +17,9 @@
     "brunch": "^2.8.0",
     "jade-brunch": "^2.8.0",
     "javascript-brunch": "^2.0.0",
-    "jshint-brunch": "^2.0.0",
     "npm-run-all": "^4.0.1",
-    "sass-brunch": "^2.6.3"
+    "sass-brunch": "^2.6.3",
+    "standard": "^8.6.0"
   },
   "dependencies": {
     "digest-brunch": "^1.5.1",
