@@ -12,6 +12,17 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
+function getAllLetters($conn){
+  /*$sql = "SELECT json FROM episodes";
+  $result = $conn->query($sql);
+
+  while($row = $result->fetch_assoc()) {
+    $rows[] = $row["json"];
+  }
+  return $rows;*/
+  return 1;
+}
+
 function firstEpisodeWithData($conn) {
   $sql = "SELECT MIN(id) as minid FROM episodes";
   $result = $conn->query($sql);
@@ -62,12 +73,15 @@ function episodesWithoutData($conn) {
     }
     $i++;
   }
-  
+
   return $ids;
 }
 
 
 switch($_GET["m"]) {
+  case "getAllLetters":
+    $json = getAllLetters($conn);
+    break;
   case "episodesWithData":
     $json = episodesWithData($conn);
     break;
