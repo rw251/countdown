@@ -1,0 +1,40 @@
+.score-bar {
+  display: -ms-flexbox;
+  display: flex;
+  padding: 4px 10px;
+  background: #eee;
+  border-bottom: 2px solid #777;
+}
+
+.score {
+  -ms-flex: 0 1 auto;
+  flex: 0 1 auto;
+  /* Don't stretch - just shrink if not enough space */
+  /* Now we make it center vertically within the container*/
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-align: center;
+  align-items: center;
+  justify-content: center;
+}
+
+.score>div {
+  text-align: center;
+}
+
+.clock {
+  -ms-flex: 1 0 auto;
+  flex: 1 0 auto;
+  /* So it stretches to fit the space in the middle */
+  text-align: center;
+  font-size: 2.5em;
+}
+
+@media (min-width: 1024px) {
+  .score-container {
+    width: 1020px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+  }
+}

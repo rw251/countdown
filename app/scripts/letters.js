@@ -58,7 +58,7 @@ var lettersRound = {
       }
 
       speech.say(start + (letter.search(/[AEIOU]/) > -1 ? 'vowel' : 'consonant') + end, contestant, function () {
-        $('.tileInner')[8 - letters.letters.length].innerText = letter
+        $('.tile')[8 - letters.letters.length].innerText = letter
         speech.say(letter, 'Rachel', function () {
           lettersRound.do(contestant)
         })
@@ -67,8 +67,8 @@ var lettersRound = {
       speech.say(speech.THIRTY, 'nick', function () {
         timer.start(function () {
           speech.say("Time's up. So what do you have?", 'nick')
-          $('.letter-declare').show()
-          $('.letter-board').hide()
+          $('.letter-declare').removeClass("hidden")
+          $('.letter-grid').addClass("hidden")
         })
       })
     }
@@ -78,7 +78,7 @@ var lettersRound = {
     $('.word-declare').hide()
 
     $('body').off('keydown')
-    $('.tileInner').removeClass('slot-hover').off('click').parent().removeClass('slot-done')
+    $('.tile').removeClass('slot-hover').off('click').parent().removeClass('slot-done')
     speech.say([{
       what: word,
       who: 'Richard'
@@ -258,7 +258,8 @@ var lettersRound = {
       var k = e.keyCode
       if (k > 90) k -= 32
       if (k >= 65 && k <= 90) {
-        lettersRound.doTile.call($('.tile3:not(.slot-done) .tileInner:contains(' + String.fromCharCode(k) + '):first'))
+        var elem = $('.tile-wrapper:not(.slot-done) .tile:contains(' + String.fromCharCode(k) + '):first')
+        lettersRound.doTile.call(elem)
       } else if (e.keyCode === 8) {
         lettersRound.undo()
       } else if (e.keyCode === 13) {
@@ -266,8 +267,8 @@ var lettersRound = {
       }
       e.preventDefault()
     })
-    $('.letter-declare').hide()
-    $('.letter-board').show()
+    $('.letter-declare').addClass("hidden");
+    $('.letter-grid').removeClass("hidden");
     speech.say(lettersRound.iveGot(length), 'Richard', function () {
       speech.say(lettersRound.iveGot(letters.c1.length), score.c1first, function () {
         if (score.c2first) {
@@ -281,7 +282,7 @@ var lettersRound = {
           speech.say('So, Richard, what have you got?', 'nick')
           $('.word-declare').show().find('input[type=text]').val('').focus()
         }
-        $('.tileInner').on('click', lettersRound.doTile).addClass('slot-hover')
+        $('.tile').on('click', lettersRound.doTile).addClass('slot-hover')
       })
     })
   },

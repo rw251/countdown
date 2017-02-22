@@ -5,7 +5,7 @@ var noSleep = new NoSleep()
 
 var countdown = function (finalCallback, buzz) {
   if (timer.isPaused) {
-    timer.isPaused = false
+    timer.isPaused = false    
     return
   }
   if (time - Math.floor(time) === 0) $('.clock').text(time)

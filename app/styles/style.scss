@@ -1,5 +1,8 @@
 @import 'pure-min-0.6.0';
 @import 'pure-grids-responsive-min-0.6.0';
+@import 'letter.scss';
+@import 'score.scss';
+@import 'action-drawer.scss';
 
 html,
 button,
@@ -11,17 +14,16 @@ textarea,
     font-family: CenturyGothic, "Apple Gothic", AppleGothic, "URW Gothic L", "Avant Garde", sans-serif;
 }
 
+.hidden {
+  display: none;
+}
+
 .feed {
     width: 100%;
     height: 120px;
     overflow-y: scroll;
     border: 2px solid darkgrey;
     margin-top: 10px;
-}
-
-.slots {
-    position: relative;
-    min-height: 1px;
 }
 
 .narrow-container {
@@ -33,12 +35,6 @@ textarea,
     .narrow-container {
         padding-left: 50px;
         padding-right: 50px;
-    }
-}
-
-@media (max-width: 512px) {
-    .letter-declare {
-        text-align: center;
     }
 }
 
@@ -59,169 +55,10 @@ textarea,
     margin-bottom: 2px;
 }
 
-.tile6 {
-    @extend .tile3;
-    width: 16%;
-    padding-bottom: 16%;
-}
-
-.tile4 {
-    @extend .tile3;
-    width: 24%;
-    padding-bottom: 24%;
-}
-
 .wrap {
     overflow: hidden;
     margin: 10px 10px 0 10px;
 }
-
-.tileInner,
-.calcslot {
-    font-size: 7vw;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    text-align: center;
-    position: absolute;
-    left: 10px;
-    right: 10px;
-    top: 10px;
-    bottom: 10px;
-    overflow: hidden;
-}
-
-
-/* uncss:ignore */
-
-.tileInner.digits2 {}
-
-
-/* uncss:ignore */
-
-.tileInner.digits3 {
-    font-size: 5vw;
-}
-
-
-/* uncss:ignore */
-
-.tileInner.digits4 {
-    font-size: 3vw;
-}
-
-@media only screen and (max-width: 480px) and (orientation:portrait) {
-    /* Smartphone view: 1 tile */
-    .tile3,
-    .tile6 {
-        width: 32%;
-        padding-bottom: 32%;
-    }
-    .tile4 {
-        width: 48%;
-        padding-bottom: 48%;
-    }
-    .tile-end {
-        margin-right: 0;
-    }
-    .tileInner,
-    .calcslot {
-        font-size: 20vw;
-    }
-    .tileInner.digits2 {}
-    .tileInner.digits3 {
-        font-size: 12vw;
-    }
-    .tileInner.digits4 {
-        font-size: 9vw;
-    }
-}
-
-@media only screen and (max-width: 360px) {
-    /* Smartphone view: 1 tile */
-    .tile3,
-    .tile6 {
-        width: 32%;
-        padding-bottom: 32%;
-    }
-    .tile4 {
-        width: 48%;
-        padding-bottom: 48%;
-    }
-    .tile-end {
-        margin-right: 0;
-    }
-    .tileInner,
-    .calcslot {
-        font-size: 20vw;
-    }
-    .tileInner.digits2 {}
-    .tileInner.digits3 {
-        font-size: 12vw;
-    }
-    .tileInner.digits4 {
-        font-size: 9vw;
-    }
-}
-
-.slot,
-.nslot,
-.cslot {
-    border: 1px solid darkgrey;
-    display: inline-block;
-    width: 40px;
-    line-height: 40px;
-    margin-right: 1px;
-    margin-top: 4px;
-    font-size: 30px;
-    font-weight: bold;
-    text-align: center;
-    background-color: rgb(0, 84, 176);
-    color: white;
-}
-
-.nslot {
-    width: 60px;
-    line-height: 60px;
-}
-
-.target {
-    border: 1px solid darkgrey;
-    display: inline-block;
-    width: 75px;
-    line-height: 40px;
-    margin-right: 1px;
-    margin-top: 4px;
-    font-size: 30px;
-    font-weight: bold;
-    text-align: center;
-    background-color: rgb(0, 84, 176);
-    color: white;
-}
-
-.clock {
-    border: 1px solid darkgrey;
-    display: inline-block;
-    width: 75px;
-    line-height: 40px;
-    margin-right: 1px;
-    margin-top: 4px;
-    font-size: 30px;
-    font-weight: bold;
-    text-align: center;
-    background-color: rgb(0, 84, 176);
-    color: white;
-}
-
-
-/* uncss:ignore */
-
-.slot-selected .tileInner,
-.slot-selected .calcslot {
-    border: 10px solid yellow;
-    margin: -10px;
-}
-
 
 /* uncss:ignore */
 
@@ -252,7 +89,6 @@ textarea,
     margin-right: 5px;
 }
 
-.letter-declare,
 .word-declare,
 /*.number-declare,*/
 .number-calc,
@@ -264,9 +100,6 @@ textarea,
     display: none;
 }
 
-.clock-container {
-    text-align: center;
-}
 
 .l-box {
     padding: 0 1em 1em 1em;

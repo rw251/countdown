@@ -24,7 +24,8 @@ if ($result->num_rows > 0) {
         $json = $row["json"];
     }
 } else {
-    echo "0 results";
+    $json["status"] = "not found";
+    $json = json_encode($json);
 }
 $conn->close();
 

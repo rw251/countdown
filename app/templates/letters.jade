@@ -1,19 +1,26 @@
 #letters-page.letters-container.page
-  .pure-g
-    .pure-u-1.letter-board
-      .wrap
-        - var n = 1
-        while n < 10
-          .tile3(class=n%3===0 ? 'tile-end' : '')
-            .tileInner
-            - n++
-  .pure-g
-    .pure-u-1.letter-declare
-      .wrap
-        - var n = 1
-        while n < 10
-          .tile3.button-success(class=n%3===0 ? 'tile-end' : '')
-            .tileInner= n++
+  .letter-grid
+    - var n = 1
+    while n < 4
+      .tile-triplet
+        - var m = 1
+        while m < 4
+          .letter-tile
+            .tile-wrapper
+              .tile 
+              - m++
+        - n++
+  .letter-declare.hidden
+    - var n = 0
+    while n < 3
+      .tile-triplet
+        - var m = 1
+        while m < 4
+          .letter-tile
+            .tile-wrapper
+              .tile= 3*n+m
+              - m++
+        - n++
   .pure-g
     .pure-u-1
       .wrap
