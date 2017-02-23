@@ -12,12 +12,12 @@ var $ = require('jquery')
 var localforage = require('localforage')
 var dictionary = require('./dictionary')
 var actionDrawer = require('./actionDrawer')
+var buttonBar = require('./buttonBar')
 
 var tmpl = {
   letters: require('templates/letters'),
   numbers: require('templates/numbers'),
   conundrum: require('templates/conundrum'),
-  feed: require('templates/feed'),
   score: require('templates/score'),
   welcome: require('templates/welcome'),
   actionDrawer: require('templates/action-drawer')
@@ -278,19 +278,19 @@ var initialise = function() {
             if (err) throw err
             $('body').prepend(tmpl.actionDrawer())
             $('#episodenumber').text(val.e)
-            $('#feed').html(tmpl.feed())
             $('#score').html(tmpl.score())
             $('#container').html(tmpl.letters()).parent().fadeIn('fast')
-            startGame(val, vs, 'richard')
+            buttonBar.show($('#buttons'))
+            startGame(val, vs, local.getName())
           })
         })
       } else {
         $('body').prepend(tmpl.actionDrawer())
         $('#episodenumber').text(episode)
-        $('#feed').html(tmpl.feed())
         $('#score').html(tmpl.score())
         $('#container').html(tmpl.letters()).parent().fadeIn('fast')
-        startGame(val, vs, 'richard')
+        buttonBar.show($('#buttons'))
+        startGame(val, vs, local.getName())
       }
     })
 
@@ -332,11 +332,7 @@ var initialise = function() {
     if (e.keyCode === 13) $('#goConundrum').click()
   })
 
-  $('body').on('click', '#pausebtn', function() {
-    timer.isPaused = true
-    timer.enableNoSleep()
-    actionDrawer.open()
-  }).on('click', '.action-drawer', function(e){
+  $('body').on('click', '.action-drawer', function(e){
     if($(e.target).is('.action-drawer')) {
       timer.isPaused = false
       timer.enableNoSleep()

@@ -1,6 +1,7 @@
 var speech = require('./speech.js')
 var timer = require('./timer.js')
 var score = require('./score.js')
+var local = require('./local.js')
 var $ = require('jquery')
 
 var conundrum
@@ -81,7 +82,7 @@ var conundrumRound = {
                 'INCORRECT'.split('').forEach(function (l, i) {
                   $($('.tileInner')[i]).text(l)
                 })
-                speech.say("No that's incorrect. Ok Richard, the rest of the time is yours", 'nick', function () {
+                speech.say("No that's incorrect. Ok " + local.getName() + ", the rest of the time is yours", 'nick', function () {
                   conundrum.conundrum.split('').forEach(function (l, i) {
                     $('.tileInner')[i].innerText = l
                   })
@@ -122,7 +123,7 @@ var conundrumRound = {
   declare: function (word) {
     $('body').off('keydown')
     $('.tileInner').removeClass('slot-hover').off('click').parent().removeClass('slot-done')
-    speech.say('Is it ' + word, 'richard', function () {
+    speech.say('Is it ' + word, local.getName(), function () {
       speech.say("Let's see..", 'nick', function () {
         if (word.toLowerCase() === conundrum.answer.toLowerCase()) {
           conundrum.answer.split('').forEach(function (l, i) {

@@ -7,7 +7,7 @@ var score = {
   c2: 0,
 
   update: function () {
-    $('#pscore').text(score.me)
+    $('#p1score').text(score.me)
     $('#c1score').text(score.c1)
     if (score.c2first) $('#c2score').text(score.c2)
   }

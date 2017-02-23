@@ -6,6 +6,7 @@ var save = function () {
 }
 
 var update = function () {
+  l.settings.name = $('#yourname').val()
   l.settings.silent = !$('#setting-speech').is(':checked')
   l.settings.speed = +$('[name=setting-speed]:checked').val()
   l.settings.timerlength = +$('#setting-clock').val()
@@ -15,7 +16,13 @@ var update = function () {
   save()
 }
 
-var l = {}
+var l = {
+
+  getName: function(){
+    return l.settings.name || "Player 1"
+  }
+
+}
 
 l.settings = window.localStorage.getItem('settings')
 
@@ -32,7 +39,7 @@ if (l.settings.skipConundrums) $('#setting-inc-conundrum').attr("checked", false
 $('#container').on('change', '#setting-speech,#setting-inc-letters,#setting-inc-numbers,#setting-inc-conundrum,input:radio', function () {
   update()
 })
-$('#container').on('keyup mouseup', 'input[name=setting-speed], #setting-clock', function () {
+$('#container').on('keyup mouseup', '#yourname, input[name=setting-speed], #setting-clock', function () {
   update()
 })
 module.exports = l

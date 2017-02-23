@@ -1,7 +1,7 @@
 .modal-content>ul {
   list-style-type: none;
   margin:0;
-  padding:20px;
+  padding:0;
 }
 .modal-content>ul>li {
   margin: 10px;
@@ -123,4 +123,16 @@
 }
 .nice-button--success:active {
   background-color: #3e8f41;
+}
+.button-bar {
+  margin-left: auto;
+  margin-right: auto;
+  display: -ms-flexbox;
+  display: flex;
+  justify-content: space-between;
+  max-width: 300px;
+}
+.button-bar>.nice-button {
+  margin: 2px;
+  flex: 1 1 100px;
 }

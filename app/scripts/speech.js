@@ -50,11 +50,6 @@ function say (text, who, callback) {
     return sayLots(text, who)
   }
 
-  $('.feed').append('<div><span class="name">' + who.toUpperCase() + ':</span>' + text + '</div>')
-  $('.feed').animate({
-    scrollTop: $('.feed').prop('scrollHeight')
-  }, 500)
-
   if (speech.silent) {
     setTimeout(callback, speech.speed)
   } else {

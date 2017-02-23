@@ -1,6 +1,7 @@
 var speech = require('./speech.js')
 var timer = require('./timer.js')
 var score = require('./score.js')
+var local = require('./local.js')
 var $ = require('jquery')
 
 var numbers
@@ -115,7 +116,7 @@ var numberRound = {
     var texts = []
     texts.push({
       what: number === 0 ? 'Sorry, I messed up.' : number,
-      who: 'richard'
+      who: local.getName()
     })
     texts.push({
       what: numbers.c1method ? numbers.c1 : 'Sorry, I messed up',
@@ -193,13 +194,13 @@ var numberRound = {
         texts = []
         if (!isValid && number > 0) {
           texts.push({
-            what: "Sorry, Richard, but you've gone wrong.",
+            what: "Sorry, ' + local.getName() + ', but you've gone wrong.",
             who: 'rachel'
           })
         } else {
           if (mindiff === diff.p) {
             score.me += points
-            winners.push('richard')
+            winners.push(local.getName())
           }
         }
 
@@ -318,7 +319,7 @@ var numberRound = {
     $('.number-board .tileInner').parent().on('click', numclick).addClass('slot-hover')
     $('.calcslot').parent().on('click', symclick).addClass('slot-hover')
 
-    speech.say("Go on Richard, show us how it's done.", 'nick', function () {
+    speech.say("Go on " + local.getName() + ", show us how it's done.", 'nick', function () {
 
     })
   }

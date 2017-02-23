@@ -1,5 +1,6 @@
 var speech = require('./speech.js')
 var timer = require('./timer.js')
+var local = require('./local.js')
 var score = require('./score.js')
 var dictionary = require('./dictionary.js')
 var $ = require('jquery')
@@ -81,7 +82,7 @@ var lettersRound = {
     $('.tile').removeClass('slot-hover').off('click').parent().removeClass('slot-done')
     speech.say([{
       what: word,
-      who: 'Richard'
+      who: local.getName()
     }, {
       what: letters.c1,
       who: score.c1first
@@ -269,17 +270,17 @@ var lettersRound = {
     })
     $('.letter-declare').addClass("hidden");
     $('.letter-grid').removeClass("hidden");
-    speech.say(lettersRound.iveGot(length), 'Richard', function () {
+    speech.say(lettersRound.iveGot(length), local.getName(), function () {
       speech.say(lettersRound.iveGot(letters.c1.length), score.c1first, function () {
         if (score.c2first) {
                     // 3p game
           speech.say(lettersRound.iveGot(letters.c2.length), score.c2first, function () {
-            speech.say('So, Richard, what have you got?', 'nick')
+            speech.say('So, ' + local.getName() + ', what have you got?', 'nick')
             $('.word-declare').show().find('input[type=text]').val('').focus()
           })
         } else {
                     // 2p game
-          speech.say('So, Richard, what have you got?', 'nick')
+          speech.say('So, ' + local.getName() + ', what have you got?', 'nick')
           $('.word-declare').show().find('input[type=text]').val('').focus()
         }
         $('.tile').on('click', lettersRound.doTile).addClass('slot-hover')
