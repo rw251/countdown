@@ -13,14 +13,13 @@ if ($conn->connect_error) {
 }
 
 function getAllLetters($conn){
-  /*$sql = "SELECT json FROM episodes";
+  $sql = "SELECT json FROM episodes";
   $result = $conn->query($sql);
 
   while($row = $result->fetch_assoc()) {
     $rows[] = $row["json"];
   }
-  return $rows;*/
-  return 1;
+  return $rows;
 }
 
 function firstEpisodeWithData($conn) {

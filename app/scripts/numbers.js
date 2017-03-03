@@ -64,20 +64,20 @@ var numberRound = {
     if (numbers.selection.length === 6) {
       number = numbers.selection.pop()
       speech.say('Hi Rachel, can I have ' + numbers.say + ' please.', contestant, function () {
-        $($('.number-board .tileInner')[5]).removeClass('digits2 digits3 digits4')
-        if (number > 9) $($('.number-board .tileInner')[5]).addClass('digits2')
-        if (number > 99) $($('.number-board .tileInner')[5]).addClass('digits3')
-        $('.number-board .tileInner')[5].innerText = number
+        $($('.tile')[5]).removeClass('digits2 digits3 digits4')
+        if (number > 9) $($('.tile')[5]).addClass('digits2')
+        if (number > 99) $($('.tile')[5]).addClass('digits3')
+        $('.tile')[5].innerText = number
         speech.say(number, 'Rachel', function () {
           numberRound.do(contestant)
         })
       })
     } else if (numbers.selection.length > 0) {
       number = numbers.selection.pop()
-      $($('.number-board .tileInner')[numbers.selection.length]).removeClass('digits2 digits3 digits4')
-      if (number > 9) $($('.number-board .tileInner')[numbers.selection.length]).addClass('digits2')
-      if (number > 99) $($('.number-board .tileInner')[numbers.selection.length]).addClass('digits3')
-      $('.number-board .tileInner')[numbers.selection.length].innerText = number
+      $($('.tile')[numbers.selection.length]).removeClass('digits2 digits3 digits4')
+      if (number > 9) $($('.tile')[numbers.selection.length]).addClass('digits2')
+      if (number > 99) $($('.tile')[numbers.selection.length]).addClass('digits3')
+      $('.tile')[numbers.selection.length].innerText = number
       speech.say(number, 'Rachel', function () {
         numberRound.do(contestant)
       })
@@ -250,7 +250,7 @@ var numberRound = {
   checkNumber: function (number, callback) {
     if (number === 0) return callback(false)
     $('#messedUp').on('click', function () {
-      $('.number-board .tileInner').removeClass('slot-hover').parent().off('click').removeClass('slot-hide slot-selected slot-changed')
+      $('.tile').removeClass('slot-hover').parent().off('click').removeClass('slot-hide slot-selected slot-changed')
       $('.calcslot').removeClass('slot-hover').parent().off('click').removeClass('slot-hide slot-selected slot-changed')
       $('.number-calc').hide()
       $('#messedUp').off('click')
@@ -292,7 +292,7 @@ var numberRound = {
         $('.calcslot').parent().removeClass('slot-selected').on('click', symclick).addClass('slot-hover')
 
         if (+n1.text() === number) {
-          $('.number-board .tileInner').removeClass('slot-hover').parent().off('click').removeClass('slot-hide slot-selected slot-changed')
+          $('.tile').removeClass('slot-hover').parent().off('click').removeClass('slot-hide slot-selected slot-changed')
           $('.calcslot').removeClass('slot-hover').parent().off('click').removeClass('slot-hide slot-selected slot-changed')
           $('.number-calc').hide()
           $('#messedUp').off('click')
@@ -316,7 +316,7 @@ var numberRound = {
       $('.calcslot').parent().off('click')
     }
 
-    $('.number-board .tileInner').parent().on('click', numclick).addClass('slot-hover')
+    $('.tile').parent().on('click', numclick).addClass('slot-hover')
     $('.calcslot').parent().on('click', symclick).addClass('slot-hover')
 
     speech.say("Go on " + local.getName() + ", show us how it's done.", 'nick', function () {

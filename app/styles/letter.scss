@@ -1,4 +1,4 @@
-.letter-grid, .letter-declare {
+.letter-grid, .letter-declare, .number-grid {
   margin-top: 2px;
   padding: 0 2px;
   display: -ms-flexbox;
@@ -17,7 +17,7 @@
   display: flex;
 }
 @media (orientation: landscape) {
-  .letter-grid, .letter-declare {
+  .letter-grid, .letter-declare, .number-grid {
     padding-bottom: 2px;
     padding-left: 1px;
     padding-right: 1px;
@@ -31,7 +31,7 @@
 }
 
 /*Use flex box to ensure the 3 tiles in a triplet are evenly spaced and take up max width available*/
-.letter-tile {
+.letter-tile, .number-tile {
   -ms-flex: 1;
   flex: 1;
   padding-right: 2px;
@@ -62,6 +62,13 @@
   line-height: calc(29vw);
   font-size: calc(33vw);
 }
+
+.tile-n {
+  font-size: calc(23vw);
+}
+.digits3 {
+  font-size: calc(16vw);
+}
 @media (orientation: landscape) {
   .tile-wrapper {
     padding-right: 1px;
@@ -71,6 +78,13 @@
     line-height: calc(9.6vw);
     font-size: calc(11vw);
   }
+  .tile-n {
+    line-height: calc(14vw);
+  }
+  .digits3 {
+    font-size: calc(8vw);
+    line-height: calc(15vw);
+  }
 }
 @media (min-width: 1024px) {
 
@@ -78,10 +92,17 @@
     line-height: 98.208px;
     font-size: 112.53px;
   }
+  .tile-n {
+    line-height: 143.248px;
+  }
+  .digits3 {
+    line-height: 153.48px;
+    font-size: 81.856px;
+  }
 }
 
 @media (min-width: 1024px) {
-  .letters-container {
+  .letters-container, .numbers-container {
     width: 1024px;
     margin-left: auto;
     margin-right: auto;

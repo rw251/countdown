@@ -1,0 +1,9 @@
+.declare
+  if evaluated
+    strong(class=p1valid ? "valid" : "invalid")= p1
+    span -
+    strong(class=p2valid ? "valid" : "invalid")= p2
+  else
+    strong= p1
+    span -
+    strong= p2

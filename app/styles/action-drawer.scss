@@ -132,7 +132,47 @@
   justify-content: space-between;
   max-width: 300px;
 }
+.message-box {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  padding:0 4px;
+}
+.c-alert {
+  font-size:1.4em;
+  padding: 0.4em;
+}
+.c-alert--info {
+  background-color: #fff;
+  color: #000;
+}
 .button-bar>.nice-button {
   margin: 2px;
   flex: 1 1 100px;
+}
+
+.declare {
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.declare > strong {
+  flex-grow: 1;
+  text-align: left;
+}
+
+.declare > span {
+  min-width:10px;
+}
+
+.declare > strong:first-child {
+  text-align: right;
+}
+
+.declare > .valid {
+  color: #4caf50;
+}
+
+.declare > .invalid {
+  color: #f44336;
 }

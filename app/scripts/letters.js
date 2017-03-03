@@ -4,6 +4,7 @@ var local = require('./local.js')
 var score = require('./score.js')
 var dictionary = require('./dictionary.js')
 var $ = require('jquery')
+var msg = require('./message')
 
 var letters, wordLength
 
@@ -58,6 +59,7 @@ var lettersRound = {
         start = 'A '
       }
 
+      msg.show(letter);
       speech.say(start + (letter.search(/[AEIOU]/) > -1 ? 'vowel' : 'consonant') + end, contestant, function () {
         $('.tile')[8 - letters.letters.length].innerText = letter
         speech.say(letter, 'Rachel', function () {
@@ -65,9 +67,11 @@ var lettersRound = {
         })
       })
     } else {
+      msg.show("Go!");
       speech.say(speech.THIRTY, 'nick', function () {
         timer.start(function () {
           speech.say("Time's up. So what do you have?", 'nick')
+          msg.show("Time's up. So what do you have?");
           $('.letter-declare').removeClass("hidden")
           $('.letter-grid').addClass("hidden")
         })
@@ -77,6 +81,8 @@ var lettersRound = {
 
   declare: function (word, playRound) {
     $('.word-declare').hide()
+
+    msg.show(require('../templates/declare')({p1:word, p2:letters.c1}));
 
     $('body').off('keydown')
     $('.tile').removeClass('slot-hover').off('click').parent().removeClass('slot-done')
@@ -175,6 +181,7 @@ var lettersRound = {
               valids.push(letters.c1valid)
             }
 
+            msg.show(require('../templates/declare')({p1:word, p2:letters.c1, p1valid:isValid, p2valid:letters.c1valid, evaluated:true}));
             var best = words.reduce(function (prev, cur, idx) {
               return valids[idx] ? Math.max(prev, cur.length) : prev
             }, 0)
@@ -223,6 +230,8 @@ var lettersRound = {
                 })
               }
 
+              msg.show("We got: " + letters.others.slice(0,2).join(", "));
+
               if (isValid && word.length === best) score.me += word.length + (best === 9 ? 9 : 0)
               if (letters.c1valid && letters.c1.length === best) score.c1 += letters.c1.length + (best === 9 ? 9 : 0)
               speech.say(tts, function () {
@@ -270,8 +279,9 @@ var lettersRound = {
     })
     $('.letter-declare').addClass("hidden");
     $('.letter-grid').removeClass("hidden");
-    speech.say(lettersRound.iveGot(length), local.getName(), function () {
-      speech.say(lettersRound.iveGot(letters.c1.length), score.c1first, function () {
+    msg.show("You declared " + length + ". " + score.c1first + " declares " + letters.c1.length);
+    //speech.say(lettersRound.iveGot(length), local.getName(), function () {
+      //speech.say(lettersRound.iveGot(letters.c1.length), score.c1first, function () {
         if (score.c2first) {
                     // 3p game
           speech.say(lettersRound.iveGot(letters.c2.length), score.c2first, function () {
@@ -284,8 +294,8 @@ var lettersRound = {
           $('.word-declare').show().find('input[type=text]').val('').focus()
         }
         $('.tile').on('click', lettersRound.doTile).addClass('slot-hover')
-      })
-    })
+      //})
+    //})
   },
 
   undo: function () {
