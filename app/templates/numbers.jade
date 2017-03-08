@@ -11,20 +11,13 @@
               .tile.tile-n
               - m++
         - n++
-  .pure-g
-    .pure-u-1-6
-    .pure-u-2-3.number-calc
-      .slots
-        .tile4
-          span.calcslot(data-operator='add') +
-        .tile4.tile-end
-          span.calcslot(data-operator='subtract') −
-        .tile4
-          span.calcslot(data-operator='divide') ÷
-        .tile4.tile-end
-          span.calcslot(data-operator='times') ×
-      div
-        button#messedUp.pure-button(type='button') Messed it up!!
+  .number-calc
+    button.nice-button.calcslot(data-operator='add') +
+    button.nice-button.calcslot(data-operator='subtract') -
+    button.nice-button.calcslot(data-operator='divide') ÷
+    button.nice-button.calcslot(data-operator='times') ×
+    div
+      button#messedUp.nice-button(type='button') Messed it up!!
   .pure-g
     .pure-u-1.number-declare
       form.pure-form

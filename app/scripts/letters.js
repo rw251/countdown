@@ -5,6 +5,7 @@ var score = require('./score.js')
 var dictionary = require('./dictionary.js')
 var $ = require('jquery')
 var msg = require('./message')
+var buttonBar = require('./buttonBar')
 
 var letters, wordLength
 
@@ -287,11 +288,13 @@ var lettersRound = {
           speech.say(lettersRound.iveGot(letters.c2.length), score.c2first, function () {
             speech.say('So, ' + local.getName() + ', what have you got?', 'nick')
             $('.word-declare').show().find('input[type=text]').val('').focus()
+            buttonBar.show($('#buttons'), {round:"letters", declare:true})
           })
         } else {
                     // 2p game
           speech.say('So, ' + local.getName() + ', what have you got?', 'nick')
           $('.word-declare').show().find('input[type=text]').val('').focus()
+          buttonBar.show($('#buttons'), {round:"letters", declare:true})
         }
         $('.tile').on('click', lettersRound.doTile).addClass('slot-hover')
       //})

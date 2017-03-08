@@ -250,8 +250,8 @@ var numberRound = {
   checkNumber: function (number, callback) {
     if (number === 0) return callback(false)
     $('#messedUp').on('click', function () {
-      $('.tile').removeClass('slot-hover').parent().off('click').removeClass('slot-hide slot-selected slot-changed')
-      $('.calcslot').removeClass('slot-hover').parent().off('click').removeClass('slot-hide slot-selected slot-changed')
+      $('.tile').removeClass('slot-hover').off('click').removeClass('slot-hide slot-selected')
+      $('.calcslot').removeClass('slot-hover').off('click').removeClass('slot-hide slot-selected')
       $('.number-calc').hide()
       $('#messedUp').off('click')
       callback(false)
@@ -263,37 +263,37 @@ var numberRound = {
 
     var numclick = function () {
       if (symbol) {
+        console.log("1: ",n1,symbol);
         n1inner = n1.find('.tileInner')
         n2 = $(this)
-                // $(this).addClass('slot-selected');
-        $(this).parent().off('click')
+        $(this).off('click')
         nn1 = +n1.text()
         nn2 = +n2.text()
 
         console.log(nn1, symbol.text(), nn2)
 
-        if (symbol.find('.calcslot').data('operator') === 'add') {
+        if (symbol.data('operator') === 'add') {
           sum = nn1 + nn2
-        } else if (symbol.find('.calcslot').data('operator') === 'times') {
+        } else if (symbol.data('operator') === 'times') {
           sum = nn1 * nn2
-        } else if (symbol.find('.calcslot').data('operator') === 'divide') {
+        } else if (symbol.data('operator') === 'divide') {
           sum = nn1 / nn2
         } else {
           sum = nn1 - nn2
         }
-        n1inner.removeClass('digits2 digits3 digits4')
-        if (sum > 9) n1inner.addClass('digits2')
-        if (sum > 99) n1inner.addClass('digits3')
-        if (sum > 999) n1inner.addClass('digits4')
-        n1inner.text(sum)
+        n1.removeClass('digits2 digits3 digits4')
+        if (sum > 9) n1.addClass('digits2')
+        if (sum > 99) n1.addClass('digits3')
+        if (sum > 999) n1.addClass('digits4')
+        n1.text(sum)
 
-        n1.removeClass('slot-selected').addClass('slot-hover slot-changed').on('click', numclick)
+        n1.removeClass('slot-selected').addClass('slot-hover').on('click', numclick)
         n2.removeClass('slot-selected').addClass('slot-hide')
-        $('.calcslot').parent().removeClass('slot-selected').on('click', symclick).addClass('slot-hover')
+        $('.calcslot').removeClass('slot-selected').on('click', symclick).addClass('slot-hover')
 
         if (+n1.text() === number) {
-          $('.tile').removeClass('slot-hover').parent().off('click').removeClass('slot-hide slot-selected slot-changed')
-          $('.calcslot').removeClass('slot-hover').parent().off('click').removeClass('slot-hide slot-selected slot-changed')
+          $('.tile').removeClass('slot-hover').off('click').removeClass('slot-hide slot-selected')
+          $('.calcslot').removeClass('slot-hover').off('click').removeClass('slot-hide slot-selected')
           $('.number-calc').hide()
           $('#messedUp').off('click')
           callback(true)
@@ -303,6 +303,7 @@ var numberRound = {
         n2 = null
         symbol = null
       } else if (!n1) {
+        console.log("2: ");
         n1 = $(this)
         $(this).addClass('slot-selected')
         $(this).off('click')
@@ -311,13 +312,14 @@ var numberRound = {
 
     var symclick = function () {
       if (!n1) return
+      console.log("3: ",n1);
       symbol = $(this)
       $(this).addClass('slot-selected')
-      $('.calcslot').parent().off('click')
+      $('.calcslot').off('click')
     }
 
-    $('.tile').parent().on('click', numclick).addClass('slot-hover')
-    $('.calcslot').parent().on('click', symclick).addClass('slot-hover')
+    $('.tile').on('click', numclick).addClass('slot-hover')
+    $('.calcslot').on('click', symclick).addClass('slot-hover')
 
     speech.say("Go on " + local.getName() + ", show us how it's done.", 'nick', function () {
 

@@ -1,3 +1,8 @@
 .button-bar
-  button#pausebtn.nice-button Pause
-  button#declarebtn.nice-button Declare
+  if round == "letters"
+    if declare
+      button#undoLetter.nice-button.visible-sm Undo
+      button#goWord.nice-button.nice-button--success Submit!
+    else
+      button#pausebtn.nice-button Pause
+      button#declarebtn.nice-button.nice-button--success Declare

@@ -25,7 +25,7 @@ module.exports = {
       port: [8081, 8082]
     },
     appcache: {
-
+      ignore: /[/][.]|php/
     }
   }
 }

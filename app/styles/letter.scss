@@ -69,6 +69,9 @@
 .digits3 {
   font-size: calc(16vw);
 }
+.digits4 {
+  font-size: calc(12vw);
+}
 @media (orientation: landscape) {
   .tile-wrapper {
     padding-right: 1px;
@@ -85,6 +88,10 @@
     font-size: calc(8vw);
     line-height: calc(15vw);
   }
+  .digits3 {
+    font-size: calc(6vw);
+    line-height: calc(15vw);
+  }
 }
 @media (min-width: 1024px) {
 
@@ -99,10 +106,14 @@
     line-height: 153.48px;
     font-size: 81.856px;
   }
+  .digits4 {
+    line-height: 153.48px;
+    font-size: 61.392px;
+  }
 }
 
 @media (min-width: 1024px) {
-  .letters-container, .numbers-container {
+  .letters-container, .numbers-container, .conundrum-container {
     width: 1024px;
     margin-left: auto;
     margin-right: auto;

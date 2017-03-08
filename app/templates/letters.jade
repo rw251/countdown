@@ -22,11 +22,6 @@
               - m++
         - n++
   #message
-  .pure-g
-    .pure-u-1
-      .wrap
-        form.pure-form.word-declare
-          input#word.hidden-sm(type='text', placeholder='Enter word...')
-          input#wordalt.visible-sm(type='text', placeholder='Tap letters to spell word...', disabled='')
-          button#undoLetter.pure-button.visible-sm(type='button') Undo
-          button#goWord.pure-button(type='button') Submit!
+  form.word-declare
+    input#word.hidden-sm(type='text', placeholder='Enter word...')
+    input#wordalt.visible-sm(type='text', placeholder='Tap letters to spell word...', disabled='')

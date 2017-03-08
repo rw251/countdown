@@ -3,13 +3,14 @@ var timer = require('./timer.js')
 var score = require('./score.js')
 var local = require('./local.js')
 var $ = require('jquery')
+var msg = require('./message')
 
 var conundrum
 var playRound
 
 var conundrumRound = {
 
-  load: function (val, switcheroo, play) {
+  load: function(val, switcheroo, play) {
     playRound = play
     var rtn = {
       c1: {},
@@ -18,7 +19,7 @@ var conundrumRound = {
 
     rtn.conundrum = val.l
     if (rtn.conundrum.length === 10) {
-            // occasioinally conundrum is abcdefghi* if they don't know what it actually was
+      // occasioinally conundrum is abcdefghi* if they don't know what it actually was
       rtn.conundrum = rtn.conundrum.substr(0, 9).toUpperCase()
     }
     rtn.c1.answer = val['1']
@@ -31,17 +32,17 @@ var conundrumRound = {
 
     if (val['1-time']) rtn.c1.time = +val['1-time']
     if (val['2-time']) rtn.c2.time = +val['2-time']
-        // empty if nothing
+    // empty if nothing
     rtn.c1.success = false
     rtn.c2.success = false
 
     if (val['1-valid']) {
-          // 1 got it
+      // 1 got it
       rtn.who = 'c1'
       rtn.c1.success = true
     }
     if (val['2-valid']) {
-          // 1 got it
+      // 1 got it
       rtn.who = 'c2'
       rtn.c2.success = true
     }
@@ -57,118 +58,116 @@ var conundrumRound = {
     conundrum = rtn
   },
 
-  do: function (contestant) {
-    conundrum.conundrum.split('').forEach(function (l, i) {
-      $('.tileInner')[i].innerText = l
-    })
-    if (conundrum.c1.time <= 30) {
-      timer.conundrum(conundrum.c1.time, function () {
-        speech.say(contestant + '?', 'nick', function () {
-          speech.say('BUZZ!! Is it ' + (conundrum.c1.answer || conundrum.answer), contestant, function () {
-            speech.say("Let's see...", 'nick', function () {
-              if (conundrum.c1.success) {
-                conundrum.answer.split('').forEach(function (l, i) {
-                  $($('.tileInner')[i]).text(l)
-                })
+  do: function(contestant) {
+    msg.show([
+      { msg: "Ok fingers on buzzers", displayFor: 1000 },
+      { msg: "It's time to reveal todays's...", displayFor: 1000 },
+      { msg: "countdown..", displayFor: 1000 },
+      { msg: "conundrum.", displayFor: 1000 }
+    ], function() {
+      conundrum.conundrum.split('').forEach(function(l, i) {
+        $('.tile')[i].innerText = l
+      })
+      if (conundrum.c1.time <= 30) {
+        timer.conundrum(conundrum.c1.time, function() {
+          msg.show([
+            { msg: "BUZZ!! - Is it " + conundrum.c1.answer, displayFor: 2000 }
+          ], function() {
+            if (conundrum.c1.success) {
+              conundrum.answer.split('').forEach(function(l, i) {
+                $($('.tile')[i]).text(l)
+              })
 
-                score.c1 += 10
-                score.update()
-                speech.say('Well done ' + contestant, 'nick', function () {
+              score.c1 += 10
+              score.update()
+              msg.show('Well done ' + contestant);
+              playRound({
+                time: [-1, conundrum.c1.time, conundrum.c2.time]
+              }, true)
+            } else {
+              msg.show([
+                { msg: "No that's incorrect.", displayFor: 1000 },
+                { msg: local.getName() + ", the rest of the time is yours", displayFor: 500 }
+              ], function() {
+                timer.conundrum(null, function() {
+                  msg.show('So no one got it...');
+                  conundrum.answer.split('').forEach(function(l, i) {
+                    $($('.tile')[i]).text(l)
+                  })
+                  msg.show('. Good game everyone');
                   playRound({
-                    time: [-1, conundrum.c1.time, conundrum.c2.time]
+                    time: [-1, -1, conundrum.c2.time]
                   }, true)
                 })
-              } else {
-                'INCORRECT'.split('').forEach(function (l, i) {
-                  $($('.tileInner')[i]).text(l)
-                })
-                speech.say("No that's incorrect. Ok " + local.getName() + ", the rest of the time is yours", 'nick', function () {
-                  conundrum.conundrum.split('').forEach(function (l, i) {
-                    $('.tileInner')[i].innerText = l
-                  })
-                  timer.conundrum(null, function () {
-                    speech.say('So no one got it...', 'nick', function () {
-                      conundrum.answer.split('').forEach(function (l, i) {
-                        $($('.tileInner')[i]).text(l)
-                      })
-                      speech.say(conundrum.answer + '. Good game everyone', 'nick', function () {
-                        playRound({
-                          time: [-1, -1, conundrum.c2.time]
-                        }, true)
-                      })
-                    })
-                  })
-                })
-              }
-            })
+              })
+            }
           })
         })
-      })
-    } else {
-      timer.start(function () {
-        speech.say('So no one got it...', 'nick', function () {
-          conundrum.answer.split('').forEach(function (l, i) {
-            $($('.tileInner')[i]).text(l)
+      } else {
+        timer.start(function() {
+          msg.show('So no one got it...');
+          conundrum.answer.split('').forEach(function(l, i) {
+            $($('.tile')[i]).text(l)
           })
-          speech.say(conundrum.answer + '. Good game everyone', 'nick', function () {
-            playRound({
-              time: [-1, -1, conundrum.c2.time]
-            }, true)
-          })
+          msg.show('. Good game everyone');
+          playRound({
+            time: [-1, -1, conundrum.c2.time]
+          }, true)
         })
-      })
-    }
+      }
+    })
+
   },
 
-  declare: function (word) {
+  declare: function(word) {
     $('body').off('keydown')
-    $('.tileInner').removeClass('slot-hover').off('click').parent().removeClass('slot-done')
-    speech.say('Is it ' + word, local.getName(), function () {
-      speech.say("Let's see..", 'nick', function () {
+    $('.tile').removeClass('slot-hover').off('click').parent().removeClass('slot-done')
+    speech.say('Is it ' + word, local.getName(), function() {
+      speech.say("Let's see..", 'nick', function() {
         if (word.toLowerCase() === conundrum.answer.toLowerCase()) {
-          conundrum.answer.split('').forEach(function (l, i) {
-            $($('.tileInner')[i]).text(l)
+          conundrum.answer.split('').forEach(function(l, i) {
+            $($('.tile')[i]).text(l)
           })
           score.me += 10
           score.update()
-          speech.say(conundrum.answer + '. Well done. Good game everyone', 'nick', function () {
+          speech.say(conundrum.answer + '. Well done. Good game everyone', 'nick', function() {
             playRound({
               time: [timer.getTime(), conundrum.c1.time, conundrum.c2.time]
             }, true)
           })
         } else {
-          'INCORRECT'.split('').forEach(function (l, i) {
-            $($('.tileInner')[i]).text(l)
+          'INCORRECT'.split('').forEach(function(l, i) {
+            $($('.tile')[i]).text(l)
           })
-          speech.say("No that's wrong. Rest of the time for you, " + score.c1first, 'nick', function () {
-            conundrum.conundrum.split('').forEach(function (l, i) {
-              $($('.tileInner')[i]).text(l)
+          speech.say("No that's wrong. Rest of the time for you, " + score.c1first, 'nick', function() {
+            conundrum.conundrum.split('').forEach(function(l, i) {
+              $($('.tile')[i]).text(l)
             })
             if (conundrum.c1.time <= 30) {
-              timer.conundrum(conundrum.c1.time, function () {
-                speech.say(score.c1first + '?', 'nick', function () {
-                  speech.say('BUZZ!! Is it ' + (conundrum.c1.answer || conundrum.answer), score.c1first, function () {
-                    speech.say("Let's see...", 'nick', function () {
+              timer.conundrum(conundrum.c1.time, function() {
+                speech.say(score.c1first + '?', 'nick', function() {
+                  speech.say('BUZZ!! Is it ' + (conundrum.c1.answer || conundrum.answer), score.c1first, function() {
+                    speech.say("Let's see...", 'nick', function() {
                       if (conundrum.c1.success) {
-                        conundrum.answer.split('').forEach(function (l, i) {
-                          $($('.tileInner')[i]).text(l)
+                        conundrum.answer.split('').forEach(function(l, i) {
+                          $($('.tile')[i]).text(l)
                         })
                         score.c1 += 10
                         score.update()
-                        speech.say('Well done ' + score.c1first, 'nick', function () {
+                        speech.say('Well done ' + score.c1first, 'nick', function() {
                           playRound({
                             time: [-1, conundrum.c1.time, conundrum.c2.time]
                           }, true)
                         })
                       } else {
-                        'INCORRECT'.split('').forEach(function (l, i) {
-                          $($('.tileInner')[i]).text(l)
+                        'INCORRECT'.split('').forEach(function(l, i) {
+                          $($('.tile')[i]).text(l)
                         })
-                        speech.say('So no one got it...', 'nick', function () {
-                          conundrum.answer.split('').forEach(function (l, i) {
-                            $($('.tileInner')[i]).text(l)
+                        speech.say('So no one got it...', 'nick', function() {
+                          conundrum.answer.split('').forEach(function(l, i) {
+                            $($('.tile')[i]).text(l)
                           })
-                          speech.say(conundrum.answer + '. Good game everyone', 'nick', function () {
+                          speech.say(conundrum.answer + '. Good game everyone', 'nick', function() {
                             playRound({
                               time: [-1, -1, conundrum.c2.time]
                             }, true)
@@ -186,16 +185,16 @@ var conundrumRound = {
     })
   },
 
-  buzz: function () {
+  buzz: function() {
     timer.isPaused = true
 
-    $('.tileInner').on('click', conundrumRound.doTile).addClass('slot-hover')
+    $('.tile').on('click', conundrumRound.doTile).addClass('slot-hover')
 
-    $('body').on('keydown', function (e) {
+    $('body').on('keydown', function(e) {
       var k = e.keyCode
       if (k > 90) k -= 32
       if (k >= 65 && k <= 90) {
-        conundrumRound.doTile.call($('.tile3:not(.slot-done) .tileInner:contains(' + String.fromCharCode(k) + '):first'))
+        conundrumRound.doTile.call($('.tile3:not(.slot-done) .tile:contains(' + String.fromCharCode(k) + '):first'))
         e.preventDefault()
       } else if (e.keyCode === 8) {
         conundrumRound.undo()
@@ -204,11 +203,11 @@ var conundrumRound = {
         $('#goConundrum').click()
         e.preventDefault()
       }
-           // e.preventDefault();
+      // e.preventDefault();
     })
   },
 
-  doTile: function () {
+  doTile: function() {
     var t = $(this).text()
     $(this).parent().addClass('slot-done')
     $(this).off('click')
@@ -218,14 +217,14 @@ var conundrumRound = {
     else conundrumRound.tiles.push($(this))
   },
 
-  undo: function () {
+  undo: function() {
     if (conundrumRound.tiles && conundrumRound.tiles.length > 0) {
       var tile = conundrumRound.tiles.pop()
       tile.parent().removeClass('slot-done')
       var newText = $('#conundrum').val().substr(0, $('#conundrum').val().length - 1)
       $('#conundrum').val(newText).focus()
       $('#conundrumalt').val(newText)
-      tile.on('click', function () {
+      tile.on('click', function() {
         var t = $(this).text()
         $(this).parent().addClass('slot-done')
         $(this).off('click')

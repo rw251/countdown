@@ -107,7 +107,7 @@ var playRound = function(lastRound, save) {
   if (rows[round].hasOwnProperty('s') && !skipConundrums) {
     // con
     conundrumRound.load(rows[round], switcheroo, playRound)
-
+    buttonBar.show($('#buttons'), { round: "conundrum", declare: false })
     $('#container').html(tmpl.conundrum())
 
     speech.say("So finally it's time for the conundrum.  Fingers on buzzers as we reveal, today's, countdown conundrum.", 'nick', function() {
@@ -116,7 +116,7 @@ var playRound = function(lastRound, save) {
   } else if (rows[round].hasOwnProperty('l') && !skipLetters) {
     // letters
     $('#container').html(tmpl.letters())
-
+    buttonBar.show($('#buttons'), { round: "letters", declare: false })
     letterRound.load(rows[round], switcheroo)
     cont = ([1, 2, 5, 6, 8, 9, 12, 13, 14, 15].indexOf(round) % 2 === 0 ? score.c1first : name)
 
@@ -126,6 +126,7 @@ var playRound = function(lastRound, save) {
   } else if (rows[round].hasOwnProperty('n') && !skipNumbers) {
     // numbers
     cont = ([3, 7, 10, 16].indexOf(round) % 2 === 0 ? score.c1first : name)
+    buttonBar.show($('#buttons'), { round: "numbers", declare: false })
     numberRound.load(rows[round], switcheroo)
 
     $('#container').html(tmpl.numbers({
@@ -280,7 +281,7 @@ var initialise = function() {
             $('#episodenumber').text(val.e)
             $('#score').html(tmpl.score())
             $('#container').html(tmpl.letters()).parent().fadeIn('fast')
-            buttonBar.show($('#buttons'))
+            buttonBar.show($('#buttons'), { round: "letters", declare: false })
             startGame(val, vs, local.getName())
           })
         })
@@ -289,7 +290,7 @@ var initialise = function() {
         $('#episodenumber').text(episode)
         $('#score').html(tmpl.score())
         $('#container').html(tmpl.letters()).parent().fadeIn('fast')
-        buttonBar.show($('#buttons'))
+        buttonBar.show($('#buttons'), { round: "letters", declare: false })
         startGame(val, vs, local.getName())
       }
     })
@@ -297,14 +298,15 @@ var initialise = function() {
     e.preventDefault()
   })
 
-  $('#container').on('click', '#goWord', function() {
+  $('#buttons').on('click', '#goWord', function() {
     timer.enableNoSleep()
     letterRound.declare($('#word').val().toUpperCase(), playRound)
   }).on('click', '#undoLetter', function() {
     letterRound.undo()
   }).on('click', '#undoConundrumLetter', function() {
     conundrumRound.undo()
-  }).on('click', '#goNumber', function(e) {
+  })
+  $('#container').on('click', '#goNumber', function(e) {
     timer.isPaused = true
     timer.enableNoSleep()
     numberRound.declare($('#number').val(), playRound)
@@ -332,8 +334,8 @@ var initialise = function() {
     if (e.keyCode === 13) $('#goConundrum').click()
   })
 
-  $('body').on('click', '.action-drawer', function(e){
-    if($(e.target).is('.action-drawer')) {
+  $('body').on('click', '.action-drawer', function(e) {
+    if ($(e.target).is('.action-drawer')) {
       timer.isPaused = false
       timer.enableNoSleep()
       actionDrawer.close()

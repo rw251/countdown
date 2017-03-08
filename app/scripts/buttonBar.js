@@ -4,9 +4,9 @@ var timer = require('./timer')
 
 var bb = {
 
-  show: function(panel) {
+  show: function(panel, opts) {
     var tmpl = require('../templates/button-bar')
-    panel.html(tmpl())
+    panel.html(tmpl(opts))
     bb.wireUp()
   },
 
