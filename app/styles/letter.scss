@@ -1,122 +1,154 @@
-.letter-grid, .letter-declare, .number-grid {
-  margin-top: 2px;
-  padding: 0 2px;
-  display: -ms-flexbox;
-  display: flex;
-  -ms-flex-wrap: wrap;
-  /* Ensures the 3 tile-triplets collapse to a square*/
-  flex-wrap: wrap;
+.letter-declare,
+.letter-grid,
+.number-grid {
+    margin-top: 2px;
+    padding: 0 2px;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    /* Ensures the 3 tile-triplets collapse to a square*/
+    flex-wrap: wrap;
 }
 
 .tile-triplet {
-  -ms-flex: 0 0 100%;
-  flex: 0 0 100%;
-  /* Makes each triplet the full width and don't allow stretching or growing */
-  padding: 2px 0;
-  display: -ms-flexbox;
-  display: flex;
+    -ms-flex: 0 0 100%;
+    flex: 0 0 100%;
+    /* Makes each triplet the full width and don't allow stretching or growing */
+    padding: 2px 0;
+    display: -ms-flexbox;
+    display: flex;
 }
 @media (orientation: landscape) {
-  .letter-grid, .letter-declare, .number-grid {
-    padding-bottom: 2px;
-    padding-left: 1px;
-    padding-right: 1px;
-    margin-top: 2px;
-  }
-  .tile-triplet {
+    .letter-declare,
+    .letter-grid,
+    .number-grid {
+        padding-bottom: 2px;
+        padding-left: 1px;
+        padding-right: 1px;
+        margin-top: 2px;
+    }
+
+    .tile-triplet {
+        -ms-flex: 1;
+        flex: 1;
+        padding-bottom: 0;
+    }
+}
+/*Use flex box to ensure the 3 tiles in a triplet are evenly spaced and take up max width available*/
+.letter-tile,
+.number-tile {
     -ms-flex: 1;
     flex: 1;
-    padding-bottom: 0;
-  }
-}
-
-/*Use flex box to ensure the 3 tiles in a triplet are evenly spaced and take up max width available*/
-.letter-tile, .number-tile {
-  -ms-flex: 1;
-  flex: 1;
-  padding-right: 2px;
-  padding-left: 2px;
+    padding-right: 2px;
+    padding-left: 2px;
 }
 
 .tile-wrapper {
-  width: 100%;
-  padding-bottom: 100%;
-  /* Makes the tile square */
-  position: relative;
-  background: #00f;
+    width: 100%;
+    padding-bottom: 100%;
+    /* Makes the tile square */
+    position: relative;
+    background: #00f;
 }
 
 .tile-wrapper.highlighted {
-  background: #ccc;
+    background: #ccc;
 }
 
 .tile {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  color: white;
-  font-family: 'Roboto Mono', monospace;
-  text-align: center;
-  line-height: calc(29vw);
-  font-size: calc(33vw);
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    color: white;
+    font-family: 'Roboto Condensed', sans-serif;
+    text-align: center;
+    line-height: calc(32vw);
+    font-size: calc(25vw);
+}
+
+#buttons {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
 }
 
 .tile-n {
-  font-size: calc(23vw);
+    font-size: calc(23vw);
 }
+
 .digits3 {
-  font-size: calc(16vw);
+    font-size: calc(16vw);
 }
+
 .digits4 {
-  font-size: calc(12vw);
+    font-size: calc(12vw);
 }
 @media (orientation: landscape) {
-  .tile-wrapper {
-    padding-right: 1px;
-    padding-left: 1px;
-  }
-  .tile {
-    line-height: calc(9.6vw);
-    font-size: calc(11vw);
-  }
-  .tile-n {
-    line-height: calc(14vw);
-  }
-  .digits3 {
-    font-size: calc(8vw);
-    line-height: calc(15vw);
-  }
-  .digits3 {
-    font-size: calc(6vw);
-    line-height: calc(15vw);
-  }
+    .tile-wrapper {
+        padding-right: 1px;
+        padding-left: 1px;
+    }
+
+    .tile {
+        line-height: calc(10.5vw);
+        font-size: calc(9vw);
+    }
+
+    .tile-n {
+        line-height: calc(14vw);
+    }
+
+    .digits3 {
+        font-size: calc(8vw);
+        line-height: calc(15vw);
+    }
+
+    .digits3 {
+        font-size: calc(6vw);
+        line-height: calc(15vw);
+    }
+
+    #buttons {
+        position: static;
+        bottom: auto;
+        width: auto;
+    }
 }
 @media (min-width: 1024px) {
+    .tile {
+        line-height: 107.436px;
+        font-size: 92.088px;
+    }
 
-  .tile {
-    line-height: 98.208px;
-    font-size: 112.53px;
-  }
-  .tile-n {
-    line-height: 143.248px;
-  }
-  .digits3 {
-    line-height: 153.48px;
-    font-size: 81.856px;
-  }
-  .digits4 {
-    line-height: 153.48px;
-    font-size: 61.392px;
-  }
+    .tile-n {
+        line-height: 143.248px;
+    }
+
+    .digits3 {
+        line-height: 153.48px;
+        font-size: 81.856px;
+    }
+
+    .digits4 {
+        line-height: 153.48px;
+        font-size: 61.392px;
+    }
+
+    #buttons {
+        position: static;
+        bottom: auto;
+        width: auto;
+    }
 }
-
 @media (min-width: 1024px) {
-  .letters-container, .numbers-container, .conundrum-container {
-    width: 1024px;
-    margin-left: auto;
-    margin-right: auto;
-    text-align: center;
-  }
+    .conundrum-container,
+    .letters-container,
+    .numbers-container {
+        width: 1024px;
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+    }
 }

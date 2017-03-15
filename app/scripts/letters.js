@@ -74,6 +74,13 @@ var lettersRound = {
           speech.say("Time's up. So what do you have?", 'nick')
           msg.show("Time's up. So what do you have?");
           $('.letter-declare').removeClass("hidden")
+          $('body').on('keydown', function (e) {
+            var k = e.keyCode
+            if (k >= 49 && k <= 57) {
+              lettersRound.declareWordLength(k-48);
+            }
+            e.preventDefault()
+          })
           $('.letter-grid').addClass("hidden")
         })
       })
@@ -265,7 +272,7 @@ var lettersRound = {
 
   declareWordLength: function (length) {
     wordLength = length
-    $('body').on('keydown', function (e) {
+    $('body').off('keydown').on('keydown', function (e) {
       var k = e.keyCode
       if (k > 90) k -= 32
       if (k >= 65 && k <= 90) {

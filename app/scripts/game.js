@@ -305,14 +305,14 @@ var initialise = function() {
     letterRound.undo()
   }).on('click', '#undoConundrumLetter', function() {
     conundrumRound.undo()
-  })
-  $('#container').on('click', '#goNumber', function(e) {
+  }).on('click', '#goNumber', function(e) {
     timer.isPaused = true
     timer.enableNoSleep()
     numberRound.declare($('#number').val(), playRound)
     e.preventDefault()
     e.stopPropagation()
-  }).on('click', '#goNumberNothing', function(e) {
+  })
+  $('#container').on('click', '#goNumberNothing', function(e) {
     timer.isPaused = true
     timer.enableNoSleep()
     numberRound.declare('', playRound)

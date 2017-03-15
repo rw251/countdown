@@ -5,13 +5,38 @@
 @import 'action-drawer.scss';
 
 html,
+body,
 button,
 input,
 select,
-textarea,
-.pure-g [class *="pure-u"] {
+textarea {
     /* Set your content font stack here: */
-    font-family: CenturyGothic, "Apple Gothic", AppleGothic, "URW Gothic L", "Avant Garde", sans-serif;
+    font-family: sans-serif;
+}
+
+/* Prevent webkit browsers resizing in landscape */
+html { -webkit-text-size-adjust: none; }
+
+/* This helps use width: 100% without hassle: */
+* {
+  box-sizing: border-box;
+}
+
+/*
+The following is a trick I use to get my page to fill the screen vertically
+since I am almost always going for the "native app" feel as much as possible.
+It's ok if your body is 100% height, the overflow will be visible and there is
+typically at least one top level container inside <body> such as
+<div class="app"> which can benefit by having min-height: 100%;
+*/
+html {
+  min-height: 100%;
+}
+
+body {
+  height: 100%;
+  position: absolute;
+  width: 100%;
 }
 
 .hidden {
