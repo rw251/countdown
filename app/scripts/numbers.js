@@ -2,13 +2,14 @@ var speech = require('./speech.js')
 var timer = require('./timer.js')
 var score = require('./score.js')
 var local = require('./local.js')
+var msg = require('./message')
 var $ = require('jquery')
 
 var numbers
 
 var numberRound = {
 
-  load: function (val, switcheroo) {
+  load: function(val, switcheroo) {
     var rtn = {}
 
     rtn.selection = val.n
@@ -17,9 +18,9 @@ var numberRound = {
     rtn.small = 0
     rtn.large = 0
 
-    rtn.selection.forEach(function (n) {
+    rtn.selection.forEach(function(n) {
       if (n > 10) rtn.large++
-      else rtn.small++
+        else rtn.small++
     })
 
     rtn.say = rtn.large === 0 ? '6 small numbers' : rtn.large + ' large number' + (rtn.large === 1 ? '' : 's') + ' and ' + rtn.small + ' small ones'
@@ -55,20 +56,20 @@ var numberRound = {
     numbers = rtn
   },
 
-  getTarget: function () {
+  getTarget: function() {
     return numbers.target
   },
 
-  do: function (contestant) {
+  do: function(contestant) {
     var number
     if (numbers.selection.length === 6) {
       number = numbers.selection.pop()
-      speech.say('Hi Rachel, can I have ' + numbers.say + ' please.', contestant, function () {
+      speech.say('Hi Rachel, can I have ' + numbers.say + ' please.', contestant, function() {
         $($('.tile')[5]).removeClass('digits2 digits3 digits4')
         if (number > 9) $($('.tile')[5]).addClass('digits2')
         if (number > 99) $($('.tile')[5]).addClass('digits3')
         $('.tile')[5].innerText = number
-        speech.say(number, 'Rachel', function () {
+        speech.say(number, 'Rachel', function() {
           numberRound.do(contestant)
         })
       })
@@ -78,25 +79,26 @@ var numberRound = {
       if (number > 9) $($('.tile')[numbers.selection.length]).addClass('digits2')
       if (number > 99) $($('.tile')[numbers.selection.length]).addClass('digits3')
       $('.tile')[numbers.selection.length].innerText = number
-      speech.say(number, 'Rachel', function () {
+      speech.say(number, 'Rachel', function() {
         numberRound.do(contestant)
       })
     } else {
-      speech.say('And the target is...', 'rachel', function () {
-        $('.target').text(numbers.target)
-        speech.say(numbers.target, 'rachel', function () {
-          speech.say(speech.THIRTY, 'nick', function () {
-            timer.start(function () {
-              speech.say("Time's up. So what do you have?", 'nick')
-              $('.number-declare').show().find('input[type=text]').val('').focus()
-            })
-          })
+      msg.show([
+        { msg: "And the target is...", displayFor: 1000 },
+        { msg: numbers.target, displayFor: 1000 },
+        { msg: "GO!", displayFor: 500 },
+      ], function() {
+        $('.target-number').text(numbers.target)
+        $('#ivegot').show();
+        timer.start(function() {
+          speech.say("Time's up. So what do you have?", 'nick')
+          $('.number-declare').show().find('input[type=text]').val('').focus()
         })
       })
     }
   },
 
-  declare: function (number, playRound) {
+  declare: function(number, playRound) {
     $('.number-declare').hide()
 
     number = +number
@@ -122,20 +124,14 @@ var numberRound = {
       what: numbers.c1method ? numbers.c1 : 'Sorry, I messed up',
       who: score.c1first
     })
-    if (score.c2first) {
-      texts.push({
-        what: numbers.c2method ? numbers.c2 : 'Sorry, I messed up',
-        who: score.c2first
-      })
-    }
 
-    speech.say(texts, function () {
+    msg.show([{ msg: score.c1first + ": " + (numbers.c1method ? numbers.c1 : 'Sorry, I messed up'), displayFor: 1000 }], function() {
       var mindiff = score.c2first ? Math.min(diff.c1, diff.c2) : diff.c1
       var method
       var winners = []
 
       if (mindiff < diff.p || number === 0) {
-                // you lost - so don't bother
+        // you lost - so don't bother
         if (mindiff === diff.c1 && numbers.c1method) {
           winners.push(score.c1first)
           method = numbers.c1method
@@ -147,7 +143,10 @@ var numberRound = {
           winners.push(score.c2first)
         }
         if (winners.length === 0) {
-          speech.say('So no-one got it. Never mind.', 'nick', function () {
+          msg.show([
+            { msg: "No one got it.. Rachel?", displayFor: 1000 },
+            { msg: numbers.rachel, displayFor: 3000 }
+          ], function() {
             playRound({
               numbers: numbers.selectionClone,
               target: numbers.target,
@@ -156,20 +155,21 @@ var numberRound = {
             })
           })
         } else if (winners.length === 1) {
-          speech.say('Go on ' + winners[0], 'nick', function () {
-            speech.say(method, winners[0], function () {
-              speech.say('Well done ' + winners[0], 'rachel', function () {
-                playRound({
-                  numbers: numbers.selectionClone,
-                  target: numbers.target,
-                  what: [number, numbers.c1, numbers.c2],
-                  valid: [null, !!numbers.c1method, !!numbers.c2method]
-                })
+          msg.show([
+            { msg: "Go on " + winners[0], displayFor: 1000 },
+            { msg: method, displayFor: 3000 }
+          ], function() {
+            speech.say('Well done ' + winners[0], 'rachel', function() {
+              playRound({
+                numbers: numbers.selectionClone,
+                target: numbers.target,
+                what: [number, numbers.c1, numbers.c2],
+                valid: [null, !!numbers.c1method, !!numbers.c2method]
               })
             })
           })
         } else if (winners.length === 2 && score.c2first) {
-          speech.say('Well done ' + winners.join(' and '), 'nick', function () {
+          speech.say('Well done ' + winners.join(' and '), 'nick', function() {
             playRound({
               numbers: numbers.selectionClone,
               target: numbers.target,
@@ -181,7 +181,7 @@ var numberRound = {
         return
       }
 
-      numberRound.checkNumber(number, function (isValid) {
+      numberRound.checkNumber(number, function(isValid) {
         if (isValid) mindiff = Math.min(mindiff, diff.p)
         if (mindiff === diff.c1 && numbers.c1method) {
           winners.push(score.c1first)
@@ -207,7 +207,10 @@ var numberRound = {
         console.log(numbers.rachel)
 
         if (winners.length === 0) {
-          speech.say('So no-one got it. Never mind.', 'nick', function () {
+          msg.show([
+            { msg: "No one got it.. Rachel?", displayFor: 1000 },
+            { msg: numbers.rachel, displayFor: 3000 }
+          ], function() {
             playRound({
               numbers: numbers.selectionClone,
               target: numbers.target,
@@ -216,7 +219,7 @@ var numberRound = {
             })
           })
         } else if (winners.length === 1) {
-          speech.say('Well done ' + winners[0], 'nick', function () {
+          speech.say('Well done ' + winners[0], 'nick', function() {
             playRound({
               numbers: numbers.selectionClone,
               target: numbers.target,
@@ -225,7 +228,7 @@ var numberRound = {
             })
           })
         } else if (winners.length === 2 && score.c2first) {
-          speech.say('Well done ' + winners.join(' and '), 'nick', function () {
+          speech.say('Well done ' + winners.join(' and '), 'nick', function() {
             playRound({
               numbers: numbers.selectionClone,
               target: numbers.target,
@@ -234,7 +237,7 @@ var numberRound = {
             })
           })
         } else {
-          speech.say('Well done everyone.', 'nick', function () {
+          speech.say('Well done everyone.', 'nick', function() {
             playRound({
               numbers: numbers.selectionClone,
               target: numbers.target,
@@ -247,9 +250,9 @@ var numberRound = {
     })
   },
 
-  checkNumber: function (number, callback) {
+  checkNumber: function(number, callback) {
     if (number === 0) return callback(false)
-    $('#messedUp').on('click', function () {
+    $('#messedUp').on('click', function() {
       $('.tile').removeClass('slot-hover').off('click').removeClass('slot-hide slot-selected')
       $('.calcslot').removeClass('slot-hover').off('click').removeClass('slot-hide slot-selected')
       $('.number-calc').hide()
@@ -258,12 +261,14 @@ var numberRound = {
     })
 
     $('.number-calc').show()
+    $('#ivegot').hide();
+    $('#buttons').hide();
 
     var n1, n2, nn1, nn2, symbol, sum, n1inner
 
-    var numclick = function () {
+    var numclick = function() {
       if (symbol) {
-        console.log("1: ",n1,symbol);
+        console.log("1: ", n1, symbol);
         n1inner = n1.find('.tileInner')
         n2 = $(this)
         $(this).off('click')
@@ -310,9 +315,9 @@ var numberRound = {
       }
     }
 
-    var symclick = function () {
+    var symclick = function() {
       if (!n1) return
-      console.log("3: ",n1);
+      console.log("3: ", n1);
       symbol = $(this)
       $(this).addClass('slot-selected')
       $('.calcslot').off('click')
@@ -321,7 +326,7 @@ var numberRound = {
     $('.tile').on('click', numclick).addClass('slot-hover')
     $('.calcslot').on('click', symclick).addClass('slot-hover')
 
-    speech.say("Go on " + local.getName() + ", show us how it's done.", 'nick', function () {
+    speech.say("Go on " + local.getName() + ", show us how it's done.", 'nick', function() {
 
     })
   }

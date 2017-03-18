@@ -103,6 +103,7 @@ var playRound = function(lastRound, save) {
   score.update()
 
   // $('#test').html(rows[round]);
+  $('#buttons').show();
 
   if (rows[round].hasOwnProperty('s') && !skipConundrums) {
     // con

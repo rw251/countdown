@@ -1,5 +1,7 @@
 #numbers-page.numbers-container.page
-  .target 000
+  .target 
+    span Target
+    span.target-number 000
   .number-grid
     - var n = 1
     while n < 3
@@ -12,19 +14,18 @@
               - m++
         - n++
   .number-calc
-    button.nice-button.calcslot(data-operator='add') +
-    button.nice-button.calcslot(data-operator='subtract') -
-    button.nice-button.calcslot(data-operator='divide') ÷
-    button.nice-button.calcslot(data-operator='times') ×
-    div
+    .button-bar
+      button.nice-button.calcslot(data-operator='add') +
+      button.nice-button.calcslot(data-operator='subtract') -
+      button.nice-button.calcslot(data-operator='divide') ÷
+      button.nice-button.calcslot(data-operator='times') ×
+    .button-bar
       button#messedUp.nice-button(type='button') Messed it up!!
-  .pure-g
-    .pure-u-1.number-declare
-      form.pure-form
-        fieldset
-          legend I've got..
-          select#number.number-select
-            - var n = target-10
-            while n <= target+10
-              option(value=n, selected=n===target ? '' : undefined)
-                = n++
+  #message
+  #ivegot.button-bar(style="display:none")
+    span(style="font-size:2.5em") I've got..
+    select#number.number-select
+      - var n = target-10
+      while n <= target+10
+        option(value=n, selected=n===target ? '' : undefined)
+          = n++
