@@ -11,7 +11,7 @@ var letters, wordLength
 
 var lettersRound = {
 
-  load: function (val, switcheroo) {
+  load: function(val, switcheroo) {
     var rtn = {}
 
     rtn.letters = val.l
@@ -47,7 +47,7 @@ var lettersRound = {
     letters = rtn
   },
 
-  do: function (contestant) {
+  do: function(contestant) {
     if (letters.letters.length > 0) {
       var letter = letters.letters[0]
       letters.letters = letters.letters.substr(1)
@@ -60,24 +60,23 @@ var lettersRound = {
         start = 'A '
       }
 
-      msg.show(letter);
-      speech.say(start + (letter.search(/[AEIOU]/) > -1 ? 'vowel' : 'consonant') + end, contestant, function () {
+      speech.say(start + (letter.search(/[AEIOU]/) > -1 ? 'vowel' : 'consonant') + end, contestant, function() {
         $('.tile')[8 - letters.letters.length].innerText = letter
-        speech.say(letter, 'Rachel', function () {
+        speech.say(letter, 'Rachel', function() {
           lettersRound.do(contestant)
         })
       })
     } else {
       msg.show("Go!");
-      speech.say(speech.THIRTY, 'nick', function () {
-        timer.start(function () {
+      speech.say(speech.THIRTY, 'nick', function() {
+        timer.start(function() {
           speech.say("Time's up. So what do you have?", 'nick')
           msg.show("Time's up. So what do you have?");
           $('.letter-declare').removeClass("hidden")
-          $('body').on('keydown', function (e) {
+          $('body').on('keydown', function(e) {
             var k = e.keyCode
             if (k >= 49 && k <= 57) {
-              lettersRound.declareWordLength(k-48);
+              lettersRound.declareWordLength(k - 48);
             }
             e.preventDefault()
           })
@@ -87,10 +86,10 @@ var lettersRound = {
     }
   },
 
-  declare: function (word, playRound) {
+  declare: function(word, playRound) {
     $('.word-declare').hide()
 
-    msg.show(require('../templates/declare')({p1:word, p2:letters.c1}));
+    msg.show(require('../templates/declare')({ p1: word, p2: letters.c1 }));
 
     $('body').off('keydown')
     $('.tile').removeClass('slot-hover').off('click').parent().removeClass('slot-done')
@@ -100,12 +99,12 @@ var lettersRound = {
     }, {
       what: letters.c1,
       who: score.c1first
-    }], function () {
+    }], function() {
       if (score.c2first) {
-                // 3p game
-        speech.say(letters.c2, score.c2first, function () {
-          speech.say('Dictionary corner?', 'nick', function () {
-            dictionary.isValidWord(word, wordLength, letters.oLetters, function (isValid) {
+        // 3p game
+        speech.say(letters.c2, score.c2first, function() {
+          speech.say('Dictionary corner?', 'nick', function() {
+            dictionary.isValidWord(word, wordLength, letters.oLetters, function(isValid) {
               var words = [word]
               var valids = [isValid]
               if (word !== letters.c1) {
@@ -117,17 +116,17 @@ var lettersRound = {
                 valids.push(letters.c2valid)
               }
 
-              var best = words.reduce(function (prev, cur, idx) {
+              var best = words.reduce(function(prev, cur, idx) {
                 return valids[idx] ? Math.max(prev, cur.length) : prev
               }, 0)
 
-              var phrase = valids.map(function (val, idx) {
+              var phrase = valids.map(function(val, idx) {
                 if (val) return words[idx] + ' is ok '
                 else return words[idx] + " isn't there I'm afraid "
               }).join(' and ')
-              speech.say(phrase, 'susie', function () {
+              speech.say(phrase, 'susie', function() {
                 var tts = []
-                var longest = letters.others.reduce(function (prev, cur) {
+                var longest = letters.others.reduce(function(prev, cur) {
                   return Math.max(prev, cur.replace(/\*/, '').length)
                 }, 0)
                 if (longest <= best) {
@@ -167,7 +166,7 @@ var lettersRound = {
                 if (isValid && word.length === best) score.me += word.length + (best === 9 ? 9 : 0)
                 if (letters.c1valid && letters.c1.length === best) score.c1 += letters.c1.length + (best === 9 ? 9 : 0)
                 if (score.c2first && letters.c2valid && letters.c2.length === best) score.c2 += letters.c2.length + (best === 9 ? 9 : 0)
-                speech.say(tts, function () {
+                speech.say(tts, function() {
                   playRound({
                     letters: letters.lettersClone,
                     what: [word, letters.c1, letters.c2],
@@ -179,9 +178,9 @@ var lettersRound = {
           })
         })
       } else {
-                // 2p game
-        speech.say('Dictionary corner?', 'nick', function () {
-          dictionary.isValidWord(word, wordLength, letters.oLetters, function (isValid) {
+        // 2p game
+        speech.say('Dictionary corner?', 'nick', function() {
+          dictionary.isValidWord(word, wordLength, letters.oLetters, function(isValid) {
             var words = [word]
             var valids = [isValid]
             if (word !== letters.c1) {
@@ -189,18 +188,18 @@ var lettersRound = {
               valids.push(letters.c1valid)
             }
 
-            msg.show(require('../templates/declare')({p1:word, p2:letters.c1, p1valid:isValid, p2valid:letters.c1valid, evaluated:true}));
-            var best = words.reduce(function (prev, cur, idx) {
+            msg.show(require('../templates/declare')({ p1: word, p2: letters.c1, p1valid: isValid, p2valid: letters.c1valid, evaluated: true }));
+            var best = words.reduce(function(prev, cur, idx) {
               return valids[idx] ? Math.max(prev, cur.length) : prev
             }, 0)
 
-            var phrase = valids.map(function (val, idx) {
+            var phrase = valids.map(function(val, idx) {
               if (val) return words[idx] + ' is ok '
               else return words[idx] + " isn't there I'm afraid "
             }).join(' and ')
-            speech.say(phrase, 'susie', function () {
+            speech.say(phrase, 'susie', function() {
               var tts = []
-              var longest = letters.others.reduce(function (prev, cur) {
+              var longest = letters.others.reduce(function(prev, cur) {
                 return Math.max(prev, cur.replace(/\*/, '').length)
               }, 0)
               if (longest <= best) {
@@ -238,11 +237,11 @@ var lettersRound = {
                 })
               }
 
-              msg.show("We got: " + letters.others.slice(0,2).join(", "));
+              msg.show("We got: " + letters.others.slice(0, 2).join(", "));
 
               if (isValid && word.length === best) score.me += word.length + (best === 9 ? 9 : 0)
               if (letters.c1valid && letters.c1.length === best) score.c1 += letters.c1.length + (best === 9 ? 9 : 0)
-              speech.say(tts, function () {
+              speech.say(tts, function() {
                 playRound({
                   letters: letters.lettersClone,
                   what: [word, letters.c1, letters.c2],
@@ -256,11 +255,11 @@ var lettersRound = {
     })
   },
 
-  iveGot: function (n) {
+  iveGot: function(n) {
     return n === 8 ? "I've got an 8." : "I've got a " + n + '.'
   },
 
-  doTile: function () {
+  doTile: function() {
     var t = $(this).text()
     $(this).parent().addClass('slot-done')
     $(this).off('click')
@@ -270,9 +269,9 @@ var lettersRound = {
     else lettersRound.tiles.push($(this))
   },
 
-  declareWordLength: function (length) {
+  declareWordLength: function(length) {
     wordLength = length
-    $('body').off('keydown').on('keydown', function (e) {
+    $('body').off('keydown').on('keydown', function(e) {
       var k = e.keyCode
       if (k > 90) k -= 32
       if (k >= 65 && k <= 90) {
@@ -287,35 +286,35 @@ var lettersRound = {
     })
     $('.letter-declare').addClass("hidden");
     $('.letter-grid').removeClass("hidden");
-    msg.show("You declared " + length + ". " + score.c1first + " declares " + letters.c1.length);
-    //speech.say(lettersRound.iveGot(length), local.getName(), function () {
-      //speech.say(lettersRound.iveGot(letters.c1.length), score.c1first, function () {
+    msg.show([
+        { msg: require('../templates/declare')({ p1: "You: " + length, p2: score.c1first + ": " + letters.c1.length }), displayFor: 1000 },
+        { msg: require('../templates/declare')({ declaring: true, p1: "You: " + length, p2: score.c1first + ": " + letters.c1.length }), displayFor: 100 }
+    ], function() {
         if (score.c2first) {
-                    // 3p game
-          speech.say(lettersRound.iveGot(letters.c2.length), score.c2first, function () {
+          // 3p game
+          speech.say(lettersRound.iveGot(letters.c2.length), score.c2first, function() {
             speech.say('So, ' + local.getName() + ', what have you got?', 'nick')
             $('.word-declare').show().find('input[type=text]').val('').focus()
-            buttonBar.show($('#buttons'), {round:"letters", declare:true})
+            buttonBar.show($('#buttons'), { round: "letters", declare: true })
           })
         } else {
-                    // 2p game
+          // 2p game
           speech.say('So, ' + local.getName() + ', what have you got?', 'nick')
           $('.word-declare').show().find('input[type=text]').val('').focus()
-          buttonBar.show($('#buttons'), {round:"letters", declare:true})
+          buttonBar.show($('#buttons'), { round: "letters", declare: true })
         }
-        $('.tile').on('click', lettersRound.doTile).addClass('slot-hover')
-      //})
-    //})
+        $('.tile').on('click', lettersRound.doTile).addClass('slot-hover');
+    });
   },
 
-  undo: function () {
+  undo: function() {
     if (lettersRound.tiles && lettersRound.tiles.length > 0) {
       var tile = lettersRound.tiles.pop()
       tile.parent().removeClass('slot-done')
       var newText = $('#word').val().substr(0, $('#word').val().length - 1)
       $('#word').val(newText).focus()
       $('#wordalt').val(newText)
-      tile.on('click', function () {
+      tile.on('click', function() {
         var t = $(this).text()
         $(this).parent().addClass('slot-done')
         $(this).off('click')

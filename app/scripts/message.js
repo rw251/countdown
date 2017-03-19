@@ -7,6 +7,10 @@ var writeMessage = function(message) {
   $('#message').html(html)
 }
 
+var hideMessage = function() {
+  $('#message').html("")
+}
+
 var writeMessageArray = function(messages, callback) {
   if(messages.length===0) return callback();
 
@@ -29,6 +33,10 @@ var msg = {
     } else {
       writeMessageArray(message, callback)
     }
+  },
+
+  hide: function() {
+
   }
 
 }

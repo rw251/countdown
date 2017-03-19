@@ -154,9 +154,13 @@
 .declare {
   display: -ms-flexbox;
   display: flex;
+  max-width:500px;
+  margin-left:auto;
+  margin-right:auto;
 }
 
-.declare > strong {
+.declare > strong,
+.declare > div {
   flex-grow: 1;
   text-align: left;
 }

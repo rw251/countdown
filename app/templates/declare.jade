@@ -1,9 +1,14 @@
 .declare
-  if evaluated
-    strong(class=p1valid ? "valid" : "invalid")= p1
-    span -
-    strong(class=p2valid ? "valid" : "invalid")= p2
-  else
-    strong= p1
-    span -
+  if declaring
+    div
+      div
+        strong= p1
+      div
+        form.word-declare
+          input#word.hidden-sm(type='text', placeholder='Enter word...')
+          input#wordalt.visible-sm(type='text', placeholder='Tap letters to spell word...', disabled='')
     strong= p2
+  else 
+    strong(class=evaluated ? (p1valid ? "valid" : "invalid") : false)= p1
+    span -
+    strong(class=evaluated ? (p2valid ? "valid" : "invalid") : false)= p2
