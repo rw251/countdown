@@ -6,7 +6,7 @@
       div
         form.word-declare
           input#word.hidden-sm(type='text', placeholder='Enter word...')
-          input#wordalt.visible-sm(type='text', placeholder='Tap letters to spell word...', disabled='')
+          input#wordalt.visible-sm(type='text', placeholder='Tap letters to spell', disabled='')
     strong= p2
   else 
     strong(class=evaluated ? (p1valid ? "valid" : "invalid") : false)= p1

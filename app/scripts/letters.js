@@ -48,6 +48,7 @@ var lettersRound = {
   },
 
   do: function(contestant) {
+    $('.letter-grid').removeClass("letter-grid-small")
     if (letters.letters.length > 0) {
       var letter = letters.letters[0]
       letters.letters = letters.letters.substr(1)
@@ -71,7 +72,7 @@ var lettersRound = {
       speech.say(speech.THIRTY, 'nick', function() {
         timer.start(function() {
           speech.say("Time's up. So what do you have?", 'nick')
-          msg.show("Time's up. So what do you have?");
+          msg.show("Time's up. How long?")
           $('.letter-declare').removeClass("hidden")
           $('body').on('keydown', function(e) {
             var k = e.keyCode
@@ -285,25 +286,24 @@ var lettersRound = {
       e.preventDefault()
     })
     $('.letter-declare').addClass("hidden");
-    $('.letter-grid').removeClass("hidden");
+    $('.letter-grid').removeClass("hidden").addClass("letter-grid-small");
     msg.show([
-        { msg: require('../templates/declare')({ p1: "You: " + length, p2: score.c1first + ": " + letters.c1.length }), displayFor: 1000 },
-        { msg: require('../templates/declare')({ declaring: true, p1: "You: " + length, p2: score.c1first + ": " + letters.c1.length }), displayFor: 100 }
+      { msg: require('../templates/declare')({ declaring: true, p1: "You: " + length, p2: score.c1first + ": " + letters.c1.length }), displayFor: 100 }
     ], function() {
-        if (score.c2first) {
-          // 3p game
-          speech.say(lettersRound.iveGot(letters.c2.length), score.c2first, function() {
-            speech.say('So, ' + local.getName() + ', what have you got?', 'nick')
-            $('.word-declare').show().find('input[type=text]').val('').focus()
-            buttonBar.show($('#buttons'), { round: "letters", declare: true })
-          })
-        } else {
-          // 2p game
+      if (score.c2first) {
+        // 3p game
+        speech.say(lettersRound.iveGot(letters.c2.length), score.c2first, function() {
           speech.say('So, ' + local.getName() + ', what have you got?', 'nick')
           $('.word-declare').show().find('input[type=text]').val('').focus()
           buttonBar.show($('#buttons'), { round: "letters", declare: true })
-        }
-        $('.tile').on('click', lettersRound.doTile).addClass('slot-hover');
+        })
+      } else {
+        // 2p game
+        speech.say('So, ' + local.getName() + ', what have you got?', 'nick')
+        $('.word-declare').show().find('input[type=text]').val('').focus()
+        buttonBar.show($('#buttons'), { round: "letters", declare: true })
+      }
+      $('.tile').on('click', lettersRound.doTile).addClass('slot-hover');
     });
   },
 
