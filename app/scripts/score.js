@@ -1,17 +1,17 @@
-var $ = require('jquery')
+const $ = require('jquery');
 
-var score = {
+const score = {
 
   me: 0,
   c1: 0,
   c2: 0,
 
-  update: function () {
-    $('#p1score').text(score.me)
-    $('#c1score').text(score.c1)
-    if (score.c2first) $('#c2score').text(score.c2)
-  }
+  update() {
+    $('#p1score').text(score.me);
+    $('#c1score').text(score.c1);
+    if (score.c2first) $('#c2score').text(score.c2);
+  },
 
-}
+};
 
-module.exports = score
+module.exports = score;

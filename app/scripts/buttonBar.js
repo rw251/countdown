@@ -1,23 +1,23 @@
-var $ = require('jquery')
-var actionDrawer = require('./actionDrawer')
-var timer = require('./timer')
+const $ = require('jquery');
+const actionDrawer = require('./actionDrawer');
+const timer = require('./timer');
+const buttonBarTmpl = require('../templates/button-bar.jade');
 
-var bb = {
+const bb = {
 
-  show: function(panel, opts) {
-    var tmpl = require('../templates/button-bar')
-    panel.html(tmpl(opts))
-    bb.wireUp()
+  show(panel, opts) {
+    panel.html(buttonBarTmpl(opts));
+    bb.wireUp();
   },
 
-  wireUp: function() {
-    $('#pausebtn').on('click', function() {
-      timer.isPaused = true
-      timer.enableNoSleep()
-      actionDrawer.open()
-    })
-  }
+  wireUp() {
+    $('#pausebtn').on('click', () => {
+      timer.isPaused = true;
+      timer.enableNoSleep();
+      actionDrawer.open();
+    });
+  },
 
-}
+};
 
-module.exports = bb
+module.exports = bb;

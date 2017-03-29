@@ -1,14 +1,12 @@
-'use strict'
+const $ = require('jquery');
+const game = require('./scripts/game');
 
-var $ = require('jquery')
-var game = require('./scripts/game')
+const App = {
+  init: function init() {
+    $(document).ready(() => {
+      game.init();
+    });
+  },
+};
 
-var App = {
-  init: function init () {
-    $(document).ready(function () {
-      game.init()
-    })
-  }
-}
-
-module.exports = App
+module.exports = App;

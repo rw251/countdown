@@ -14,7 +14,13 @@
   "devDependencies": {
     "appcache-brunch": "^1.7.1",
     "auto-reload-brunch": "^2.7.1",
+    "babel-eslint": "^7.2.1",
     "brunch": "^2.8.0",
+    "eslint": "^3.18.0",
+    "eslint-config-airbnb": "^14.1.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^3.0.2",
+    "eslint-plugin-react": "^6.10.3",
     "jade-brunch": "^2.8.0",
     "javascript-brunch": "^2.0.0",
     "npm-run-all": "^4.0.1",

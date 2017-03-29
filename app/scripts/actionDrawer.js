@@ -1,14 +1,14 @@
-var  $ = require('jquery')
+const $ = require('jquery');
 
-var ad = {
+const ad = {
 
-  close: function(){
-    $('.action-drawer').hide()
+  close() {
+    $('.action-drawer').hide();
   },
 
-  open: function(){
-    $('.action-drawer').show()
-  }
-}
+  open() {
+    $('.action-drawer').show();
+  },
+};
 
-module.exports = ad
+module.exports = ad;

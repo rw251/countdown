@@ -1,44 +1,42 @@
-var $ = require('jquery')
+const $ = require('jquery');
+const messageTmpl = require('../templates/message.jade');
 
-var writeMessage = function(message) {
-  var tmpl = require('../templates/message')
-  var html = tmpl({msg:message})
+const writeMessage = function writeMessage(message) {
+  const html = messageTmpl({ msg: message });
 
-  $('#message').html(html)
-}
+  $('#message').html(html);
+};
 
-var hideMessage = function() {
-  $('#message').html("")
-}
+const writeMessageArray = function writeMessageArray(messages, callback) {
+  if (messages.length === 0) {
+    callback();
+  } else {
+    const item = messages.shift();
+    writeMessage(item.msg);
+    setTimeout(() => {
+      writeMessageArray(messages, callback);
+    }, item.displayFor);
+  }
+};
 
-var writeMessageArray = function(messages, callback) {
-  if(messages.length===0) return callback();
-
-  var item = messages.shift();
-  writeMessage(item.msg)
-  setTimeout(function(){
-    writeMessageArray(messages, callback)
-  }, item.displayFor)
-}
-
-var msg = {
+const msg = {
 
   // Either a string or an array of {message: "xxx", displayFor: n}
-  show: function(message, callback) {
-    if(typeof message === "string") {
-      writeMessage(message)
-      if(typeof callback === "function") {
-        return callback();
+  show(message, callback) {
+    if (typeof message === 'string') {
+      writeMessage(message);
+      if (typeof callback === 'function') {
+        callback();
       }
     } else {
-      writeMessageArray(message, callback)
+      writeMessageArray(message, callback);
     }
   },
 
-  hide: function() {
+  hide() {
 
-  }
+  },
 
-}
+};
 
-module.exports = msg
+module.exports = msg;
