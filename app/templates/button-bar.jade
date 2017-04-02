@@ -9,3 +9,10 @@
   if round == "numbers"
     button#pausebtn.nice-button Pause
     button#goNumber.nice-button.nice-button--success Declare
+  if round == "conundrum"
+    if declare
+      button#undoConundrumLetter.nice-button.visible-sm Undo
+      button#goConundrum.nice-button.nice-button--success Submit!
+    else
+      button#pausebtn.nice-button Pause
+      button#declarebtn.nice-button.nice-button--success Declare

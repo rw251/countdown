@@ -1,269 +1,259 @@
-/* jshint node: true */
-/* global location */
+const speech = require('./speech');
+const numberRound = require('./numbers');
+const letterRound = require('./letters');
+const conundrumRound = require('./conundrum');
+const timer = require('./timer');
+const score = require('./score');
+const local = require('./local');
+const $ = require('jquery');
+const localforage = require('localforage');
+const dictionary = require('./dictionary');
+const actionDrawer = require('./actionDrawer');
+const buttonBar = require('./buttonBar');
+const lettersTmpl = require('../templates/letters.jade');
+const numbersTmpl = require('../templates/numbers.jade');
+const conundrumTmpl = require('../templates/conundrum.jade');
+const scoreTmpl = require('../templates/score.jade');
+const welcomeTmpl = require('../templates/welcome.jade');
+const actionDrawerTmpl = require('../templates/action-drawer.jade');
 
-var speech = require('./speech')
-var numberRound = require('./numbers')
-var letterRound = require('./letters')
-var conundrumRound = require('./conundrum')
-var timer = require('./timer')
-var score = require('./score')
-var local = require('./local')
-var $ = require('jquery')
-var localforage = require('localforage')
-var dictionary = require('./dictionary')
-var actionDrawer = require('./actionDrawer')
-var buttonBar = require('./buttonBar')
+let currentEpisode;
+let c1;
+let c2;
+let rows;
+let name;
+let round = -1;
+let switcheroo = false;
+let skipLetters = true;
+let skipNumbers = false;
+let skipConundrums = false;
+const gameRecord = [];
 
-var tmpl = {
-  letters: require('templates/letters'),
-  numbers: require('templates/numbers'),
-  conundrum: require('templates/conundrum'),
-  score: require('templates/score'),
-  welcome: require('templates/welcome'),
-  actionDrawer: require('templates/action-drawer')
-}
-
-var c1
-var c2
-var rows
-var name
-var round = -1
-var switcheroo = false
-var skipLetters = true
-var skipNumbers = false
-var skipConundrums = false
-var gameRecord = []
-var episode
-
-var startGame = function(episode, vs, player) {
-  rows = episode.r
-  name = player
-  c1 = episode.p1.n
-  c2 = episode.p2.n
-  var isChampWinner = episode.p1.s > episode.p2.s
-
-  if (vs === 'cham') {
-    // all fine
-  } else if (vs === 'chal') {
-    c1 = c2
-  } else if (vs === 'winn') {
-    c1 = isChampWinner ? c1 : c2
-  } else if (vs === 'lose') {
-    c1 = isChampWinner ? c2 : c1
-  } else if (vs === 'rand') {
-    c1 = Math.random() > 0.5 ? c1 : c2
-  } else if (vs === 'both') {
-    score.c2first = c2.split(' ')[0]
-    $('#c2').text(score.c2first + ': ')
-  }
-  if (c1 === c2) switcheroo = true
-
-  score.c1first = c1.split(' ')[0]
-
-  $('#p1').text(name + ': ')
-  $('#c1').text(score.c1first + ': ')
-
-  speech.say([{
-    what: speech.WELCOME,
-    who: 'nick'
-  }, {
-    what: speech.WHO + player + ' and ' + c1 + (score.c2first ? ' and ' + c2 + '.' : '.'),
-    who: 'nick'
-  }], function() {
-    playRound()
-  })
-}
-
-var playRound = function(lastRound, save) {
-  if (lastRound) gameRecord.push(lastRound)
+const playRound = function playRound(lastRound, save) {
+  if (lastRound) gameRecord.push(lastRound);
 
   if (save) {
-    localforage.getItem('gamelist', function(err, val) {
-      if (err) console.log(err)
-      val = val || []
-      val.push(episode)
-      localforage.setItem('gamelist', val)
-      localforage.setItem('' + episode, gameRecord, function(err) {
-        if (err) console.log(err)
-      })
-    })
+    localforage.getItem('gamelist', (getErr, vals) => {
+      if (getErr) console.log(getErr);
+      const val = vals || [];
+      val.push(currentEpisode);
+      localforage.setItem('gamelist', val);
+      localforage.setItem(`${currentEpisode}`, gameRecord, (setErr) => {
+        if (setErr) console.log(setErr);
+      });
+    });
 
-    return
+    return;
   }
 
-  var cont
+  let cont;
 
-  timer.reset()
+  timer.reset();
   // $('.page').hide();
   // $('#clock-score').show();
   // $('.letter-board .tileInner').html("");
   // $('.number-board .tileInner').html("");
   // $('.nslot').html("&nbsp;");
-  round++
-  score.update()
+  round += 1;
+  score.update();
 
   // $('#test').html(rows[round]);
   $('#buttons').show();
 
-  if (rows[round].hasOwnProperty('s') && !skipConundrums) {
+  if (Object.prototype.hasOwnProperty.call(rows[round], 's') && !skipConundrums) {
     // con
-    conundrumRound.load(rows[round], switcheroo, playRound)
-    buttonBar.show($('#buttons'), { round: "conundrum", declare: false })
-    $('#container').html(tmpl.conundrum())
+    conundrumRound.load(rows[round], switcheroo, playRound);
+    buttonBar.show($('#buttons'), { round: 'conundrum', declare: false });
+    $('#container').html(conundrumTmpl());
 
-    speech.say("So finally it's time for the conundrum.  Fingers on buzzers as we reveal, today's, countdown conundrum.", 'nick', function() {
-      conundrumRound.do(score.c1first)
-    })
-  } else if (rows[round].hasOwnProperty('l') && !skipLetters) {
+    speech.say("So finally it's time for the conundrum.  Fingers on buzzers as we reveal, today's, countdown conundrum.", 'nick', () => {
+      conundrumRound.do(score.c1first);
+    });
+  } else if (Object.prototype.hasOwnProperty.call(rows[round], 'l') && !skipLetters) {
     // letters
-    $('#container').html(tmpl.letters())
-    buttonBar.show($('#buttons'), { round: "letters", declare: false })
-    letterRound.load(rows[round], switcheroo)
-    cont = ([1, 2, 5, 6, 8, 9, 12, 13, 14, 15].indexOf(round) % 2 === 0 ? score.c1first : name)
+    $('#container').html(lettersTmpl());
+    buttonBar.show($('#buttons'), { round: 'letters', declare: false });
+    letterRound.load(rows[round], switcheroo);
+    cont = ([1, 2, 5, 6, 8, 9, 12, 13, 14, 15].indexOf(round) % 2 === 0 ? score.c1first : name);
 
-    speech.say('Ok, ' + cont + speech.LETTERS, 'NICK', function() {
-      letterRound.do(cont)
-    })
-  } else if (rows[round].hasOwnProperty('n') && !skipNumbers) {
+    speech.say(`Ok, ${cont}${speech.LETTERS}`, 'NICK', () => {
+      letterRound.do(cont);
+    });
+  } else if (Object.prototype.hasOwnProperty.call(rows[round], 'n') && !skipNumbers) {
     // numbers
-    cont = ([3, 7, 10, 16].indexOf(round) % 2 === 0 ? score.c1first : name)
-    buttonBar.show($('#buttons'), { round: "numbers", declare: false })
-    numberRound.load(rows[round], switcheroo)
+    cont = ([3, 7, 10, 16].indexOf(round) % 2 === 0 ? score.c1first : name);
+    buttonBar.show($('#buttons'), { round: 'numbers', declare: false });
+    numberRound.load(rows[round], switcheroo);
 
-    $('#container').html(tmpl.numbers({
-      target: +numberRound.getTarget()
-    }))
+    $('#container').html(numbersTmpl({
+      target: +numberRound.getTarget(),
+    }));
 
-    speech.say('Ok, ' + cont + speech.NUMBERS, 'NICK', function() {
-      numberRound.do(cont)
-    })
+    speech.say(`Ok, ${cont}${speech.NUMBERS}`, 'NICK', () => {
+      numberRound.do(cont);
+    });
   } else {
     // Tea time teaser
-    playRound()
+    playRound();
   }
-}
+};
 
-var cacheEpisode = function(episode, callback) {
-  localforage.getItem('cachedEpisodes', function(err, val) {
-    if (err) return callback(err)
-    val = val || []
-    val.push(episode)
-    localforage.setItem('cachedEpisodes', val, function(err) {
-      if (err) return callback(err)
-      callback()
-    })
-  })
-}
+const startGame = function startGame(episode, vs, player) {
+  rows = episode.r;
+  name = player;
+  c1 = episode.p1.n;
+  c2 = episode.p2.n;
+  const isChampWinner = episode.p1.s > episode.p2.s;
 
-var getEpisode = function(episodeNumber, callback) {
+  if (vs === 'cham') {
+    // all fine
+  } else if (vs === 'chal') {
+    c1 = c2;
+  } else if (vs === 'winn') {
+    c1 = isChampWinner ? c1 : c2;
+  } else if (vs === 'lose') {
+    c1 = isChampWinner ? c2 : c1;
+  } else if (vs === 'rand') {
+    c1 = Math.random() > 0.5 ? c1 : c2;
+  } else if (vs === 'both') {
+    score.c2first = c2.split(' ')[0];
+    $('#c2').text(`${score.c2first}: `);
+  }
+  if (c1 === c2) switcheroo = true;
+
+  score.c1first = c1.split(' ')[0];
+
+  $('#p1').text(`${name}: `);
+  $('#c1').text(`${score.c1first}: `);
+
+  speech.say([{
+    what: speech.WELCOME,
+    who: 'nick',
+  }, {
+    what: `${speech.WHO + player} and ${c1}${score.c2first ? ` and ${c2}.` : '.'}`,
+    who: 'nick',
+  }], () => {
+    playRound();
+  });
+};
+
+const cacheEpisode = function cacheEpisode(episode, callback) {
+  localforage.getItem('cachedEpisodes', (getErr, vals) => {
+    if (getErr) return callback(getErr);
+    const val = vals || [];
+    val.push(episode);
+    return localforage.setItem('cachedEpisodes', val, (setErr) => {
+      if (setErr) return callback(setErr);
+      return callback();
+    });
+  });
+};
+
+const getEpisode = function getEpisode(episodeNumber, callback) {
   $
     // .get('down.php?episode=' + episodeNumber)
-    .get('episode.php?e=' + episodeNumber)
-    .success(function(doc) {
-      callback(null, JSON.parse(doc))
-    }).error(function(jqXHR, textStatus, err) {
-      return callback(new Error(err))
-    })
-}
+    .get(`episode.php?e=${episodeNumber}`)
+    .success((doc) => {
+      callback(null, JSON.parse(doc));
+    }).error((jqXHR, textStatus, err) => callback(new Error(err)));
+};
 
-var getRandomEpisode = function(callback) {
-  localforage.getItem('gamelist', function(err, val) {
-    if (err) throw err
-    val = val || []
-    var r = Math.floor(Math.random() * 5000) + 1000
+const getRandomEpisode = function (callback) {
+  localforage.getItem('gamelist', (getErr, vals) => {
+    if (getErr) throw getErr;
+    const val = vals || [];
+    let r = Math.floor(Math.random() * 5000) + 1000;
 
     while (val.indexOf(r) > -1) {
-      r = Math.floor(Math.random() * 5000) + 1000
+      r = Math.floor(Math.random() * 5000) + 1000;
     }
 
-    getEpisode(r, function(err, val) {
-      if (err) return callback(err)
-      return callback(null, val)
-    })
-  })
-}
+    getEpisode(r, (err, epVal) => {
+      if (err) return callback(err);
+      return callback(null, epVal);
+    });
+  });
+};
 
-var numberOfCachedGames = function(callback) {
-  localforage.getItem('cachedEpisodes', function(err, val) {
-    if (err) return callback(err)
-    val = val || []
-    console.log(val.length + ' cached episodes.')
-    return callback ? callback(null, val.length) : val
-  })
-}
+const numberOfCachedGames = function (callback) {
+  localforage.getItem('cachedEpisodes', (err, vals) => {
+    if (err) return callback(err);
+    const val = vals || [];
+    console.log(`${val.length} cached episodes.`);
+    return callback ? callback(null, val.length) : val;
+  });
+};
 
-var refillCachedGames = function(limit, callback) {
-  numberOfCachedGames(function(err, val) {
-    if (err) return callback(err)
-    if (val < limit) {
-      getRandomEpisode(function(err, val) {
-        if (err) return callback(err)
-        if (!val.e) refillCachedGames(limit, callback)
-        else {
-          cacheEpisode(val, function() {
-            refillCachedGames(limit, callback)
-          })
+const refillCachedGames = function (limit, callback) {
+  numberOfCachedGames((numErr, num) => {
+    if (numErr) return callback(numErr);
+    if (num < limit) {
+      return getRandomEpisode((err, val) => {
+        if (err) return callback(err);
+        if (!val.e) {
+          return refillCachedGames(limit, callback);
         }
-      })
-    } else {
-      return callback()
+        return cacheEpisode(val, () => {
+          refillCachedGames(limit, callback);
+        });
+      });
     }
-  })
-}
+    return callback();
+  });
+};
 
-var resetCache = function() {
-  localforage.getItem('cachedEpisodes', function(err, val) {
-    if (err) console.log(err)
-    val = []
-    console.log('Resetting cache...')
-    localforage.setItem('cachedEpisodes', val, function(err, val) {
-      if (err) console.log(err)
-      console.log('Cache reset.')
-      refillCachedGames(10, function() {})
-    })
-  })
-}
+const resetCache = function () {
+  localforage.getItem('cachedEpisodes', (getErr) => {
+    if (getErr) console.log(getErr);
+    console.log('Resetting cache...');
+    localforage.setItem('cachedEpisodes', [], (err) => {
+      if (err) console.log(err);
+      console.log('Cache reset.');
+      refillCachedGames(10, () => {});
+    });
+  });
+};
 
-var getEpisodeFromCache = function(callback) {
-  localforage.getItem('cachedEpisodes', function(err, val) {
-    if (err) return callback(err)
-    var episode = val.pop()
-    localforage.setItem('cachedEpisodes', val, function(err, val) {
-      if (err) return callback(err)
-      return callback(null, episode)
-    })
-  })
-}
+const getEpisodeFromCache = function (callback) {
+  localforage.getItem('cachedEpisodes', (err, val) => {
+    if (err) return callback(err);
+    const episode = val.pop();
+    localforage.setItem('cachedEpisodes', val, (err, val) => {
+      if (err) return callback(err);
+      return callback(null, episode);
+    });
+  });
+};
 
-var initialise = function() {
-  numberOfCachedGames()
-  refillCachedGames(10, function() {})
+const initialise = function () {
+  numberOfCachedGames();
+  refillCachedGames(10, () => {});
 
-  $('#container').html(tmpl.welcome(local.settings))
-  score.me = 0
-  score.c1 = 0
-  score.c2 = 0
+  $('#container').html(welcomeTmpl(local.settings));
+  score.me = 0;
+  score.c1 = 0;
+  score.c2 = 0;
 
-  $('#episode').keydown(function(e) {
-    if (e.keyCode === 13) $('#go').click()
-  })
+  $('#episode').keydown((e) => {
+    if (e.keyCode === 13) $('#go').click();
+  });
 
-  $('#go').on('click', function(e) {
-    $(this).text('Loading...').prop('disabled', true)
+  $('#go').on('click', function (e) {
+    $(this).text('Loading...').prop('disabled', true);
 
-    timer.enableNoSleep()
-    var vs = $('select[name=player]').val()
-    episode = $('#episode').val()
-    episode = episode === '' ? Math.floor(Math.random() * 5000) + 1000 : episode
+    timer.enableNoSleep();
+    const vs = $('select[name=player]').val();
+    episode = $('#episode').val();
+    episode = episode === '' ? Math.floor(Math.random() * 5000) + 1000 : episode;
 
-    speech.silent = !$('#setting-speech').is(':checked')
-    speech.speed = +$('[name=setting-speed]:checked').val()
-    timer.LENGTH = +$('#setting-clock').val()
-    timer.reset()
-    skipLetters = !$('#setting-inc-letters').is(':checked')
-    skipNumbers = !$('#setting-inc-numbers').is(':checked')
-    skipConundrums = !$('#setting-inc-conundrum').is(':checked')
-    $('#container').parent().fadeOut('slow')
+    speech.silent = !$('#setting-speech').is(':checked');
+    speech.speed = +$('[name=setting-speed]:checked').val();
+    timer.LENGTH = +$('#setting-clock').val();
+    timer.reset();
+    skipLetters = !$('#setting-inc-letters').is(':checked');
+    skipNumbers = !$('#setting-inc-numbers').is(':checked');
+    skipConundrums = !$('#setting-inc-conundrum').is(':checked');
+    $('#container').parent().fadeOut('slow');
 
     /*
      LLNLLNLLNLLLLNC - 5666 -
@@ -272,116 +262,114 @@ var initialise = function() {
      LLNLLNCLLNLLNC  - 14 round (grand finals / CoCs / 2 specials) [80,132,184,234,288,338,397,404,444,445,494,544,594,601,644,707,757,812,819,867,937,1002,1003,1067,1074,1132,1197,1262,1327,1334,1392,1457,1522,1523,1587,1594,1652,1717,1782,1847,1854,1907,1972,2037,2102,2162,2177,2292,2422,2552,2673,2678,2797,2911,3042,3085]
     */
 
-    getEpisode(episode, function(err, val) {
+    getEpisode(episode, (err, val) => {
       if (err || !val.e) {
-        dictionary.cache(function(err, val) {
-          if (err) throw err
-          getEpisodeFromCache(function(err, val) {
-            if (err) throw err
-            $('body').prepend(tmpl.actionDrawer())
-            $('#episodenumber').text(val.e)
-            $('#score').html(tmpl.score())
-            $('#container').html(tmpl.letters()).parent().fadeIn('fast')
-            buttonBar.show($('#buttons'), { round: "letters", declare: false })
-            startGame(val, vs, local.getName())
-          })
-        })
+        dictionary.cache((err, val) => {
+          if (err) throw err;
+          getEpisodeFromCache((err, val) => {
+            if (err) throw err;
+            $('body').prepend(actionDrawerTmpl({ episode }));
+            $('#episodenumber').text(val.e);
+            $('#score').html(scoreTmpl());
+            $('#container').html(lettersTmpl()).parent().fadeIn('fast');
+            buttonBar.show($('#buttons'), { round: 'letters', declare: false });
+            startGame(val, vs, local.getName());
+          });
+        });
       } else {
-        $('body').prepend(tmpl.actionDrawer())
-        $('#episodenumber').text(episode)
-        $('#score').html(tmpl.score())
-        $('#container').html(tmpl.letters()).parent().fadeIn('fast')
-        buttonBar.show($('#buttons'), { round: "letters", declare: false })
-        startGame(val, vs, local.getName())
+        $('body').prepend(actionDrawerTmpl({ episode }));
+        $('#episodenumber').text(episode);
+        $('#score').html(scoreTmpl());
+        $('#container').html(lettersTmpl()).parent().fadeIn('fast');
+        buttonBar.show($('#buttons'), { round: 'letters', declare: false });
+        startGame(val, vs, local.getName());
       }
-    })
+    });
 
-    e.preventDefault()
-  })
+    e.preventDefault();
+  });
 
-  $('#buttons').on('click', '#goWord', function() {
-    timer.enableNoSleep()
-    letterRound.declare($('#word').val().toUpperCase(), playRound)
-  }).on('click', '#undoLetter', function() {
-    letterRound.undo()
-  }).on('click', '#undoConundrumLetter', function() {
-    conundrumRound.undo()
-  }).on('click', '#goNumber', function(e) {
-    timer.isPaused = true
-    timer.enableNoSleep()
-    numberRound.declare($('#number').val(), playRound)
-    e.preventDefault()
-    e.stopPropagation()
-  })
-  $('#container').on('click', '#goNumberNothing', function(e) {
-    timer.isPaused = true
-    timer.enableNoSleep()
-    numberRound.declare('', playRound)
-    e.preventDefault()
-    e.stopPropagation()
-  }).on('click', '.letter-declare .tile', function(e) {
-    letterRound.declareWordLength($(this).text())
-  }).on('keydown', '#word', function(e) {
-    if (e.keyCode === 13) $('#goWord').click()
-  }).on('keydown', '#number', function(e) {
-    if (e.keyCode === 13) $('#goNumber').click()
-  }).on('click', '#buzz', function() {
-    $('.conundrum-buzz').hide()
-    $('.conundrum-declare').show()
-    conundrumRound.buzz()
-  }).on('click', '#goConundrum', function() {
-    conundrumRound.declare($('#conundrum').val())
-  }).on('keydown', '#conundrum', function(e) {
-    if (e.keyCode === 13) $('#goConundrum').click()
-  })
+  $('#buttons').on('click', '#goWord', () => {
+    timer.enableNoSleep();
+    letterRound.declare($('#word').val().toUpperCase(), playRound);
+  }).on('click', '#undoLetter', () => {
+    letterRound.undo();
+  }).on('click', '#undoConundrumLetter', () => {
+    conundrumRound.undo();
+  }).on('click', '#goNumber', (e) => {
+    timer.isPaused = true;
+    timer.enableNoSleep();
+    numberRound.declare($('#number').val(), playRound);
+    e.preventDefault();
+    e.stopPropagation();
+  }).on('click', '#goConundrum', () => {
+    conundrumRound.declare($('#conundrum').val());
+  });
+  $('#container').on('click', '#goNumberNothing', (e) => {
+    timer.isPaused = true;
+    timer.enableNoSleep();
+    numberRound.declare('', playRound);
+    e.preventDefault();
+    e.stopPropagation();
+  }).on('click', '.letter-declare .tile', function (e) {
+    letterRound.declareWordLength($(this).text());
+  }).on('keydown', '#word', (e) => {
+    if (e.keyCode === 13) $('#goWord').click();
+  }).on('keydown', '#number', (e) => {
+    if (e.keyCode === 13) $('#goNumber').click();
+  }).on('click', '#buzz', () => {
+    $('.conundrum-buzz').hide();
+    $('.conundrum-declare').show();
+    conundrumRound.buzz();
+  }).on('keydown', '#conundrum', (e) => {
+    if (e.keyCode === 13) $('#goConundrum').click();
+  });
 
-  $('body').on('click', '.action-drawer', function(e) {
+  $('body').on('click', '.action-drawer', (e) => {
     if ($(e.target).is('.action-drawer')) {
-      timer.isPaused = false
-      timer.enableNoSleep()
-      actionDrawer.close()
+      timer.isPaused = false;
+      timer.enableNoSleep();
+      actionDrawer.close();
     }
-  }).on('click', '#resumebtn', function() {
-    timer.isPaused = false
-    timer.enableNoSleep()
-    actionDrawer.close()
-  }).on('click', '#savebtn', function() {
-    //save game
-  }).on('click', '#feedbackbtn', function() {
-    //open form for feedback
-  }).on('click', '#infobtn', function() {
-    //show game info in pop over
-  }).on('click', '#quitbtn', function() {
-    location.reload()
-  })
+  }).on('click', '#resumebtn', () => {
+    timer.isPaused = false;
+    timer.enableNoSleep();
+    actionDrawer.close();
+  }).on('click', '#savebtn', () => {
+    // save game
+  }).on('click', '#feedbackbtn', () => {
+    // open form for feedback
+  }).on('click', '#quitbtn', () => {
+    location.reload();
+  });
 
-  $('#reset').on('click', function(e) {
-    resetCache()
-    e.preventDefault()
-  })
+  $('#reset').on('click', (e) => {
+    resetCache();
+    e.preventDefault();
+  });
 
   // Temp for trying out different interfaces
-  var display = location.href.split('?').splice(1)
+  const display = location.href.split('?').splice(1);
   if (display.length > 0) {
-    var els = display[0].split('&')
-    var tmp
+    const els = display[0].split('&');
+    let tmp;
     switch (els[0][0]) {
       case 'n':
         tmp = require('templates/numbers')({
-          target: 200
-        })
-        break
+          target: 200,
+        });
+        break;
       case 'l':
-        tmp = require('templates/letters')()
-        break
+        tmp = require('templates/letters')();
+        break;
       default:
-        tmp = require('templates/conundrum')()
+        tmp = require('templates/conundrum')();
     }
-    $('#container').html(tmp)
-    if (els.length > 1 && els[1][0] === 's') $('#container').find('*').show()
+    $('#container').html(tmp);
+    if (els.length > 1 && els[1][0] === 's') $('#container').find('*').show();
   }
-}
+};
 
 module.exports = {
-  init: initialise
-}
+  init: initialise,
+};
