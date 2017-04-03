@@ -6,6 +6,7 @@ const $ = require('jquery');
 const msg = require('./message');
 const buttonBar = require('./buttonBar.js');
 const declareTmpl = require('../templates/conundrumDeclare.jade');
+const actionDrawer = require('./actionDrawer.js');
 
 let conundrum;
 let playRound;
@@ -82,10 +83,12 @@ const conundrumRound = {
 
               score.c1 += 10;
               score.update();
-              msg.show(`Well done ${contestant}`);
-              playRound({
-                time: [-1, conundrum.c1.time, conundrum.c2.time],
-              }, true);
+              msg.show([{ msg: `Well done ${contestant}`, displayFor: 1000 }], () => {
+                actionDrawer.open();
+                playRound({
+                  time: [-1, conundrum.c1.time, conundrum.c2.time],
+                }, true);
+              });
             } else {
               msg.show([
                 { msg: "No that's incorrect.", displayFor: 1000 },
@@ -96,10 +99,12 @@ const conundrumRound = {
                   conundrum.answer.split('').forEach((l, i) => {
                     $($('.tile')[i]).text(l);
                   });
-                  msg.show('. Good game everyone');
-                  playRound({
-                    time: [-1, -1, conundrum.c2.time],
-                  }, true);
+                  msg.show([{ msg: 'Good game everyone.', displayFor: 1000 }], () => {
+                    actionDrawer.open();
+                    playRound({
+                      time: [-1, -1, conundrum.c2.time],
+                    }, true);
+                  });
                 });
               });
             }
@@ -111,10 +116,12 @@ const conundrumRound = {
           conundrum.answer.split('').forEach((l, i) => {
             $($('.tile')[i]).text(l);
           });
-          msg.show('. Good game everyone');
-          playRound({
-            time: [-1, -1, conundrum.c2.time],
-          }, true);
+          msg.show([{ msg: 'Good game everyone.', displayFor: 1000 }], () => {
+            actionDrawer.open();
+            playRound({
+              time: [-1, -1, conundrum.c2.time],
+            }, true);
+          });
         });
       }
     });
@@ -134,7 +141,8 @@ const conundrumRound = {
         });
         score.me += 10;
         score.update();
-        speech.say(`${conundrum.answer}. Well done. Good game everyone`, 'nick', () => {
+        msg.show([{ msg: `${conundrum.answer}. Well done. Good game everyone`, displayFor: 1000 }], () => {
+          actionDrawer.open();
           playRound({
             time: [timer.getTime(), conundrum.c1.time, conundrum.c2.time],
           }, true);
@@ -158,7 +166,8 @@ const conundrumRound = {
                       });
                       score.c1 += 10;
                       score.update();
-                      speech.say(`Well done ${score.c1first}`, 'nick', () => {
+                      msg.show([{ msg: `Well done ${score.c1first}`, displayFor: 1000 }], () => {
+                        actionDrawer.open();
                         playRound({
                           time: [-1, conundrum.c1.time, conundrum.c2.time],
                         }, true);
@@ -171,7 +180,8 @@ const conundrumRound = {
                         conundrum.answer.split('').forEach((l, i) => {
                           $($('.tile')[i]).text(l);
                         });
-                        speech.say(`${conundrum.answer}. Good game everyone`, 'nick', () => {
+                        msg.show([{ msg: `${conundrum.answer}. Good game everyone`, displayFor: 1000 }], () => {
+                          actionDrawer.open();
                           playRound({
                             time: [-1, -1, conundrum.c2.time],
                           }, true);
