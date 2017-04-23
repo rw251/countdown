@@ -10,6 +10,14 @@ if($word === "") {
     exit;
 }
 
+// Words that aren't hyphenated in en.oxford.. but are in the v1/inflections method call
+$exceptions = array("exactor", "stargaze"); //told them about exactor - not yet about stargaze
+if(in_array(strtolower($word), $exceptions)) {
+    $rtn2['match']=true;
+    echo json_encode($rtn2);
+    exit;
+}
+
 $host = "https://od-api.oxforddictionaries.com:443/api/v1/inflections/en/" . $word;
 
 $ch = curl_init();
