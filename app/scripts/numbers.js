@@ -7,6 +7,13 @@ const $ = require('jquery');
 
 let numbers;
 
+const getPoints = (declare, target) => {
+  if (declare === target) return 10;
+  if (Math.abs(declare - target) <= 5) return 7;
+  if (Math.abs(declare - target) <= 10) return 5;
+  return 0;
+};
+
 const numberRound = {
 
   load(val, switcheroo) {
@@ -26,32 +33,20 @@ const numberRound = {
     rtn.say = rtn.large === 0 ? '6 small numbers' : `${rtn.large} large number${rtn.large === 1 ? '' : 's'} and ${rtn.small} small ones`;
 
     rtn.target = val.t;
-    rtn.c1 = +val['1'] || 0;
-    rtn.c2 = +val['2'] || 0;
-    if (val['1-sol'] === 'X') {
+    rtn.c1 = switcheroo ? (+val['2'] || 0) : (+val['1'] || 0);
+    if (switcheroo) {
+      if (val['2-sol'] === 'X') {
+        rtn.c1valid = false;
+      } else {
+        rtn.c1method = val['2-sol'];
+      }
+    } else if (val['1-sol'] === 'X') {
       rtn.c1valid = false;
     } else {
       rtn.c1method = val['1-sol'];
     }
-    if (val['2-sol'] === 'X') {
-      rtn.c2valid = false;
-    } else {
-      rtn.c2method = val['2-sol'];
-    }
 
     rtn.rachel = val.sol;
-
-    if (switcheroo) {
-      rtn.c3 = rtn.c1;
-      rtn.c1 = rtn.c2;
-      rtn.c2 = rtn.c3;
-      rtn.c3valid = rtn.c1valid;
-      rtn.c1valid = rtn.c2valid;
-      rtn.c2valid = rtn.c3valid;
-      rtn.c3method = rtn.c1method;
-      rtn.c1method = rtn.c2method;
-      rtn.c2method = rtn.c3method;
-    }
 
     numbers = rtn;
   },
@@ -104,56 +99,24 @@ const numberRound = {
 
     const number = +numberString;
 
-    const points = numbers.target - number === 0 ? 10 : 7;
-    const c1points = numbers.target - numbers.c1 === 0 ? 10 : 7;
-    const c2points = numbers.target - numbers.c2 === 0 ? 10 : 7;
+    const points = getPoints(number, numbers.target);
+    const c1points = getPoints(numbers.c1, numbers.target);
 
     const diff = {
       p: Math.abs(numbers.target - number),
       c1: numbers.c1method ? Math.abs(numbers.target - numbers.c1) : 100,
-      c2: numbers.c2method ? Math.abs(numbers.target - numbers.c2) : 100,
     };
 
-    let texts = [];
-    texts.push({
-      what: number === 0 ? 'Sorry, I messed up.' : number,
-      who: local.getName(),
-    });
-    texts.push({
-      what: numbers.c1method ? numbers.c1 : 'Sorry, I messed up',
-      who: score.c1first,
-    });
-
     msg.show([{ msg: `${score.c1first}: ${numbers.c1method ? numbers.c1 : 'Sorry, I messed up'}`, displayFor: 1000 }], () => {
-      let mindiff = score.c2first ? Math.min(diff.c1, diff.c2) : diff.c1;
       let method;
       const winners = [];
 
-      if (mindiff < diff.p || number === 0) {
+      if (diff.c1 < diff.p || number === 0) {
         // you lost - so don't bother
-        if (mindiff === diff.c1 && numbers.c1method) {
+        if (numbers.c1method) {
           winners.push(score.c1first);
           method = numbers.c1method;
           score.c1 += c1points;
-        }
-        if (score.c2first && mindiff === diff.c2 && numbers.c2method) {
-          score.c2 += c2points;
-          method = numbers.c2method;
-          winners.push(score.c2first);
-        }
-        if (winners.length === 0) {
-          msg.show([
-            { msg: 'No one got it.. Rachel?', displayFor: 1000 },
-            { msg: numbers.rachel, displayFor: 3000 },
-          ], () => {
-            playRound({
-              numbers: numbers.selectionClone,
-              target: numbers.target,
-              what: [number, numbers.c1, numbers.c2],
-              valid: [null, !!numbers.c1method, !!numbers.c2method],
-            });
-          });
-        } else if (winners.length === 1) {
           msg.show([
             { msg: `Go on ${winners[0]}`, displayFor: 1000 },
             { msg: method, displayFor: 3000 },
@@ -162,18 +125,21 @@ const numberRound = {
               playRound({
                 numbers: numbers.selectionClone,
                 target: numbers.target,
-                what: [number, numbers.c1, numbers.c2],
-                valid: [null, !!numbers.c1method, !!numbers.c2method],
+                what: [number, numbers.c1],
+                valid: [null, !!numbers.c1method],
               });
             });
           });
-        } else if (winners.length === 2 && score.c2first) {
-          speech.say(`Well done ${winners.join(' and ')}`, 'nick', () => {
+        } else {
+          msg.show([
+            { msg: 'No one got it.. Rachel?', displayFor: 1000 },
+            { msg: numbers.rachel, displayFor: 3000 },
+          ], () => {
             playRound({
               numbers: numbers.selectionClone,
               target: numbers.target,
-              what: [number, numbers.c1, numbers.c2],
-              valid: [null, !!numbers.c1method, !!numbers.c2method],
+              what: [number, numbers.c1],
+              valid: [null, !!numbers.c1method],
             });
           });
         }
@@ -181,22 +147,13 @@ const numberRound = {
       }
 
       numberRound.checkNumber(number, (isValid) => {
-        if (isValid) mindiff = Math.min(mindiff, diff.p);
+        let mindiff = diff.c1;
+        if (isValid) mindiff = Math.min(diff.c1, diff.p);
         if (mindiff === diff.c1 && numbers.c1method) {
           winners.push(score.c1first);
           score.c1 += c1points;
         }
-        if (score.c2first && mindiff === diff.c2 && numbers.c2method) {
-          score.c2 += c2points;
-          winners.push(score.c2first);
-        }
-        texts = [];
-        if (!isValid && number > 0) {
-          texts.push({
-            what: "Sorry, ' + local.getName() + ', but you've gone wrong.",
-            who: 'rachel',
-          });
-        } else if (mindiff === diff.p) {
+        if (mindiff === diff.p) {
           score.me += points;
           winners.push(local.getName());
         }
@@ -209,8 +166,8 @@ const numberRound = {
             playRound({
               numbers: numbers.selectionClone,
               target: numbers.target,
-              what: [number, numbers.c1, numbers.c2],
-              valid: [isValid, !!numbers.c1method, !!numbers.c2method],
+              what: [number, numbers.c1],
+              valid: [isValid, !!numbers.c1method],
             });
           });
         } else if (winners.length === 1) {
@@ -218,17 +175,8 @@ const numberRound = {
             playRound({
               numbers: numbers.selectionClone,
               target: numbers.target,
-              what: [number, numbers.c1, numbers.c2],
-              valid: [isValid, !!numbers.c1method, !!numbers.c2method],
-            });
-          });
-        } else if (winners.length === 2 && score.c2first) {
-          speech.say(`Well done ${winners.join(' and ')}`, 'nick', () => {
-            playRound({
-              numbers: numbers.selectionClone,
-              target: numbers.target,
-              what: [number, numbers.c1, numbers.c2],
-              valid: [isValid, !!numbers.c1method, !!numbers.c2method],
+              what: [number, numbers.c1],
+              valid: [isValid, !!numbers.c1method],
             });
           });
         } else {
@@ -236,8 +184,8 @@ const numberRound = {
             playRound({
               numbers: numbers.selectionClone,
               target: numbers.target,
-              what: [number, numbers.c1, numbers.c2],
-              valid: [isValid, !!numbers.c1method, !!numbers.c2method],
+              what: [number, numbers.c1],
+              valid: [isValid, !!numbers.c1method],
             });
           });
         }
