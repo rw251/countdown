@@ -3,7 +3,6 @@ TODO
 
 BUGS
 susie - "we got" then blank when theirs is same as ours
-4752 - vtt.. - i've got a 1 "-"
 4084 - conundrum freezes
 4887 - declares TAGGER - mine accepted contestant not
 if lose network games freezes at word check

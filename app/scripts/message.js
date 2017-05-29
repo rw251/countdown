@@ -21,7 +21,7 @@ const writeMessageArray = function writeMessageArray(messages, callback) {
 
 const msg = {
 
-  // Either a string or an array of {message: "xxx", displayFor: n}
+  // Either a string or an array of {msg: "xxx", displayFor: n}
   show(message, callback) {
     if (typeof message === 'string') {
       writeMessage(message);
