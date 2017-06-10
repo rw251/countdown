@@ -14,6 +14,93 @@ const getPoints = (declare, target) => {
   return 0;
 };
 
+let $tiles;
+let $firstNumberInCalcEl;
+let $secondNumberInCalcEl;
+let $operation;
+let numClickFixed;
+
+const symclick = function symclick() {
+  if (!$firstNumberInCalcEl) return;
+  $operation = $(this);
+  $(this).addClass('slot-selected');
+  $('.calcslot').off('click');
+};
+
+const numclick = function (number, callback) {
+  return function () {
+    if ($operation) {
+      $secondNumberInCalcEl = $(this);
+      $(this).off('click');
+      const firstNumberInCalc = +$firstNumberInCalcEl.text();
+      const secondNumberInCalc = +$secondNumberInCalcEl.text();
+
+      let sum = firstNumberInCalc - secondNumberInCalc;
+      if ($operation.data('operator') === 'add') {
+        sum = firstNumberInCalc + secondNumberInCalc;
+      } else if ($operation.data('operator') === 'times') {
+        sum = firstNumberInCalc * secondNumberInCalc;
+      } else if ($operation.data('operator') === 'divide') {
+        sum = firstNumberInCalc / secondNumberInCalc;
+      }
+      $firstNumberInCalcEl.removeClass('digits2 digits3 digits4');
+      if (sum > 9) $firstNumberInCalcEl.addClass('digits2');
+      if (sum > 99) $firstNumberInCalcEl.addClass('digits3');
+      if (sum > 999) $firstNumberInCalcEl.addClass('digits4');
+      $firstNumberInCalcEl.text(sum);
+
+      $firstNumberInCalcEl.removeClass('slot-selected').addClass('slot-hover').on('click', numClickFixed);
+      $secondNumberInCalcEl.removeClass('slot-selected').addClass('slot-hide');
+      $('.calcslot').removeClass('slot-selected').on('click', symclick).addClass('slot-hover');
+
+      if (+$firstNumberInCalcEl.text() === number) {
+        $tiles.removeClass('slot-hover').off('click').removeClass('slot-hide slot-selected');
+        $('.calcslot').removeClass('slot-hover').off('click').removeClass('slot-hide slot-selected');
+        $('.number-calc').hide();
+        $('#messedUp').off('click');
+        callback(true);
+      }
+
+      $firstNumberInCalcEl = null;
+      $secondNumberInCalcEl = null;
+      $operation = null;
+    } else if (!$firstNumberInCalcEl) {
+      $firstNumberInCalcEl = $(this);
+      $(this).addClass('slot-selected');
+      $(this).off('click');
+    }
+  };
+};
+
+const assignElements = () => {
+  $tiles = $('.tile');
+};
+
+const undo = () => {
+  if ($operation) {
+    // have just clicked an operation
+    $operation = null;
+    $('.calcslot').removeClass('slot-selected').on('click', symclick).addClass('slot-hover');
+  } else if ($firstNumberInCalcEl) {
+    $tiles.off('click').on('click', numClickFixed).removeClass('slot-selected').addClass('slot-hover');
+    $firstNumberInCalcEl = null;
+  }
+};
+
+const wireUpGoneWrongButton = (callback) => {
+  $('#messedUp').on('click', () => {
+    $tiles.removeClass('slot-hover').off('click').removeClass('slot-hide slot-selected');
+    $('.calcslot').removeClass('slot-hover').off('click').removeClass('slot-hide slot-selected');
+    $('.number-calc').hide();
+    $('#messedUp').off('click');
+    callback(false);
+  });
+};
+
+const wireUpGoneUndoButton = () => {
+  $('#undo').on('click', undo);
+};
+
 const numberRound = {
 
   load(val, switcheroo) {
@@ -56,24 +143,25 @@ const numberRound = {
   },
 
   do(contestant) {
+    assignElements();
     let number;
     if (numbers.selection.length === 6) {
       number = numbers.selection.pop();
       speech.say(`Hi Rachel, can I have ${numbers.say} please.`, contestant, () => {
-        $($('.tile')[5]).removeClass('digits2 digits3 digits4');
-        if (number > 9) $($('.tile')[5]).addClass('digits2');
-        if (number > 99) $($('.tile')[5]).addClass('digits3');
-        $('.tile')[5].innerText = number;
+        $($tiles[5]).removeClass('digits2 digits3 digits4');
+        if (number > 9) $($tiles[5]).addClass('digits2');
+        if (number > 99) $($tiles[5]).addClass('digits3');
+        $tiles[5].innerText = number;
         speech.say(number, 'Rachel', () => {
           numberRound.do(contestant);
         });
       });
     } else if (numbers.selection.length > 0) {
       number = numbers.selection.pop();
-      $($('.tile')[numbers.selection.length]).removeClass('digits2 digits3 digits4');
-      if (number > 9) $($('.tile')[numbers.selection.length]).addClass('digits2');
-      if (number > 99) $($('.tile')[numbers.selection.length]).addClass('digits3');
-      $('.tile')[numbers.selection.length].innerText = number;
+      $($tiles[numbers.selection.length]).removeClass('digits2 digits3 digits4');
+      if (number > 9) $($tiles[numbers.selection.length]).addClass('digits2');
+      if (number > 99) $($tiles[numbers.selection.length]).addClass('digits3');
+      $tiles[numbers.selection.length].innerText = number;
       speech.say(number, 'Rachel', () => {
         numberRound.do(contestant);
       });
@@ -197,77 +285,16 @@ const numberRound = {
     if (number === 0) {
       callback(false);
     } else {
-      $('#messedUp').on('click', () => {
-        $('.tile').removeClass('slot-hover').off('click').removeClass('slot-hide slot-selected');
-        $('.calcslot').removeClass('slot-hover').off('click').removeClass('slot-hide slot-selected');
-        $('.number-calc').hide();
-        $('#messedUp').off('click');
-        callback(false);
-      });
+      wireUpGoneUndoButton();
+      wireUpGoneWrongButton(callback);
 
       $('.number-calc').show();
       $('#ivegot').hide();
       $('#buttons').hide();
 
-      let n1;
-      let n2;
-      let nn1;
-      let nn2;
-      let symbol;
-      let sum;
+      numClickFixed = numclick(number, callback);
 
-      const symclick = function symclick() {
-        if (!n1) return;
-        symbol = $(this);
-        $(this).addClass('slot-selected');
-        $('.calcslot').off('click');
-      };
-
-      const numclick = function numclick() {
-        if (symbol) {
-          n2 = $(this);
-          $(this).off('click');
-          nn1 = +n1.text();
-          nn2 = +n2.text();
-
-          if (symbol.data('operator') === 'add') {
-            sum = nn1 + nn2;
-          } else if (symbol.data('operator') === 'times') {
-            sum = nn1 * nn2;
-          } else if (symbol.data('operator') === 'divide') {
-            sum = nn1 / nn2;
-          } else {
-            sum = nn1 - nn2;
-          }
-          n1.removeClass('digits2 digits3 digits4');
-          if (sum > 9) n1.addClass('digits2');
-          if (sum > 99) n1.addClass('digits3');
-          if (sum > 999) n1.addClass('digits4');
-          n1.text(sum);
-
-          n1.removeClass('slot-selected').addClass('slot-hover').on('click', numclick);
-          n2.removeClass('slot-selected').addClass('slot-hide');
-          $('.calcslot').removeClass('slot-selected').on('click', symclick).addClass('slot-hover');
-
-          if (+n1.text() === number) {
-            $('.tile').removeClass('slot-hover').off('click').removeClass('slot-hide slot-selected');
-            $('.calcslot').removeClass('slot-hover').off('click').removeClass('slot-hide slot-selected');
-            $('.number-calc').hide();
-            $('#messedUp').off('click');
-            callback(true);
-          }
-
-          n1 = null;
-          n2 = null;
-          symbol = null;
-        } else if (!n1) {
-          n1 = $(this);
-          $(this).addClass('slot-selected');
-          $(this).off('click');
-        }
-      };
-
-      $('.tile').on('click', numclick).addClass('slot-hover');
+      $tiles.on('click', numClickFixed).addClass('slot-hover');
       $('.calcslot').on('click', symclick).addClass('slot-hover');
     }
   },

@@ -1,53 +1,52 @@
-var $ = require('jquery')
+const $ = require('jquery');
 
-var offlineDictionary
+let offlineDictionary;
 
-var cacheDictionary = function (callback) {
+const cacheDictionary = function cacheDictionary(callback) {
   $
     .getJSON('dictionary.json')
-    .success(function (dic) {
-      offlineDictionary = dic
-      return callback(null, dic.length)
+    .success((dic) => {
+      offlineDictionary = dic;
+      return callback(null, dic.length);
     })
-    .error(function (jqXHR, textStatus, err) {
-      return callback(new Error(err))
-    })
-}
+    .error((jqXHR, textStatus, err) => callback(new Error(err)));
+};
 
-var isValidWord = function (word, length, letters, callback) {
-  if (word.length !== +length) return callback(false)
+const isValidWord = function (word, length, letters, callback) {
+  if (word.length !== +length) return callback(false);
 
-  var enoughLetters = true
-  word.split('').forEach(function (c) {
+  let enoughLetters = true;
+  word.split('').forEach((c) => {
     if (letters.indexOf(c) > -1) {
-      letters = letters.replace(new RegExp(c, 'i'), '')
+      letters = letters.replace(new RegExp(c, 'i'), '');
     } else {
-      enoughLetters = false
+      enoughLetters = false;
     }
-  })
+  });
 
-  if (!enoughLetters) return callback(false)
+  if (!enoughLetters) return callback(false);
 
   if (offlineDictionary) {
-    return callback(word.length <= 4 || offlineDictionary.indexOf(word.toLowerCase()) > -1)
+    return callback(word.length <= 4 || offlineDictionary.indexOf(word.toLowerCase()) > -1);
   }
 
-  $.getJSON('check.php?word=' + word, function (data) {
+  return $.getJSON(`check.php?word=${word}`, (data) => {
     if (data.match) {
-      callback(true)
+      callback(true);
     } else {
-      callback(false)
+      callback(false);
     }
-  }).done(function () {
-
-  }).fail(function () {
-
-  }).always(function () {
-
-  })
-}
+  }).done(() => {
+    // console.log('done');
+  }).fail(() => {
+    cacheDictionary(() => callback(word.length <= 4 ||
+                                        offlineDictionary.indexOf(word.toLowerCase()) > -1));
+  }).always(() => {
+    // console.log('alwats');
+  });
+};
 
 module.exports = {
-  isValidWord: isValidWord,
-  cache: cacheDictionary
-}
+  isValidWord,
+  cache: cacheDictionary,
+};
