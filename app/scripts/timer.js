@@ -51,6 +51,7 @@ timer = {
   },
 
   conundrum(buzztime, callback) {
+    timer.isPaused = false;
     countdown(callback, buzztime);
   },
 
