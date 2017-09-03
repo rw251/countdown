@@ -31,6 +31,14 @@ const lettersRound = {
     rtn.othersD = val.d || [];
     rtn.others = rtn.othersC.concat(rtn.othersD);
 
+    if (rtn.others) {
+      if (switcheroo && !val['1-bad'] && val['1'].length === rtn.others[0].length) {
+        rtn.others.push(val['1']);
+      } else if (!switcheroo && !val['2-bad'] && val['2'].length === rtn.others[0].length) {
+        rtn.others.push(val['2']);
+      }
+    }
+
     letters = rtn;
   },
 
