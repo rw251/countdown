@@ -241,7 +241,7 @@ const numberRound = {
           winners.push(score.c1first);
           score.c1 += c1points;
         }
-        if (mindiff === diff.p) {
+        if (isValid && mindiff === diff.p) {
           score.me += points;
           winners.push(local.getName());
         }
