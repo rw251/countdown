@@ -42,6 +42,25 @@ const numclick = function (number, callback) {
         sum = firstNumberInCalc * secondNumberInCalc;
       } else if ($operation.data('operator') === 'divide') {
         sum = firstNumberInCalc / secondNumberInCalc;
+        if (sum !== Math.floor(sum)) {
+          // fraction - not allowed
+          $firstNumberInCalcEl.removeClass('slot-selected').addClass('slot-hover').on('click', numClickFixed);
+          $secondNumberInCalcEl.removeClass('slot-selected').addClass('slot-hover').on('click', numClickFixed);
+          $('.calcslot').removeClass('slot-selected').on('click', symclick).addClass('slot-hover');
+          $firstNumberInCalcEl = null;
+          $secondNumberInCalcEl = null;
+          $operation = null;
+          return;
+        }
+      } else if (sum < 0) {
+          // negative not allowed
+        $firstNumberInCalcEl.removeClass('slot-selected').addClass('slot-hover').on('click', numClickFixed);
+        $secondNumberInCalcEl.removeClass('slot-selected').addClass('slot-hover').on('click', numClickFixed);
+        $('.calcslot').removeClass('slot-selected').on('click', symclick).addClass('slot-hover');
+        $firstNumberInCalcEl = null;
+        $secondNumberInCalcEl = null;
+        $operation = null;
+        return;
       }
       $firstNumberInCalcEl.removeClass('digits2 digits3 digits4');
       if (sum > 9) $firstNumberInCalcEl.addClass('digits2');
