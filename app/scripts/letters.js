@@ -32,9 +32,17 @@ const lettersRound = {
     rtn.others = rtn.othersC.concat(rtn.othersD);
 
     if (rtn.others) {
-      if (switcheroo && !val['1-bad'] && (rtn.others.length === 0 || val['1'].length === rtn.others[0].length)) {
+      if (
+          switcheroo && !val['1-bad'] &&
+          (rtn.others.length === 0 || val['1'].length === rtn.others[0].length) &&
+          !(!val['2-bad'] && val['2'].length > val['1'].length)
+        ) {
         rtn.others.push(val['1']);
-      } else if (!switcheroo && !val['2-bad'] && (rtn.others.length === 0 || val['2'].length === rtn.others[0].length)) {
+      } else if (
+          !switcheroo && !val['2-bad'] &&
+          (rtn.others.length === 0 || val['2'].length === rtn.others[0].length) &&
+          !(!val['1-bad'] && val['1'].length > val['2'].length)
+        ) {
         rtn.others.push(val['2']);
       }
     }
