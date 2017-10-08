@@ -11,7 +11,7 @@ if($word === "") {
 }
 
 // Words that aren't hyphenated in en.oxford.. but are in the v1/inflections method call
-$exceptions = array("exactor", "stargaze", "exactors", "stargazes", "stargazer", "stargazed", "crudites","nodalise","nodalises","nodalised"); 
+$exceptions = array("exactor", "stargaze", "exactors", "stargazes", "stargazer", "stargazed", "crudites","nodalise","nodalises","nodalised","manless"); 
 //told them about exactor - not yet about stargaze
 if(in_array(strtolower($word), $exceptions)) {
     $rtn2['match']=true;
