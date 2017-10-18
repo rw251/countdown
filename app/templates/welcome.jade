@@ -2,27 +2,20 @@
   .pure-g
     .pure-u-1
       h1 Countdown
-      p
-        | Play countdown against contestants from the actual show.
-  form.pure-form
+  form.pure-form.pure-form-stacked
     fieldset
-      .pure-g
-        .pure-u-1.pure-u-md-1-3
-          label(for='player') Play
-          select#player(name='player')
-            option(value='winn') the winner
-            option(value='lose') the loser
-            option(value='both') both players
-            option(value='cham') the champion
-            option(value='chal') the challenger
-            option(value='rand') a random player
-        .pure-u-1.pure-u-md-1-3
-          label(for='episode') from
-          input#episode.pure-input-1(type='text', placeholder='Episode number... leave blank for random')
-        .pure-u-1.pure-u-md-1-3
-          label(for='yourname') Your name
-          input#yourname.pure-input-1(type='text', placeholder='Enter your name', value=name)
-      button#go.pure-button.pure-button-primary Play!
+      label(for='player') Play
+      select#player.pure-input-1(name='player')
+        option(value='winn') the winner
+        option(value='lose') the loser
+        option(value='cham') the champion
+        option(value='chal') the challenger
+        option(value='rand') a random player
+      label(for='episode') from
+      input#episode.pure-input-1(type='text', placeholder='Episode number... leave blank for random')
+      label(for='yourname') Your name
+      input#yourname.pure-input-1(type='text', placeholder='Enter your name', value=name)
+      button#go.nice-button.pure-input-1.mt-10 Play!
   form.pure-form.pure-form-stacked
     fieldset
       legend Settings
@@ -52,10 +45,5 @@
         .pure-u-1-2.pure-u-md-1-5
           label.control-label(for='setting-clock') Round length (seconds)
           input#setting-clock.pure-input-1-3(type='number', value=timerlength || '30')
-        .pure-u-1-2.pure-u-md-1-5
-          label.control-label(for='setting-speech') Speech
-          label
-            input#setting-speech(type='checkbox', checked=silent ? undefined : '')
-            |  Enable speech!
         .pure-u-1-2.pure-u-md-1-5
           button#reset.pure-button.pure-button-primary Reset cache

@@ -1,6 +1,4 @@
-const speech = require('./speech.js');
 const timer = require('./timer.js');
-const local = require('./local.js');
 const score = require('./score.js');
 const dictionary = require('./dictionary.js');
 const $ = require('jquery');
