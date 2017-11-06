@@ -7,7 +7,9 @@
     "start": "brunch watch --server",
     "build": "rm -rf public/ && brunch build --production",
     "build:dev": "brunch build",
-    "test": "standard"
+    "test": "standard",
+    "predeploy": "npm run build",
+    "deploy": "rsync -az --force --delete --progress -e 'ssh' ./public/ rw251.com:~/public_html/cdown"
   },
   "author": "Richard Williams",
   "license": "ISC",

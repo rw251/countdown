@@ -4,28 +4,28 @@ module.exports = {
     javascripts: {
       joinTo: {
         'libraries.js': /^(?!app\/)/,
-        'app.js': /^app\//
+        'app.js': /^app\//,
       },
       order: {
-        before: [/jquery/]
-      }
+        before: [/jquery/],
+      },
     },
     stylesheets: {
-      joinTo: 'app.css'
+      joinTo: 'app.css',
     },
     templates: {
-      joinTo: 'app.js'
-    }
+      joinTo: 'app.js',
+    },
   },
 
-  server: {command: 'php -S 0.0.0.0:8080 -t public -c php.ini'},
+  server: { command: 'php -S 0.0.0.0:8080 -t public -c php.ini' },
 
   plugins: {
     autoReload: {
-      port: [8081, 8082]
+      port: [8081, 8082],
     },
     appcache: {
-      ignore: /[/][.]|php/
-    }
-  }
-}
+      ignore: /[/][.]|php/,
+    },
+  },
+};
