@@ -9,7 +9,7 @@
     "build:dev": "brunch build",
     "test": "standard",
     "predeploy": "npm run build",
-    "deploy": "rsync -az --force --delete --progress -e 'ssh' ./public/ rw251.com:~/public_html/cdown"
+    "deploy": "rsync -az --force --delete --progress -e 'ssh' ./public/ rw251.com:~/public_html/cdown--exclude=/.ssh --exclude=/.logs --exclude=/.cagefs --exclude=/.cl.selector --exclude=/.bash_history"
   },
   "author": "Richard Williams",
   "license": "ISC",
@@ -26,7 +26,7 @@
     "jade-brunch": "^2.8.0",
     "javascript-brunch": "^2.0.0",
     "npm-run-all": "^4.0.1",
-    "sass-brunch": "^2.6.3",
+    "sass-brunch": "^2.10.4",
     "standard": "^8.6.0"
   },
   "dependencies": {

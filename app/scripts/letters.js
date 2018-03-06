@@ -59,6 +59,7 @@ const lettersRound = {
       });
     } else {
       msg.show('Go!');
+      buttonBar.show($('#buttons'), { round: 'letters' });
       timer.start(() => {
         msg.show("Time's up. How long?");
         $('.letter-declare').removeClass('hidden');

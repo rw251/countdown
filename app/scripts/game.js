@@ -72,7 +72,7 @@ const playRound = function playRound(lastRound, save) {
   } else if (Object.prototype.hasOwnProperty.call(rows[round], 'l') && !skipLetters) {
     // letters
     $('#container').html(lettersTmpl());
-    buttonBar.show($('#buttons'), { round: 'letters', declare: false });
+    buttonBar.show($('#buttons'), { round: 'letters', placing: true });
     letterRound.load(rows[round], switcheroo);
     cont = ([1, 2, 5, 6, 8, 9, 12, 13, 14, 15].indexOf(round) % 2 === 0 ? score.c1first : name);
 
@@ -272,7 +272,7 @@ const initialise = function () {
             $('#episodenumber').text(val.e);
             $('#score').html(scoreTmpl());
             $('#container').html(lettersTmpl()).parent().fadeIn('fast');
-            buttonBar.show($('#buttons'), { round: 'letters', declare: false });
+            buttonBar.show($('#buttons'), { round: 'letters', placing: true });
             startGame(val, vs, local.getName());
           });
         });
@@ -281,7 +281,7 @@ const initialise = function () {
         $('#episodenumber').text(episode);
         $('#score').html(scoreTmpl());
         $('#container').html(lettersTmpl()).parent().fadeIn('fast');
-        buttonBar.show($('#buttons'), { round: 'letters', declare: false });
+        buttonBar.show($('#buttons'), { round: 'letters', placing: true });
         startGame(val, vs, local.getName());
       }
     });

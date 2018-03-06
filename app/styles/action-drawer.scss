@@ -127,6 +127,9 @@ a.nice-button {
 .nice-button--success:active {
   background-color: #3e8f41;
 }
+.buttons {
+  height: calc(100vh - 100vw - 60px);
+}
 .button-bar {
   margin-left: auto;
   margin-right: auto;
