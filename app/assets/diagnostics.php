@@ -1,4 +1,9 @@
 <?php
+// Perform a diagnostic query
+// CALL diagnostics.php?m=xxx
+// where xxx is one of: getAllLetters, episodesWithData, episodesWithoutData, firstEpisodeWithData, lastEpisodeWithData
+
+
 $host=getenv('CDOWN_MYSQL_HOST');
 $username=getenv('CDOWN_MYSQL_USER');
 $password=getenv('CDOWN_MYSQL_PASS');

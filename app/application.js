@@ -13,9 +13,9 @@ FEATURES
 5115 - conundrum example of "No - sorry not got it"
 3795 example of word shorter Ryan declaration and a declaration of length without a word.
 
-Display game number for debug purposes. 
-Game 's Malcolm fairy. Stops after repaves greaves. Not issue but sometimes get 502 from oed. 
-Don't query oed if word in list of contestants or dic corner 
+Display game number for debug purposes.
+Game 's Malcolm fairy. Stops after repaves greaves. Not issue but sometimes get 502 from oed.
+Don't query oed if word in list of contestants or dic corner
 
 Chris colsam. First game KB...  Conundrum messed up because rather than NINEUPPER it is ninelower*
 

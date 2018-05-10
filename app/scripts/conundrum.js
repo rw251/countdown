@@ -199,7 +199,7 @@ const conundrumRound = {
   },
 
   buzz() {
-    timer.isPaused = true;
+    timer.stop();
 
     $('.tile').on('click', conundrumRound.doTile).addClass('slot-hover');
 

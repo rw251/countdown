@@ -152,6 +152,17 @@ const numberRound = {
       rtn.c1method = val['1-sol'];
     }
 
+    const c2 = switcheroo ? (+val['1'] || 0) : (+val['2'] || 0);
+    let c2valid = true;
+    if (switcheroo) {
+      if (val['1-sol'] === 'X') {
+        c2valid = false;
+      }
+    } else if (val['2-sol'] === 'X') {
+      c2valid = false;
+    }
+    rtn.c2 = c2valid ? c2 : 0;
+
     rtn.rachel = val.sol;
 
     numbers = rtn;
@@ -208,22 +219,31 @@ const numberRound = {
 
     const points = getPoints(number, numbers.target);
     const c1points = getPoints(numbers.c1, numbers.target);
+    const c2points = getPoints(numbers.c2, numbers.target);
 
     const diff = {
       p: Math.abs(numbers.target - number),
       c1: numbers.c1method ? Math.abs(numbers.target - numbers.c1) : 100,
+      c2: Math.abs(numbers.target - numbers.c2),
     };
 
     msg.show([{ msg: `${score.c1first}: ${numbers.c1method ? numbers.c1 : 'Sorry, I messed up'}`, displayFor: 1000 }], () => {
       let method;
       const winners = [];
 
+      console.log(`${score.me} - ${score.c1} || ${score.me2} - ${score.c2}`);
+
       if (diff.c1 < diff.p || number === 0) {
         // you lost - so don't bother
+        if(numbers.c2) {
+          // other person
+          score.c2 += c2points;
+        }
         if (numbers.c1method) {
           winners.push(score.c1first);
           method = numbers.c1method;
           score.c1 += c1points;
+          console.log(`${score.me} - ${score.c1} || ${score.me2} - ${score.c2}`);
           msg.show([
             { msg: `Go on ${winners[0]}`, displayFor: 1000 },
             { msg: method, displayFor: 3000 },
@@ -264,6 +284,18 @@ const numberRound = {
           score.me += points;
           winners.push(local.getName());
         }
+
+        // other guy
+        mindiff = diff.c2;
+        if (isValid) mindiff = Math.min(diff.c2, diff.p);
+        if (mindiff === diff.c2) {
+          score.c2 += c2points;
+        }
+        if (isValid && mindiff === diff.p) {
+          score.me2 += points;
+        }
+        
+        console.log(`${score.me} - ${score.c1} || ${score.me2} - ${score.c2}`);
 
         if (winners.length === 0) {
           msg.show([

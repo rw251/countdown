@@ -25,6 +25,13 @@ const lettersRound = {
       rtn.c1 = rtn.c1.substr(0, rtn.c1.length - 2).trim().toUpperCase();
     }
 
+    const c2 = switcheroo ? val['1'] : val['2'];
+    let c2valid = switcheroo ? !val['1-bad'] : !val['2-bad'];
+    if (c2.toUpperCase() !== c2) {
+      c2valid = false;
+    }
+    rtn.c2score = c2valid ? c2.length : 0;
+
     rtn.othersC = val.c || [];
     rtn.othersD = val.d || [];
     rtn.others = rtn.othersC.concat(rtn.othersD);
@@ -51,28 +58,36 @@ const lettersRound = {
   do(contestant) {
     $('.letter-grid').removeClass('letter-grid-small');
     if (letters.letters.length > 0) {
+      if (timer.isPaused) {
+        return setTimeout(() => {
+          lettersRound.do(contestant);
+        }, 500);
+      }
       const letter = letters.letters[0];
       letters.letters = letters.letters.substr(1);
-      msg.show([{ msg: '', displayFor: 500 }], () => {
+      return msg.show([{ msg: '', displayFor: 500 }], () => {
         $('.tile')[8 - letters.letters.length].innerText = letter;
         lettersRound.do(contestant);
       });
-    } else {
-      msg.show('Go!');
-      buttonBar.show($('#buttons'), { round: 'letters' });
-      timer.start(() => {
-        msg.show("Time's up. How long?");
-        $('.letter-declare').removeClass('hidden');
-        $('body').on('keydown', (e) => {
-          const k = e.keyCode;
-          if (k >= 49 && k <= 57) {
-            lettersRound.declareWordLength(k - 48);
-          }
-          e.preventDefault();
-        });
-        $('.letter-grid').addClass('hidden');
-      });
     }
+    msg.show('Go!');
+    buttonBar.show($('#buttons'), { round: 'letters' });
+    return timer.start(() => {
+      lettersRound.goToDeclare();
+    });
+  },
+
+  goToDeclare(declareEarly) {
+    msg.show(declareEarly ? 'How long?' : "Time's up. How long?");
+    $('.letter-declare').removeClass('hidden');
+    $('body').on('keydown', (e) => {
+      const k = e.keyCode;
+      if (k >= 49 && k <= 57) {
+        lettersRound.declareWordLength(k - 48);
+      }
+      e.preventDefault();
+    });
+    $('.letter-grid').addClass('hidden');
   },
 
   declare(word, playRound) {
@@ -103,13 +118,23 @@ const lettersRound = {
             evaluated: true,
           }),
           displayFor: 1000 }], () => {
-          const best = words.reduce((prev, cur, idx) => valids[idx] ? Math.max(prev, cur.length) : prev, 0);
+          const best = words
+            .reduce((prev, cur, idx) => valids[idx] ? Math.max(prev, cur.length) : prev, 0);
 
           msg.show([{ msg: `We got: ${letters.others.slice(0, 2).join(', ')}`, displayFor: 1000 }], () => {
+            console.log(`${score.me} - ${score.c1} || ${score.me2} - ${score.c2}`);
             if (isValid && word.length === best) score.me += word.length + (best === 9 ? 9 : 0);
             if (letters.c1valid && letters.c1.length === best) {
               score.c1 += letters.c1.length + (best === 9 ? 9 : 0);
             }
+
+            // if playing other person
+            if (isValid && word.length >= letters.c2score) score.me2 += word.length + (word.length === 9 ? 9 : 0);
+            if (!isValid || letters.c2score >= word.length) {
+              score.c2 += letters.c2score + (letters.c2score === 9 ? 9 : 0);
+              console.log(`${letters.c2score}`);
+            }
+            console.log(`${score.me} - ${score.c1} || ${score.me2} - ${score.c2}`);
 
             playRound({
               letters: letters.lettersClone,

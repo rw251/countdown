@@ -12,8 +12,7 @@ const bb = {
 
   wireUp() {
     $('#pausebtn').on('click', () => {
-      timer.isPaused = true;
-      timer.enableNoSleep();
+      timer.pause();
       actionDrawer.open();
     });
   },

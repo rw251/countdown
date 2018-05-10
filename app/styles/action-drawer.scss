@@ -1,3 +1,5 @@
+@import 'variables.scss';
+
 .modal-content>ul {
   list-style-type: none;
   margin:0;
@@ -36,6 +38,7 @@
   position: relative;
   background-color: #fefefe;
   margin: auto;
+  margin-top: $scoreHeight;
   padding: 0;
   border: 1px solid #888;
   width: 80%;
@@ -126,9 +129,6 @@ a.nice-button {
 }
 .nice-button--success:active {
   background-color: #3e8f41;
-}
-.buttons {
-  height: calc(100vh - 100vw - 60px);
 }
 .button-bar {
   margin-left: auto;

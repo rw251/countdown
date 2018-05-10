@@ -15,13 +15,13 @@
 }
 @media screen and (max-height: 520px) and (orientation: portrait) {
     .letter-grid-small {
-        margin-left: calc(260px - 50vh);
-        margin-right: calc(260px - 50vh);
+        margin-left: calc(300px - 50vh);
+        margin-right: calc(300px - 50vh);
     }
 
     .letter-grid-small > .tile-triplet > .letter-tile > .tile-wrapper > .tile {
-        line-height: calc(32vw - 182px + 35vh);
-        font-size: calc(25vw - 130px + 25vh);
+        line-height: calc(32vw - 202px + 35vh);
+        font-size: calc(25vw - 150px + 25vh);
     }
 }
 
