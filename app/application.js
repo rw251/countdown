@@ -3,8 +3,11 @@ TODO
 
 BUGS
 4887 - declares TAGGER - mine accepted contestant not
+4955 allows me pouncer but disallows oppo
+3880 declare 7 and lectures in round 2. OPP doesn't get points
 
 FEATURES
+- don't allow me to buzz immediately after contestant has buzzed
 - clock to dial
 - button to skip to end of clock
 - list of games/contestants
