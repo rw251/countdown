@@ -24,8 +24,5 @@ module.exports = {
     autoReload: {
       port: [8081, 8082],
     },
-    appcache: {
-      ignore: /[/][.]|php/,
-    },
   },
 };

@@ -9,12 +9,11 @@
     "build:dev": "brunch build",
     "test": "standard",
     "predeploy": "npm run build",
-    "deploy": "rsync -az --force --delete --progress -e 'ssh' ./public/ rw251.com:~/public_html/cdown--exclude=/.ssh --exclude=/.logs --exclude=/.cagefs --exclude=/.cl.selector --exclude=/.bash_history"
+    "deploy": "rsync -az --force --delete --progress -e 'ssh' ./public/ rw251.com:~/public_html/cdown --exclude=/.ssh --exclude=/.logs --exclude=/.cagefs --exclude=/.cl.selector --exclude=/.bash_history"
   },
   "author": "Richard Williams",
   "license": "ISC",
   "devDependencies": {
-    "appcache-brunch": "^1.7.1",
     "auto-reload-brunch": "^2.7.1",
     "babel-eslint": "^7.2.1",
     "brunch": "^2.8.0",
@@ -30,7 +29,6 @@
     "standard": "^8.6.0"
   },
   "dependencies": {
-    "digest-brunch": "^1.5.1",
     "jquery": "^1.12.4",
     "localforage": "^1.4.2",
     "nosleep.js": "^0.5.1"

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" manifest="appcache.appcache">
+<html lang="en">
 
 <head>
 	<meta charset="utf-8">
@@ -11,10 +11,9 @@
 	<link rel="manifest" href="manifest.json">
 	<link href="https://fonts.googleapis.com/css?family=Roboto+Mono:300" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed" rel="stylesheet">
-  <link rel="stylesheet" href="https://unpkg.com/blaze">
 	<title>Countdown</title>
 
-	<link rel="stylesheet" href="DIGEST(app.css)">
+	<link rel="stylesheet" href="app.css">
 
 	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -27,9 +26,16 @@
 <body>
   <div id="score" class="score-container"></div>
 	<div id="container"></div>
-  <div id="buttons" class="buttons"></div>
-	<script src="DIGEST(libraries.js)"></script>
-	<script src="DIGEST(app.js)"></script>
+	<div id="buttons" class="buttons"></div>
+	<script>
+		if('serviceWorker' in navigator) {
+			navigator.serviceWorker
+							 .register('/sw.js')
+							 .then(function() { console.log("Service Worker Registered"); });
+		}
+	</script>
+	<script src="libraries.js"></script>
+	<script src="app.js"></script>
 	<script>
 		require("application").init();
 	</script>
