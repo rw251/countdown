@@ -7,7 +7,7 @@ const noSleep = new NoSleep();
 let timer;
 
 const countdown = function countdown(finalCallback, buzz) {
-  if(timer.isStopped) {
+  if (timer.isStopped) {
     timer.isStopped = false;
     timer.isPaused = false;
     timer.hasStarted = false;
@@ -53,6 +53,7 @@ timer = {
 
   reset() {
     timer.hasStarted = false;
+    timer.isStopped = false;
     time = timer.LENGTH;
     $('.clock').text(timer.LENGTH);
   },

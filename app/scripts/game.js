@@ -85,9 +85,7 @@ const playRound = function playRound(lastRound, save) {
     buttonBar.show($('#buttons'), { round: 'numbers', declare: false });
     numberRound.load(rows[round], switcheroo);
 
-    $('#container').html(numbersTmpl({
-      target: +numberRound.getTarget(),
-    }));
+    $('#container').html(numbersTmpl({target: +numberRound.getTarget(),}));
 
     speech.say(`Ok, ${cont}${speech.NUMBERS}`, 'NICK', () => {
       numberRound.do(cont);
@@ -273,6 +271,7 @@ const initialise = function () {
             $('#score').html(scoreTmpl());
             $('#container').html(lettersTmpl()).parent().fadeIn('fast');
             buttonBar.show($('#buttons'), { round: 'letters', placing: true });
+            console.log(`Episode: ${val.e}`);
             startGame(val, vs, local.getName());
           });
         });
@@ -282,6 +281,7 @@ const initialise = function () {
         $('#score').html(scoreTmpl());
         $('#container').html(lettersTmpl()).parent().fadeIn('fast');
         buttonBar.show($('#buttons'), { round: 'letters', placing: true });
+        console.log(`Episode: ${episodeNumber}`);
         startGame(episode, vs, local.getName());
       }
     });
@@ -373,9 +373,7 @@ const initialise = function () {
     let tmp;
     switch (els[0][0]) {
       case 'n':
-        tmp = numbersTmpl({
-          target: 200,
-        });
+        tmp = numbersTmpl({target: 200,});
         break;
       case 'l':
         tmp = lettersTmpl();
@@ -388,6 +386,4 @@ const initialise = function () {
   }
 };
 
-module.exports = {
-  init: initialise,
-};
+module.exports = {init: initialise,};
