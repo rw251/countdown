@@ -37,11 +37,10 @@ curl_setopt($ch, CURLOPT_URL, $host);
 curl_setopt($ch, CURLOPT_HTTPHEADER, array('app_id: ' . getenv('OED_ID'), 'app_key: ' . getenv('OED_KEY')));
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 // enable thie following for debugging
-//curl_setopt($ch, CURLOPT_VERBOSE, true);
+// curl_setopt($ch, CURLOPT_VERBOSE, true);
 
 $rtn = json_decode(curl_exec($ch));
 curl_close($ch);
-
 $valid=false;
 if($rtn != null && array_key_exists("results",$rtn)) {
     foreach($rtn->results as $result) {

@@ -1,6 +1,6 @@
 /* eslint-disable no-var, prefer-arrow-callback, func-names, require-jsdoc*/
 // taken from https://serviceworke.rs/ with thanks.
-var CACHE = 'cache-and-update-v3';
+var CACHE = 'cache-and-update-v4';
 
 // Open a cache and use addAll() with an array of assets to add all of them to the
 // cache. Return a promise resolving when all the assets are added.
@@ -64,8 +64,14 @@ self.addEventListener('install', function (evt) {
 self.addEventListener('fetch', function (evt) {
 // You can use respondWith() to answer immediately, without waiting for the network
 // response to reach the service worker…
-  evt.respondWith(fromCache(evt.request));
+  evt.respondWith(
+    caches.open(CACHE).then(function (cache) {
+      return cache.match(evt.request).then(function (matching) {
+        return matching || fetch(evt.request);
+      });
+    }),
+  );
 
 // ...and waitUntil() to prevent the worker from being killed until the cache is updated.
-  evt.waitUntil(update(evt.request));
+ // evt.waitUntil(update(evt.request));
 });

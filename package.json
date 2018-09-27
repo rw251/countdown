@@ -7,7 +7,7 @@
     "start": "brunch watch --server",
     "build": "rm -rf public/ && brunch build --production",
     "build:dev": "brunch build",
-    "test": "standard",
+    "test": "mocha test/bootstrap.js --recursive test",
     "predeploy": "npm run build",
     "deploy": "rsync -az --force --delete --progress -e 'ssh' ./public/ rw251.com:~/public_html/cdown --exclude=/.ssh --exclude=/.logs --exclude=/.cagefs --exclude=/.cl.selector --exclude=/.bash_history"
   },
@@ -17,6 +17,7 @@
     "auto-reload-brunch": "^2.7.1",
     "babel-eslint": "^7.2.1",
     "brunch": "^2.8.0",
+    "chai": "^4.1.2",
     "eslint": "^3.18.0",
     "eslint-config-airbnb": "^14.1.0",
     "eslint-plugin-import": "^2.2.0",
@@ -24,7 +25,9 @@
     "eslint-plugin-react": "^6.10.3",
     "jade-brunch": "^2.8.0",
     "javascript-brunch": "^2.0.0",
+    "mocha": "^5.2.0",
     "npm-run-all": "^4.0.1",
+    "puppeteer": "^1.6.0",
     "sass-brunch": "^2.10.4",
     "standard": "^8.6.0"
   },
