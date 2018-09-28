@@ -17,6 +17,8 @@ const scoreTmpl = require('../templates/score.jade');
 const welcomeTmpl = require('../templates/welcome.jade');
 const actionDrawerTmpl = require('../templates/action-drawer.jade');
 
+const version = 'v7'; // UPDATE HERE AND IN SW.JS (OH AND DO IT HERE FIRST)
+
 let currentEpisode;
 let c1;
 let c2;
@@ -85,7 +87,7 @@ const playRound = function playRound(lastRound, save) {
     buttonBar.show($('#buttons'), { round: 'numbers', declare: false });
     numberRound.load(rows[round], switcheroo);
 
-    $('#container').html(numbersTmpl({target: +numberRound.getTarget(),}));
+    $('#container').html(numbersTmpl({ target: +numberRound.getTarget() }));
 
     speech.say(`Ok, ${cont}${speech.NUMBERS}`, 'NICK', () => {
       numberRound.do(cont);
@@ -222,6 +224,8 @@ const getEpisodeFromCache = function (callback) {
 const initialise = function () {
   numberOfCachedGames();
   refillCachedGames(10, () => {});
+
+  local.settings.version = version;
 
   $('#container').html(welcomeTmpl(local.settings));
   score.me = 0;
@@ -373,7 +377,7 @@ const initialise = function () {
     let tmp;
     switch (els[0][0]) {
       case 'n':
-        tmp = numbersTmpl({target: 200,});
+        tmp = numbersTmpl({ target: 200 });
         break;
       case 'l':
         tmp = lettersTmpl();
@@ -386,4 +390,4 @@ const initialise = function () {
   }
 };
 
-module.exports = {init: initialise,};
+module.exports = { init: initialise };

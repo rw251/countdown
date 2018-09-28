@@ -106,6 +106,8 @@ EXAMPLE GAMES
 
 Display game number for debug purposes.
 
+Display sw cache version for debug purposes
+
 Don't query oed if word in list of contestants or dic corner
 
 

@@ -1,6 +1,8 @@
 /* eslint-disable no-var, prefer-arrow-callback, func-names, require-jsdoc*/
 // taken from https://serviceworke.rs/ with thanks.
-var CACHE = 'cache-and-update-v5';
+
+// MAKE SURE TO UPDATE THIS ON DEPLOY AND ALSO IN GAME.JS (OH AND DO IT HERE SECOND)
+var CACHE = 'cache-and-update-v7';
 
 // Open a cache and use addAll() with an array of assets to add all of them to the
 // cache. Return a promise resolving when all the assets are added.
