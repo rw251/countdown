@@ -90,6 +90,7 @@ Sometimes countdown doesn't start on conundrum (especially,
     maybe only, when i've buzzed early on previous rounds)
 4314 - disallows CANAPE
 4356 - round two example of Not Written Down - currently gives them 7 points -  or maybe not might have got it wrong
+4816 - declare defiant as 8 cause challenger to get 0 points
 
 3639 - second numbers if declare 501 (e.g. would lose to champ but beat challenger - should get points against challenger)
 
