@@ -86,13 +86,11 @@ BUGS
 Chris colsam. First game KB...  Conundrum messed up because rather than NINEUPPER it is ninelower*
 2965 loads as 4550
 2086 Stops after repaves greaves. Not issue but sometimes get 502 from oed.
-Sometimes countdown doesn't start on conundrum (especially,
-    maybe only, when i've buzzed early on previous rounds)
 4314 - disallows CANAPE
 4356 - round two example of Not Written Down - currently gives them 7 points -  or maybe not might have got it wrong
 4816 - declare defiant as 8 cause challenger to get 0 points
-
 3639 - second numbers if declare 501 (e.g. would lose to champ but beat challenger - should get points against challenger)
+3490 - harass*XX interpreted as an 8 letter word
 
 FEATURES
 - don't allow me to buzz immediately after contestant has buzzed
