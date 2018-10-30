@@ -10,12 +10,12 @@ const localforage = require('localforage');
 const dictionary = require('./dictionary');
 const actionDrawer = require('./actionDrawer');
 const buttonBar = require('./buttonBar');
-const lettersTmpl = require('../templates/letters.jade');
-const numbersTmpl = require('../templates/numbers.jade');
-const conundrumTmpl = require('../templates/conundrum.jade');
-const scoreTmpl = require('../templates/score.jade');
-const welcomeTmpl = require('../templates/welcome.jade');
-const actionDrawerTmpl = require('../templates/action-drawer.jade');
+const lettersTmpl = require('../templates/letters.pug');
+const numbersTmpl = require('../templates/numbers.pug');
+const conundrumTmpl = require('../templates/conundrum.pug');
+const scoreTmpl = require('../templates/score.pug');
+const welcomeTmpl = require('../templates/welcome.pug');
+const actionDrawerTmpl = require('../templates/action-drawer.pug');
 
 const version = 'v7'; // UPDATE HERE AND IN SW.JS (OH AND DO IT HERE FIRST)
 

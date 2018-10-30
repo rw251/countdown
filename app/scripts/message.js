@@ -1,5 +1,5 @@
 const $ = require('jquery');
-const messageTmpl = require('../templates/message.jade');
+const messageTmpl = require('../templates/message.pug');
 
 const writeMessage = function writeMessage(message) {
   const html = messageTmpl({ msg: message });

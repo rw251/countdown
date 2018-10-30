@@ -1,5 +1,7 @@
 .c9/
+.fusebox/
 public/
+dist/
 node_modules/
 todo
 php.ini

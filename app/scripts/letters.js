@@ -4,7 +4,7 @@ const dictionary = require('./dictionary.js');
 const $ = require('jquery');
 const msg = require('./message');
 const buttonBar = require('./buttonBar');
-const declareTemplate = require('../templates/declare.jade');
+const declareTemplate = require('../templates/declare.pug');
 
 let letters;
 let wordLength;

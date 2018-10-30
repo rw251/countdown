@@ -115,12 +115,6 @@ Don't query oed if word in list of contestants or dic corner
 const $ = require('jquery');
 const game = require('./scripts/game');
 
-const App = {
-  init: function init() {
-    $(document).ready(() => {
-      game.init();
-    });
-  },
-};
-
-module.exports = App;
+$(document).ready(() => {
+  game.init();
+});

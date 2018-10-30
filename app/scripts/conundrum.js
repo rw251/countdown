@@ -5,7 +5,7 @@ const local = require('./local.js');
 const $ = require('jquery');
 const msg = require('./message');
 const buttonBar = require('./buttonBar.js');
-const declareTmpl = require('../templates/conundrumDeclare.jade');
+const declareTmpl = require('../templates/conundrumDeclare.pug');
 const actionDrawer = require('./actionDrawer.js');
 
 let conundrum;

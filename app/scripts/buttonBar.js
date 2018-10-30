@@ -1,7 +1,7 @@
 const $ = require('jquery');
 const actionDrawer = require('./actionDrawer');
 const timer = require('./timer');
-const buttonBarTmpl = require('../templates/button-bar.jade');
+const buttonBarTmpl = require('../templates/button-bar.pug');
 
 const bb = {
 
