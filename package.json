@@ -21,11 +21,15 @@
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "^3.0.2",
     "eslint-plugin-react": "^6.10.3",
+    "fuse-box": "^3.6.0",
     "jade-brunch": "^2.8.0",
     "javascript-brunch": "^2.0.0",
     "npm-run-all": "^4.0.1",
     "sass-brunch": "^2.6.3",
-    "standard": "^8.6.0"
+    "standard": "^8.6.0",
+    "typescript": "^3.1.4",
+    "uglify-es": "^3.3.9",
+    "uglify-js": "^3.4.9"
   },
   "dependencies": {
     "digest-brunch": "^1.5.1",
