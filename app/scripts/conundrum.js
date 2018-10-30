@@ -85,9 +85,8 @@ const conundrumRound = {
               score.update();
               msg.show([{ msg: `Well done ${contestant}`, displayFor: 1000 }], () => {
                 actionDrawer.open();
-                playRound({
-                  time: [-1, conundrum.c1.time, conundrum.c2.time],
-                }, true);
+                console.log(`${score.me} - ${score.c1} || ${score.me2} - ${score.c2}`);
+                playRound({time: [-1, conundrum.c1.time, conundrum.c2.time],}, true);
               });
             } else {
               msg.show([
@@ -101,9 +100,8 @@ const conundrumRound = {
                   });
                   msg.show([{ msg: 'Good game everyone.', displayFor: 1000 }], () => {
                     actionDrawer.open();
-                    playRound({
-                      time: [-1, -1, conundrum.c2.time],
-                    }, true);
+                    console.log(`${score.me} - ${score.c1} || ${score.me2} - ${score.c2}`);
+                    playRound({time: [-1, -1, conundrum.c2.time],}, true);
                   });
                 });
               });
@@ -118,9 +116,8 @@ const conundrumRound = {
           });
           msg.show([{ msg: 'Good game everyone.', displayFor: 1000 }], () => {
             actionDrawer.open();
-            playRound({
-              time: [-1, -1, conundrum.c2.time],
-            }, true);
+            console.log(`${score.me} - ${score.c1} || ${score.me2} - ${score.c2}`);
+            playRound({time: [-1, -1, conundrum.c2.time],}, true);
           });
         });
       }
@@ -142,10 +139,9 @@ const conundrumRound = {
         score.me += 10;
         score.update();
         msg.show([{ msg: `${conundrum.answer}. Well done. Good game everyone`, displayFor: 1000 }], () => {
+          console.log(`${score.me} - ${score.c1} || ${score.me2} - ${score.c2}`);
           actionDrawer.open();
-          playRound({
-            time: [timer.getTime(), conundrum.c1.time, conundrum.c2.time],
-          }, true);
+          playRound({time: [timer.getTime(), conundrum.c1.time, conundrum.c2.time],}, true);
         });
       } else {
         'INCORRECT'.split('').forEach((l, i) => {
@@ -168,9 +164,8 @@ const conundrumRound = {
                       score.update();
                       msg.show([{ msg: `Well done ${score.c1first}`, displayFor: 1000 }], () => {
                         actionDrawer.open();
-                        playRound({
-                          time: [-1, conundrum.c1.time, conundrum.c2.time],
-                        }, true);
+                        console.log(`${score.me} - ${score.c1} || ${score.me2} - ${score.c2}`);
+                        playRound({time: [-1, conundrum.c1.time, conundrum.c2.time],}, true);
                       });
                     } else {
                       'INCORRECT'.split('').forEach((l, i) => {
@@ -182,9 +177,8 @@ const conundrumRound = {
                         });
                         msg.show([{ msg: `${conundrum.answer}. Good game everyone`, displayFor: 1000 }], () => {
                           actionDrawer.open();
-                          playRound({
-                            time: [-1, -1, conundrum.c2.time],
-                          }, true);
+                          console.log(`${score.me} - ${score.c1} || ${score.me2} - ${score.c2}`);
+                          playRound({time: [-1, -1, conundrum.c2.time],}, true);
                         });
                       });
                     }
@@ -199,7 +193,7 @@ const conundrumRound = {
   },
 
   buzz() {
-    timer.isPaused = true;
+    timer.stop();
 
     $('.tile').on('click', conundrumRound.doTile).addClass('slot-hover');
 

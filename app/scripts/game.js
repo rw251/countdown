@@ -17,6 +17,8 @@ const scoreTmpl = require('../templates/score.jade');
 const welcomeTmpl = require('../templates/welcome.jade');
 const actionDrawerTmpl = require('../templates/action-drawer.jade');
 
+const version = 'v7'; // UPDATE HERE AND IN SW.JS (OH AND DO IT HERE FIRST)
+
 let currentEpisode;
 let c1;
 let c2;
@@ -72,7 +74,7 @@ const playRound = function playRound(lastRound, save) {
   } else if (Object.prototype.hasOwnProperty.call(rows[round], 'l') && !skipLetters) {
     // letters
     $('#container').html(lettersTmpl());
-    buttonBar.show($('#buttons'), { round: 'letters', declare: false });
+    buttonBar.show($('#buttons'), { round: 'letters', placing: true });
     letterRound.load(rows[round], switcheroo);
     cont = ([1, 2, 5, 6, 8, 9, 12, 13, 14, 15].indexOf(round) % 2 === 0 ? score.c1first : name);
 
@@ -85,9 +87,7 @@ const playRound = function playRound(lastRound, save) {
     buttonBar.show($('#buttons'), { round: 'numbers', declare: false });
     numberRound.load(rows[round], switcheroo);
 
-    $('#container').html(numbersTmpl({
-      target: +numberRound.getTarget(),
-    }));
+    $('#container').html(numbersTmpl({ target: +numberRound.getTarget() }));
 
     speech.say(`Ok, ${cont}${speech.NUMBERS}`, 'NICK', () => {
       numberRound.do(cont);
@@ -115,9 +115,6 @@ const startGame = function startGame(episode, vs, player) {
     c1 = isChampWinner ? c2 : c1;
   } else if (vs === 'rand') {
     c1 = Math.random() > 0.5 ? c1 : c2;
-  } else if (vs === 'both') {
-    score.c2first = c2.split(' ')[0];
-    $('#c2').text(`${score.c2first}: `);
   }
   if (c1 === c2) switcheroo = true;
 
@@ -130,7 +127,7 @@ const startGame = function startGame(episode, vs, player) {
     what: speech.WELCOME,
     who: 'nick',
   }, {
-    what: `${speech.WHO + player} and ${c1}${score.c2first ? ` and ${c2}.` : '.'}`,
+    what: `${speech.WHO + player} and ${c1}.`,
     who: 'nick',
   }], () => {
     playRound();
@@ -151,7 +148,6 @@ const cacheEpisode = function cacheEpisode(episode, callback) {
 
 const getEpisode = function getEpisode(episodeNumber, callback) {
   $
-    // .get('down.php?episode=' + episodeNumber)
     .get(`episode.php?e=${episodeNumber}`)
     .success((doc) => {
       callback(null, JSON.parse(doc));
@@ -218,8 +214,8 @@ const getEpisodeFromCache = function (callback) {
   localforage.getItem('cachedEpisodes', (err, val) => {
     if (err) return callback(err);
     const episode = val.pop();
-    localforage.setItem('cachedEpisodes', val, (err, val) => {
-      if (err) return callback(err);
+    return localforage.setItem('cachedEpisodes', val, (setErr) => {
+      if (setErr) return callback(setErr);
       return callback(null, episode);
     });
   });
@@ -228,6 +224,8 @@ const getEpisodeFromCache = function (callback) {
 const initialise = function () {
   numberOfCachedGames();
   refillCachedGames(10, () => {});
+
+  local.settings.version = version;
 
   $('#container').html(welcomeTmpl(local.settings));
   score.me = 0;
@@ -238,13 +236,13 @@ const initialise = function () {
     if (e.keyCode === 13) $('#go').click();
   });
 
-  $('#go').on('click', function (e) {
-    $(this).text('Loading...').prop('disabled', true);
+  $('#go').on('click', (e) => {
+    $('#go').text('Loading...').prop('disabled', true);
 
     timer.enableNoSleep();
     const vs = $('select[name=player]').val();
-    episode = $('#episode').val();
-    episode = episode === '' ? Math.floor(Math.random() * 5000) + 1000 : episode;
+    let episodeNumber = $('#episode').val();
+    episodeNumber = episodeNumber === '' ? Math.floor(Math.random() * 5000) + 1000 : episodeNumber;
 
     speech.silent = !$('#setting-speech').is(':checked');
     speech.speed = +$('[name=setting-speed]:checked').val();
@@ -259,89 +257,113 @@ const initialise = function () {
      LLNLLNLLNLLLLNC - 5666 -
      LLLLNLLLLNLLLNC - 3086 - 5665
      LLLNLLLNC       - 1    - 3086
-     LLNLLNCLLNLLNC  - 14 round (grand finals / CoCs / 2 specials) [80,132,184,234,288,338,397,404,444,445,494,544,594,601,644,707,757,812,819,867,937,1002,1003,1067,1074,1132,1197,1262,1327,1334,1392,1457,1522,1523,1587,1594,1652,1717,1782,1847,1854,1907,1972,2037,2102,2162,2177,2292,2422,2552,2673,2678,2797,2911,3042,3085]
+     LLNLLNCLLNLLNC  - 14 round (grand finals / CoCs / 2 specials)
+        [80,132,184,234,288,338,397,404,444,445,494,544,594,601,644,707,
+          757,812,819,867,937,1002,1003,1067,1074,1132,1197,1262,1327,1334,
+          1392,1457,1522,1523,1587,1594,1652,1717,1782,1847,1854,1907,1972,
+          2037,2102,2162,2177,2292,2422,2552,2673,2678,2797,2911,3042,3085]
     */
 
-    getEpisode(episode, (err, val) => {
-      if (err || !val.e) {
-        dictionary.cache((err, val) => {
-          if (err) throw err;
-          getEpisodeFromCache((err, val) => {
-            if (err) throw err;
-            $('body').prepend(actionDrawerTmpl({ episode }));
+    getEpisode(episodeNumber, (err, episode) => {
+      if (err || !episode.e) {
+        dictionary.cache((cacheErr) => {
+          if (cacheErr) throw cacheErr;
+          getEpisodeFromCache((getErr, val) => {
+            if (getErr) throw getErr;
+            $('body').prepend(actionDrawerTmpl({ episodeNumber: val.e }));
             $('#episodenumber').text(val.e);
             $('#score').html(scoreTmpl());
             $('#container').html(lettersTmpl()).parent().fadeIn('fast');
-            buttonBar.show($('#buttons'), { round: 'letters', declare: false });
+            buttonBar.show($('#buttons'), { round: 'letters', placing: true });
+            console.log(`Episode: ${val.e}`);
             startGame(val, vs, local.getName());
           });
         });
       } else {
-        $('body').prepend(actionDrawerTmpl({ episode }));
-        $('#episodenumber').text(episode);
+        $('body').prepend(actionDrawerTmpl({ episodeNumber }));
+        $('#episodenumber').text(episodeNumber);
         $('#score').html(scoreTmpl());
         $('#container').html(lettersTmpl()).parent().fadeIn('fast');
-        buttonBar.show($('#buttons'), { round: 'letters', declare: false });
-        startGame(val, vs, local.getName());
+        buttonBar.show($('#buttons'), { round: 'letters', placing: true });
+        console.log(`Episode: ${episodeNumber}`);
+        startGame(episode, vs, local.getName());
       }
     });
 
     e.preventDefault();
   });
 
-  $('#buttons').on('click', '#goWord', () => {
-    timer.enableNoSleep();
-    letterRound.declare($('#word').val().toUpperCase(), playRound);
-  }).on('click', '#undoLetter', () => {
-    letterRound.undo();
-  }).on('click', '#undoConundrumLetter', () => {
-    conundrumRound.undo();
-  }).on('click', '#goNumber', (e) => {
-    timer.isPaused = true;
-    timer.enableNoSleep();
-    numberRound.declare($('#number').val(), playRound);
-    e.preventDefault();
-    e.stopPropagation();
-  }).on('click', '#goConundrum', () => {
-    conundrumRound.declare($('#conundrum').val());
-  });
-  $('#container').on('click', '#goNumberNothing', (e) => {
-    timer.isPaused = true;
-    timer.enableNoSleep();
-    numberRound.declare('', playRound);
-    e.preventDefault();
-    e.stopPropagation();
-  }).on('click', '.letter-declare .tile', function (e) {
-    letterRound.declareWordLength($(this).text());
-  }).on('keydown', '#word', (e) => {
-    if (e.keyCode === 13) $('#goWord').click();
-  }).on('keydown', '#number', (e) => {
-    if (e.keyCode === 13) $('#goNumber').click();
-  }).on('click', '#buzz', () => {
-    $('.conundrum-buzz').hide();
-    $('.conundrum-declare').show();
-    conundrumRound.buzz();
-  }).on('keydown', '#conundrum', (e) => {
-    if (e.keyCode === 13) $('#goConundrum').click();
-  });
-
-  $('body').on('click', '.action-drawer', (e) => {
-    if ($(e.target).is('.action-drawer')) {
-      timer.isPaused = false;
+  $('#buttons')
+    .on('click', '#goWord', () => {
       timer.enableNoSleep();
+      letterRound.declare($('#word').val().toUpperCase(), playRound);
+    })
+    .on('click', '#undoLetter', () => {
+      letterRound.undo();
+    })
+    .on('click', '#undoConundrumLetter', () => {
+      conundrumRound.undo();
+    })
+    .on('click', '#declarebtn', (e) => {
+      timer.stop();
+      letterRound.goToDeclare(true);
+      e.preventDefault();
+      e.stopPropagation();
+    })
+    .on('click', '#goNumber', (e) => {
+      timer.stop();
+      numberRound.declare($('#number').val(), playRound);
+      e.preventDefault();
+      e.stopPropagation();
+    })
+    .on('click', '#goConundrum', () => {
+      conundrumRound.declare($('#conundrum').val());
+    });
+  $('#container')
+    .on('click', '#goNumberNothing', (e) => {
+      timer.stop();
+      numberRound.declare('', playRound);
+      e.preventDefault();
+      e.stopPropagation();
+    })
+    .on('click', '.letter-declare .tile', function (e) {
+      letterRound.declareWordLength($(this).text());
+    })
+    .on('keydown', '#word', (e) => {
+      if (e.keyCode === 13) $('#goWord').click();
+    })
+    .on('keydown', '#number', (e) => {
+      if (e.keyCode === 13) $('#goNumber').click();
+    })
+    .on('click', '#buzz', () => {
+      $('.conundrum-buzz').hide();
+      $('.conundrum-declare').show();
+      conundrumRound.buzz();
+    })
+    .on('keydown', '#conundrum', (e) => {
+      if (e.keyCode === 13) $('#goConundrum').click();
+    });
+
+  $('body')
+    .on('click', '.action-drawer', (e) => {
+      if ($(e.target).is('.action-drawer')) {
+        timer.resume();
+        actionDrawer.close();
+      }
+    })
+    .on('click', '#resumebtn', () => {
+      timer.resume();
       actionDrawer.close();
-    }
-  }).on('click', '#resumebtn', () => {
-    timer.isPaused = false;
-    timer.enableNoSleep();
-    actionDrawer.close();
-  }).on('click', '#savebtn', () => {
-    // save game
-  }).on('click', '#feedbackbtn', () => {
-    // open form for feedback
-  }).on('click', '#quitbtn', () => {
-    location.reload();
-  });
+    })
+    .on('click', '#savebtn', () => {
+      // save game
+    })
+    .on('click', '#feedbackbtn', () => {
+      // open form for feedback
+    })
+    .on('click', '#quitbtn', () => {
+      location.reload();
+    });
 
   $('#reset').on('click', (e) => {
     resetCache();
@@ -355,21 +377,17 @@ const initialise = function () {
     let tmp;
     switch (els[0][0]) {
       case 'n':
-        tmp = require('templates/numbers')({
-          target: 200,
-        });
+        tmp = numbersTmpl({ target: 200 });
         break;
       case 'l':
-        tmp = require('templates/letters')();
+        tmp = lettersTmpl();
         break;
       default:
-        tmp = require('templates/conundrum')();
+        tmp = conundrumTmpl();
     }
     $('#container').html(tmp);
     if (els.length > 1 && els[1][0] === 's') $('#container').find('*').show();
   }
 };
 
-module.exports = {
-  init: initialise,
-};
+module.exports = { init: initialise };

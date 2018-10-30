@@ -15,13 +15,13 @@
 }
 @media screen and (max-height: 520px) and (orientation: portrait) {
     .letter-grid-small {
-        margin-left: calc(260px - 50vh);
-        margin-right: calc(260px - 50vh);
+        margin-left: calc(300px - 50vh);
+        margin-right: calc(300px - 50vh);
     }
 
     .letter-grid-small > .tile-triplet > .letter-tile > .tile-wrapper > .tile {
-        line-height: calc(32vw - 182px + 35vh);
-        font-size: calc(25vw - 130px + 25vh);
+        line-height: calc(32vw - 202px + 35vh);
+        font-size: calc(25vw - 150px + 25vh);
     }
 }
 
@@ -77,7 +77,7 @@
     left: 0;
     right: 0;
     color: white;
-    font-family: 'Roboto Condensed', sans-serif;
+    font-family: 'Roboto Condensed', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     text-align: center;
     line-height: calc(32vw);
     font-size: calc(25vw);
