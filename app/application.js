@@ -92,6 +92,7 @@ Chris colsam. First game KB...  Conundrum messed up because rather than NINEUPPE
 3639 - second numbers if declare 501 (e.g. would lose to champ but beat challenger - should get points against challenger)
 3490 - harass*XX interpreted as an 8 letter word
 4294 - vivienne declares seminar as an 8 in round 2 - the game thinks she declared 7
+3491 - doesn't allow sauted
 
 FEATURES
 - don't allow me to buzz immediately after contestant has buzzed
