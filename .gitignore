@@ -1,4 +1,6 @@
 .c9/
+.fusebox/
+dist/
 public/
 node_modules/
 todo
